@@ -1,0 +1,467 @@
+<html><head>
+
+<link rel="stylesheet" href="ui.css">
+<link rel="stylesheet" href="superfish.css">
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="codemirror-5.1/lib/codemirror.css">
+<link rel="stylesheet" href="codemirror-5.1/theme/rubyblue.css">
+<link rel="stylesheet" href="themes/default/style.min.css" />
+
+<link rel="stylesheet" href="codemirror-5.1/addon/hint/show-hint.css">
+<style type="text/css">
+
+      .CodeMirror-focused .cm-matchhighlight {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+        background-position: bottom;
+        background-repeat: repeat-x;
+      }
+    </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<script src="jstree/jstree.js"></script>
+
+
+<script src="codemirror-5.1/lib/codemirror.js"></script>
+<script src="codemirror-5.1/addon/selection/active-line.js"></script>
+<script src="codemirror-5.1/addon/edit/matchbrackets.js"></script>
+<script src="codemirror-5.1/mode/xml/xml.js"></script>
+<script src="codemirror-5.1/mode/css/css.js"></script>
+<script src="codemirror-5.1/mode/javascript/javascript.js"></script>
+<script src="codemirror-5.1/mode/htmlmixed/htmlmixed.js"></script>
+<script src="codemirror-5.1/addon/hint/show-hint.js"></script>
+<script src="codemirror-5.1/addon/hint/xml-hint.js"></script>
+<script src="codemirror-5.1/addon/hint/html-hint.js"></script>
+
+<script src="codemirror-5.1/addon/search/searchcursor.js"></script>
+<script src="codemirror-5.1/addon/search/match-highlighter.js"></script>
+
+
+
+<script src="superfish.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    $(".tabBar div a").click(function() {
+ 
+        $("#textEditor01").empty().append("<div id='loading'><h1>Loading, Please Wait</h1></div>");
+        $(".tabBar div a").removeClass('current');
+        $(this).addClass('current');
+ 
+		//$('#textEditor01').load('page.html');
+
+    
+		
+        //$.ajax({ url: this.href, success: function(html) {
+        //     $("#textEditor01").empty().append(html);
+        //    }
+		//});
+    return false;
+    });
+	
+	
+	 $(function() {
+		$( ".fileIcon" ).draggable();
+		$( ".tabBar" ).droppable({
+			drop: function( event, ui ) {
+				$( this )
+				.addClass( "ui-state-highlight" )
+				.find( "p" )
+				.html( "Dropped!" );
+				}
+		});
+	});
+	
+	
+
+	$(".closeTab").on("click", function() {
+		//$(this).parent.remove();
+		return false;
+	});
+	 $(function() {
+		$( "#editorContextMenu" ).menu();
+	});
+});
+
+ $(function() {
+$( ".tabBar" ).tabs();
+});
+
+
+</script>
+<style type="text/css">
+ .tabBar div { display:inline-block; background-color:#EEEEEE; }
+ .tabBar div a { background-color:#EEEEEE; }
+ .tabBar div a.current { background-color:#CCCCCC;}
+ 
+ .noDisplay {
+	display:none;
+ }
+</style>
+
+ <script>
+     
+<!--These are auto complete functions that I found in an XML auto-completer-->
+      function completeAfter(cm, pred) {
+        var cur = cm.getCursor();
+        if (!pred || pred()) setTimeout(function() {
+          if (!cm.state.completionActive)
+            cm.showHint({completeSingle: false});
+        }, 100);
+        return CodeMirror.Pass;
+      }
+
+      function completeIfAfterLt(cm) {
+        return completeAfter(cm, function() {
+          var cur = cm.getCursor();
+          return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
+        });
+      }
+
+      function completeIfInTag(cm) {
+        return completeAfter(cm, function() {
+          var tok = cm.getTokenAt(cm.getCursor());
+          if (tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
+          var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state;
+          return inner.tagName;
+        });
+      }
+</script>
+
+
+<script>
+
+  
+$(function() {
+    $( "ul.sf-menu" ).superfish();
+  });
+
+$(document).load(function() {
+
+    $.ajax({
+url: '/getFileStatus.php',
+data: {
+format: 'json'
+},
+success: function(data) {
+console.log(data);
+},
+});
+});
+ws = new WebSocket("ws://172.17.0.42:8080/");
+ws.onmessage = function(evt) {
+       	console.log($.parseJSON(evt.data));
+       	var jObj = $.parseJSON(evt.data);
+       	if (jObj.replyType == 'reply_insertDataSingleLine') {
+       		var inputData = jObj.data;
+       		var lineData = jObj.line;
+       		var chData = jObj.char;
+       		
+       		console.log("Calling replaceRange with ");
+       		$('.CodeMirror').each(function() {
+       			if (lineData > this.CodeMirror.lineCount()) {
+       				console.log("We need more lines!");
+       				var x = this.CodeMirror.lineCount;
+       				while (x <= lineData) {
+       					this.CodeMirror.replaceRange('\n', {line: x, ch: this.CodeMirror.getLine(x).length});
+       					x++;
+       				}
+       			}
+       			this.CodeMirror.replaceRange(inputData, {line: lineData, ch: chData});
+       		});
+       	}
+       	if (jObj.replyType == 'reply_deleteDataSingleLine') {
+       		var inputData = jObj.data;
+       		var lineData = jObj.line;
+       		var chData = jObj.char;
+       		var delLength = jObj.length;
+       		console.log("Calling replaceRange with ");
+       		$('.CodeMirror').each(function() {
+       			this.CodeMirror.replaceRange('', {line: lineData, ch: chData}, {line: lineData, ch: (chData + delLength)});
+       		});
+
+       	}
+ };
+ws.onclose = function() {};
+ws.onopen = function() { };
+$(document).ready(function() {
+		$.fn.buildCodeMirror = function(){
+			var cmOption = {
+				lineNumbers: true,
+				styleActiveLine: true,
+				matchBrackets: true,
+			};	
+		$('.textEditor').each(
+			function() {
+				console.log('Create new CodeMirror instance');
+				var cm = CodeMirror.fromTextArea(this, {    
+						lineNumbers: true,
+						styleActiveLine: true,
+						matchBrackets: true,
+						ownerArea: this,
+						mode: "text/html",
+						highlightSelectionMatches: {showToken: /\w/},
+						extraKeys: {
+							"'<'": completeAfter,
+							"'/'": completeIfAfterLt,
+							"' '": completeIfInTag,
+							"'='": completeIfInTag,
+							"Ctrl-Space": "autocomplete"
+						},
+						value: document.documentElement.innerHTML
+						}
+					);
+				cm.on("change",$.fn.cmChange);
+			}
+		);
+	
+}
+
+$.fn.cmChange = function(cm,change){
+	var totalText = cm.getValue();
+	var statusText = "Change type: " + change.origin + "";
+	if (change.origin == "+input") {
+		statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
+		if (change.text[0].length) {
+			statusText += change.text;
+		}
+		else {
+			change.text = "\n";
+		}
+		statusJSON = {
+			"command" : "insertDataSingleLine",
+			"document" : "/server/source/test.rb",
+			"insertDataSingleLine" : {
+				"type" : "input",
+				"ch" : change.to.ch,
+				"line" : change.to.line,
+				"data" : change.text,
+			}
+		};
+		ws.send(JSON.stringify(statusJSON));
+	}
+	if (change.origin == "paste") {
+		if (change.removed.length == 1 && change.removed[0].length == 0 && change.text.length == 1) {
+			/* Simplest case */
+			statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
+			if (change.text[0].length) {
+				statusText += change.text;
+			}
+		}
+		
+	}
+	if ((change.origin == "+delete" || change.origin == "cut")) {
+		if (change.removed.length == 1) {
+			/* This is a simple single line modification */
+			var startPosition = change.to.ch - change.removed[0].length;
+			var endPosition = change.to.ch;
+			statusText += "@ " + change.to.line + ":" + startPosition + "-" + endPosition + " text: ";
+			statusText += change.removed;
+			console.log("Change information: ");
+			console.log(change);
+			statusJSON = {
+				"command" : "deleteDataSingleLine",
+				"document" : "/server/source/test.rb",
+				"deleteDataSingleLine" : {
+				"type" : "input",
+				"ch" : startPosition,
+				"line" : change.to.line,
+				"data" : change.removed,
+			}
+		};
+		ws.send(JSON.stringify(statusJSON));
+
+		}
+		else {
+			/* This is a multi-line delete/cut which needs to be handled differently */
+		}
+                
+        }
+
+        var statusBarInstance = cm.getOption('ownerArea').id;
+	$('#statusBar_' + statusBarInstance).text(statusText);
+	console.log('Attempting to update #statusBar_' + statusBarInstance + " to " + statusText);
+//	console.log(change);
+//	console.log(cm.getCursor());
+
+}
+$.fn.buildCodeMirror();
+/*var editor = CodeMirror.fromTextArea($("#textEditor01")[0], {    
+	lineNumbers: true,
+	styleActiveLine: true,
+	matchBrackets: true,
+	});
+$('.CodeMirror').height('95%');
+$('.CodeMirror').click();*/
+/*$('.CodeMirror').on("change", function(cm, change) {
+	var totalText = cm.getValue();
+	var statusText = "Change type: " + change.origin + "";
+	if (change.origin == "+input") {
+		statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
+		if (change.text[0].length) {
+			statusText += change.text;
+		}
+	}
+	if (change.origin == "paste") {
+		if (change.removed.length == 1 && change.removed[0].length == 0 && change.text.length == 1) {
+			// Simplest case
+			statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
+			if (change.text[0].length) {
+				statusText += change.text;
+			}
+		}
+		
+	}
+	if ((change.origin == "+delete" || change.origin == "cut")) {
+		if (change.removed.length == 1) {
+			// This is a simple single line modification 
+			var startPosition = change.to.ch - change.removed[0].length;
+			var endPosition = change.to.ch;
+			statusText += "@ " + change.to.line + ":" + startPosition + "-" + endPosition + " text: ";
+			statusText += change.removed;
+		}
+		else {
+			// This is a multi-line delete/cut which needs to be handled differently 
+		}
+                
+        }
+
+
+	$('#statusBar_te01').text(statusText);
+	console.log(change);
+	console.log(cm.getCursor());
+});*/
+$('#jsTree1').jstree();
+});
+
+</script>
+
+	
+</head>
+<body>
+<div id="mainContainer">
+        <div id="topBar">
+                <div id="menuBar">
+                        <ul id="menu1" class="sf-menu">
+                                <li class="current"> <a href="#">File</a>
+                                        <ul>
+                                                <li><a href="#">Commit</a></li>
+                                                <li><a href="#">Export</a></li>
+                                        </ul>
+                                </li>
+                                <li class="current"><a href="#">VCS</a>
+                                                <ul>
+                                                <li><a href="#">View Revisions</a></li>
+                                                <li><a href="#">Revert Commits</a></li>
+                                        </ul>
+                                </li>
+                        </ul>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="toolBarTop">
+                        <div class="toolBarItemTop">[button]</div>
+                        <div class="toolBarItemTop">[button]</div>
+                        <div class="toolBarItemTop">[button]</div>
+                </div>
+                <div style="clear:both;"></div>
+        </div>
+
+        <div id="editorContainer">
+                <div id="bottomWindow">
+                        <div id="leftBar">
+                                <div id="toolBarSide">
+                                        <div class="toolBarItemSide">[button]</div>
+                                        <div class="toolBarItemSide">[button]</div>
+                                        <div class="toolBarItemSide">[button]</div>
+                                </div>
+                                <div id="fileContainer">
+<div id="jsTree1">
+  <ul>
+    <li>Mockup Project
+      <ul>
+        <li>Source
+		<ul>
+		        <li class="fileIcon" data-jstree='{"icon":"jstree-file"}'>uiTest.html</li>
+		        <li class="fileIcon" data-jstree='{"icon":"jstree-file"}'>testFile.php</li>
+		</ul>
+	</li>
+      </ul>
+    </li>
+  </ul>
+</div></div>
+                                <div style="border:0px;clear:both;"></div>
+
+                        </div>
+
+                        <div id="rightWindow">
+							<div id="window01" class="windowPane">
+                                <div class="tabBar">
+									<div id="tab0101"><a href="ui.css" class="current">Tab01</a><div class="closeTab">X</div></div>
+									<div id="tab0102"><a href="test.rb">Tab02</a><div class="closeTab">X</div></div>
+									<div id="tab0103"><a href="jstree.js">Tab03</a><div class="closeTab">X</div></div>
+								</div>
+                                <div class="editorWindow"><textarea id="textEditor01" class="textEditor" style="width:100%;height:100%;"></textarea>
+									<div id="statusBar_textEditor01" class="statusBar">There should be status info here</div>
+								</div>
+                                
+								
+								<ul id="editorContextMenu" class="noDisplay">
+									<li><span class="ui-icon ui-icon-undo"></span>Undo</li>
+									<li><span class="ui-icon ui-icon-redo"></span>Redo</li>
+									<li><span class="ui-icon ui-icon-cut"></span>Cut</li>
+									<li><span class="ui-icon ui-icon-copy"></span>Copy</li>
+									<li><span class="ui-icon ui-icon-paste"></span>Paste</li>
+									<li>
+									Find...
+									<ul>
+									<li><span class="ui-icon ui-icon-search"></span>Find in File</li>
+									<li><span class="ui-icon ui-icon-zoomin"></span>Find in All Files</li>
+									<li><span class="ui-icon ui-icon-wrench"></span>Find and Replace</li>
+
+									</ul>
+									</li>
+								</ul>
+							</div>
+							
+							<div id="window02" class="windowPane">
+                                <div class="tabBar">
+									<div id="tab0201">Tab01</div>
+									<div id="tab0202">Tab02</div>
+									<div id="tab0203">Tab03</div>
+								</div>
+                                <div class="editorWindow"><textarea id="textEditor02" class="textEditor" style="width:100%;height:100%;"></textarea>
+									<div id="statusBar_textEditor02" class="statusBar">There should be status info here</div>
+								</div>
+                                
+							</div>
+							
+							<div class="windowRowClear"> </div>
+							
+							<div id="window03" class="windowPane">
+                                <div class="tabBar">There should be open document tabs here</div>
+                                <div class="editorWindow"><textarea id="textEditor03" class="textEditor" style="width:100%;height:100%;"></textarea>
+									<div id="statusBar_textEditor03" class="statusBar">There should be status info here</div>
+								</div>
+                                
+							</div>
+							
+							<div id="window04" class="windowPane">
+                                <div class="tabBar">There should be open document tabs here</div>
+                                <div class="editorWindow"><textarea id="textEditor04" class="textEditor" style="width:100%;height:100%;"></textarea>
+									<div id="statusBar_textEditor04" class="statusBar">There should be status info here</div>
+								</div>
+                                
+							</div>
+							
+							<div class="windowRowClear"> </div>
+							
+                        </div>
+						
+						
+						
+                        <div style="clear:both;"></div>
+                </div>
+        </div>
+</div>
+</body></html>
