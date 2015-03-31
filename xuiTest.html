@@ -149,7 +149,7 @@ console.log(data);
 },
 });
 });
-ws = new WebSocket("ws://172.17.0.42:8080/");
+var ws = new WebSocket("ws://172.17.0.42:8080/");
 ws.onmessage = function(evt) {
        	console.log($.parseJSON(evt.data));
        	var jObj = $.parseJSON(evt.data);
@@ -203,10 +203,6 @@ $(document).ready(function() {
 						mode: "text/html",
 						highlightSelectionMatches: {showToken: /\w/},
 						extraKeys: {
-							"'<'": completeAfter,
-							"'/'": completeIfAfterLt,
-							"' '": completeIfInTag,
-							"'='": completeIfInTag,
 							"Ctrl-Space": "autocomplete"
 						},
 						value: document.documentElement.innerHTML
@@ -229,7 +225,7 @@ $.fn.cmChange = function(cm,change){
 		else {
 			change.text = "\n";
 		}
-		statusJSON = {
+		var statusJSON = {
 			"command" : "insertDataSingleLine",
 			"document" : "/server/source/test.rb",
 			"insertDataSingleLine" : {
