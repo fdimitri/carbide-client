@@ -1,3 +1,19 @@
+$(
+	function () {
+		var pos = $("#windows").offset();
+		console.log("Windows position:");
+		console.log(pos);
+		$("#editorContainer").height(
+			$("body").height() - 
+			$("#topBar").height() -
+			28 );
+		
+	}
+);
+
+
+
+
 function customMenu(node) {
 	var cloneCount = $('div[id^=pane]').length;
 	// The default set of all items
@@ -111,8 +127,8 @@ function initChatTree(data) {
 }
 
 
-function newTab(filename, paneId, originId, tabType) {
-	console.log("Called with filename:" + filename + " paneId:" + paneId + " originId" + originId);
+function newTab(filename, paneId, originId, tabType, srcPath) {
+	console.log("Called with filename:" + filename + " paneId:" + paneId + " originId" + originId + " srcPath:" + srcPath);
 	var num_Tabs = $("#" + paneId + ' .menuList li').length;
 	var tabName = "tab-" + paneId + "-" + filename;
 	tabName = tabName.replace('.', '_');
@@ -138,6 +154,7 @@ function newTab(filename, paneId, originId, tabType) {
 		'paneId': paneId,
 		'originId': originId,
 		'chatTarget': filename,
+		'srcPath' : srcPath,
 	}, ];
 	$.ajax({
 		url: "/createContent.php",
@@ -176,9 +193,10 @@ function newTab(filename, paneId, originId, tabType) {
 				console.log("Informing server we are joining the channel !!! Return val from ws was: " + rval);
 				console.log(statusJSON);
 				console.log(ws);
+				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
 			if (tabType == 'file') {
-				var cm = $.fn.buildCodeMirror($("#" + tabName).find('textarea'), "/server/source/test.rb");
+				var cm = $.fn.buildCodeMirror($("#" + tabName).find('textarea'), $("#" + tabName).find('textarea').attr('srcPath'));
 			}
 
 		},
@@ -266,6 +284,7 @@ $(document).ready(function() {
 					matchBrackets: true,
 					ownerArea: this,
 					fileName: myFileName,
+					srcPath: myFileName,
 					mode: "text/html",
 					highlightSelectionMatches: {
 						showToken: /\w/
@@ -285,6 +304,7 @@ $(document).ready(function() {
 	}
 
 	$.fn.cmChange = function(cm, change) {
+		console.log("srcPath for cm is " + cm.getOption('srcPath'))
 		var totalText = cm.getValue();
 		var statusText = "Change type: " + change.origin + "";
 		if (change.origin == "+input") {
@@ -298,7 +318,7 @@ $(document).ready(function() {
 			var statusJSON = {
 				"commandSet": "document",
 				"command": "insertDataSingleLine",
-				"document": "/server/source/test.rb",
+				"document": cm.getOption('srcPath'),
 				"insertDataSingleLine": {
 					"type": "input",
 					"ch": change.to.ch,
@@ -332,7 +352,7 @@ $(document).ready(function() {
 				var statusJSON = {
 					"commandSet" : "document",
 					"command": "deleteDataSingleLine",
-					"document": "/server/source/test.rb",
+					"document": cm.getOption('srcPath'),
 					"deleteDataSingleLine": {
 						"type": "input",
 						"ch": startPosition,
@@ -506,7 +526,7 @@ $('.drag')
 					console.log($("#" + data.data.obj[0].id));
 					//console.log($("#" + data.data.obj[0].id).closest('li').attr('srcPath'));
 					console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-					var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'file');
+					var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'file', $("#" + data.data.obj[0].id).attr('srcpath'));
 					var tabItem = $("#tabs-" + tabCounter);
 					var itemParent = tabItem.closest('div').attr('id');
 				}
@@ -524,7 +544,7 @@ $('.drag')
 					console.log($("#" + data.data.obj[0].id));
 					console.log($("#" + data.data.obj[0].id).closest('li'));
 					console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-					var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'chat');
+					var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'chat', '');
 					var tabItem = $("#tabs-" + tabCounter);
 					var itemParent = tabItem.closest('div').attr('id');
 				}

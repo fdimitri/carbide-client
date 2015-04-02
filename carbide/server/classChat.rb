@@ -38,10 +38,13 @@ class ChatChannel
 		if (getClientByName(client.name))
 			puts "This client already exists by name"
 			oldClient = getClientByName(client.name)
+			puts YAML.dump(oldClient)
+			puts oldClient.inspect
+			return false
 			if (oldClient.ws == client.ws)
-				echo "This client already exists by this websocket"
+				puts "This client already exists by this websocket"
 			else
-				echo "The old client's web socket does not match the new one -- possible derelict client"
+				puts "The old client's web socket does not match the new one -- possible derelict client"
 				puts YAML.dump(oldClient)
 			end
 			return false

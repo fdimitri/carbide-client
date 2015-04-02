@@ -1,3 +1,31 @@
+html {
+	height: 100%;
+	margin: 0;
+	padding:0;
+}
+body {
+	height: 100%;
+	margin:0;
+	padding:0;
+}
+#mainContainer {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	
+}
+
+
+.paneMaximized {
+	
+}
+.cContainer { 
+	height:100%;
+}
+.cOutputs {
+height:calc(100% - 40px);
+}
+
 .activeWindow {
 	position: absolute;
 }
@@ -11,6 +39,7 @@
 	clear:both;
 }
 .paneBox {
+	background: rgba(192,192,224,0.9);
 	float:right;
 }
 .paneMinimize {
@@ -27,10 +56,10 @@
 }
 
 #windows .ui-widget-header {
-    background: #cccccc url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x !important;
-    color: #222222;
+    background: rgba(43, 47, 58, 0.9);
+    color: #9ea2a5;
     font-weight: bold;
-    height:13px
+    height:16px
 }
 #windows .ui-widget-header ul {
     height:11px;   
@@ -38,10 +67,12 @@
 .tabBar ul .ui-tabs-nav {
 	height: 11px;
 }
-
+#windows .ui-tabs-panel {
+	height: calc(100% - 36px);
+}
 #windows .ui-tabs .ui-tabs-nav li {
     height:15px;
-    margin-top:-3px;
+    margin-top:0px;
     font-size:10px;
     
 }
@@ -63,6 +94,7 @@
 	float: left;
 }
 #leftBar {
+	height: 100%;
 	float: left;
 }
 #toolBarTop {
@@ -73,11 +105,11 @@
 }
 #rightWindow {
 	position: absolute;
+	height: calc(100% - 92px);
 }
-body {
-	max-height: 100%;
-}
+
 .cChatBox {
+	height:100%;
 	float: left;
 	border: 1px solid black;
 	width: calc(80% - 4px);
@@ -85,6 +117,7 @@ body {
 	margin: 0px;
 }
 .cUserBox {
+	height:100%;
 	float: right;
 	border: 1px solid black;
 	width: calc(20% - 4px);
@@ -126,13 +159,17 @@ body {
 }
 .windowPane {
 	width: 600px;
+	height:50%;
 	overflow: hidden;
-	margin: 10px;
+	/*margin: 10px;*/
+	top: 0px;
+	left: 0px;
 }
 #windows {
-	padding: 5px;
-	border: 5px solid rgba(0, 0, 0, 0.0);
-	height: 1200px;
+	/*padding: 5px;*/
+	/*border: 5px solid rgba(0, 0, 0, 0.0);*/
+	height:100%;
+
 }
 .CodeMirror {
 	width: 100%;
@@ -143,6 +180,7 @@ body {
 	padding: 5px;
 	overflow: hidden;
 	border-right-width: 5px;
+	height:100%;
 }
 .ui-menu {
 	width: 150px;
@@ -163,7 +201,8 @@ body {
 	width: 95%;
 }
 .tabBar {
-	margin-top: 1em;
+	height: calc(100% - 28px);
+	margin-top: 0;
 }
 .tabBar .tabIconBox {
 	float:right;

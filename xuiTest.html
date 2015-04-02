@@ -186,29 +186,8 @@ ws.onmessage = function(evt) {
 ws.onclose = function() {};
 ws.onopen = function() { };
 $(document).ready(function() {
-		$.fn.buildCodeMirror = function(){
-			var cmOption = {
-				lineNumbers: true,
-				styleActiveLine: true,
-				matchBrackets: true,
-			};	
 		$('.textEditor').each(
 			function() {
-				console.log('Create new CodeMirror instance');
-				var cm = CodeMirror.fromTextArea(this, {    
-						lineNumbers: true,
-						styleActiveLine: true,
-						matchBrackets: true,
-						ownerArea: this,
-						mode: "text/html",
-						highlightSelectionMatches: {showToken: /\w/},
-						extraKeys: {
-							"Ctrl-Space": "autocomplete"
-						},
-						value: document.documentElement.innerHTML
-						}
-					);
-				cm.on("change",$.fn.cmChange);
 			}
 		);
 	

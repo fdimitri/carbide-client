@@ -16,31 +16,33 @@ $data = $data[0];
 $tabName = $data->tabName;
 $tabType = $data->tabType;
 $paneId = $data->paneId;
-$originId = $data->originId;
+//$originId = $data->originId;
 $chatTarget = $data->chatTarget;
+
 		// 'tabName': tabName,
 		// 'tabType' : tabType,
 		// 'paneId': paneId,
 		// 'originId': originId,
+		$script = "console.log('test script eval');";
 if ($tabType == 'chat') {
 	$newDiv = '<div id="' . $chatTarget . '_';
-	$html = $newDiv . 'Container" class="cContainer">' .
+	$html = $newDiv . 'Container" class="cContainer"><div class="cOutputs">' .
 	$newDiv . 'ChatBox" class="cChatBox" chatRoom="' . $chatTarget . '" ></div>' .
 	$newDiv . 'UserBox" class="cUserBox" chatRoom="' . $chatTarget . '" ></div>' .
-	'<div style="clear:both;"></div>' .
+	'<div style="clear:both;"></div></div>' .
 	$newDiv . 'InputBoxContainer" class="cInputBoxContainer" chatRoom="' . $chatTarget . '" >' .
 	'<input chatRoom="' . $chatTarget . '" class="cInputBox" id="' . $chatTarget . 'cInputBox type="text" role="textbox" value="" /></div>' .
 	'</div>';
 	$rval = array(
 		'success' => TRUE, 
 		'html' => $html,
-		'script' => 'function test() { console.log("Hi from PHP and ' . $tabName . '!"); }; test();',
+		'script' => $script,
 	);
 }
 else if ($tabType == 'file') {
 	$newDiv = '<div id="' . $tabName . '_';
 	$html = $newDiv . 'Container" class="eContainer">' .
-	$newDiv . 'EditBox" class="eEditBox"><textarea id="' . $tabName . '"></textarea></div>' .
+	$newDiv . 'EditBox" class="eEditBox"><textarea id="' . $tabName . '" srcpath="' . $data->srcPath . '"></textarea></div>' .
 	'</div>';
 	$rval = array(
 		'success' => TRUE, 

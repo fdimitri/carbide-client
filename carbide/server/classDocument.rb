@@ -133,10 +133,55 @@ class Document < DocumentBase
 		@project.sendToClientsListeningExcept(client, document, @clientString)
 
 	end
+
+
+	def procMsg_insertDataMultiLine(client, jsonMsg)
+		startLine = jsonMsg['insertDataMultiLine']['startLine'].to_i
+		data = jsonMsg['insertDataMultiLine']['data']
+		startChar = jsonMsg['insertDataMultiLine']['startChar'].to_i
+		length = data.length
+		puts "insertDataMultiLine(): Called #{jsonMsg}"
+		
+		if (@data[startLine].nil?)
+			@data.push(data[0].to_str);
+		else
+			str = @data.fetch(startLine).to_str
+			if str.length < startChar
+				a = str.length;
+				while (a < startChar)
+					a = str.length
+					str.insert(a, " ")
+					a += 1
+				end
+				
+				puts "#{str.length} is less than #{char}.. this may crash"
+			end
+			str.insert(startChar, data[0])
+			@data.fetch(line, str)
+			puts "OK! " + @data.fetch(startLine)
+		end
+		
+		puts data[1..-2].inspect
+		data[1..-1].each do |cline|
+			startLine += 1
+			puts cline
+			if (@data[startLine].nil?)
+				@data.insert(startLine, cline.to_s);
+			else
+				@data.insert(startLine, cline.to_s);
+				puts "Need to write function handler for existing data in the case of overwrites"
+			end
+		end
+		puts "Done"
+		puts @data.inspect
+		#sendMsg_cInsertDataSingleLine(client, @name, line, data, char, length, @data[line])
+	end
+
+
 	def procMsg_insertDataSingleLine(client, jsonMsg)
 		line = jsonMsg['insertDataSingleLine']['line'];
 		#data = jsonMsg['insertDataSingleLine']['data'][0].gsub("\n","")
-		data = jsonMsg['insertDataSingleLine']['data'][0]
+		data = jsonMsg['insertDataSingleLine']['data']
 		char = jsonMsg['insertDataSingleLine']['ch'].to_i
 		length = data.length
 		puts "insertDataSingleLine(): Called #{jsonMsg}"
@@ -165,14 +210,14 @@ class Document < DocumentBase
 	
 	# This is almost done, needs some tweaks!
 	def procMsg_deleteDataSingleLine(client, jsonMsg)
-		line = jsonMsg['deleteDataSingleLine']['line'];
-		data = jsonMsg['deleteDataSingleLine']['data'][0].gsub("\n","")
+		line = jsonMsg['deleteDataSingleLine']['line']
+		data = jsonMsg['deleteDataSingleLine']['data']
 		char = jsonMsg['deleteDataSingleLine']['ch'].to_i
 		length = data.length
 		puts "deleteDataSingleLine(): Called #{jsonMsg} .. deleting " + data.inspect
 		if (@data[line].nil?)
 			puts "Error: Delete character on line that doesn't exist"
-			client.sendMsg_Fail('deleteDataSingleLine');
+			#client.sendMsg_Fail('deleteDataSingleLine');
 			return FALSE
 		end
 		@str = @data.fetch(line).to_str
@@ -200,13 +245,11 @@ class Document < DocumentBase
 			return TRUE
 		else
 			puts "Deleted data #{data} did not match data at string position #{char} with length #{length}! Server reports data is #{@substr}"
-			client.sendMsg_Fail('deleteDataSingleLine');
+			#client.sendMsg_Fail('deleteDataSingleLine');
 			return FALSE
 		end			
 	end
 	
-	def procMsg_insertDataMultiLine(client, jsonMsg)
-	end
 	
 	def procMsg_insertLine(client, jsonMsg)
 	end

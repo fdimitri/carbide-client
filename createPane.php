@@ -68,8 +68,30 @@ $(function() {
 
 
 $(function() {
+	var containerHeight = 0;
+	var containerWidth = 0;
+	var newHeight = 0;
 	$("#pane01").resizable({
 		containment: "parent",
+		//alsoResize: ".cContainer",
+		resize: function( event, ui ) {
+
+			containerHeight = ui.size.height;
+			containerWidth = ui.size.width;
+
+			if( $(ui.element).find(".cContainer").length) {
+	
+				
+
+				newHeight = $(ui.element).find(".cContainer").height() - $(ui.element).find(".cInputBoxContainer").height();
+			//	$(ui.element).find(".cOutputs").css("height", newHeight);
+
+			}
+			//else { console.log("there is no chat window."); }
+			
+
+			
+		},
 		start: function(event, ui) {
 			$(".windowPane").addClass("lowZ");
 			$(".windowPane").removeClass("highZ");

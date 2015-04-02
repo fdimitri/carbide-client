@@ -62,12 +62,15 @@
 							      <ul>
 							         <li id="window_newPane"><a href='#'><span>New Pane</span></a></li>
 							         <li class='has-sub'><a href='#'><span>Default Layouts</span></a>
-							            <ul>
-							               <li><a href='#'><span>Single Pane</span></a></li>
-							               <li><a href='#'><span>Two Pane - Side by Side</span></a></li>
-							               <li><a href='#'><span>Two Pane - Top & Bottom</span></a></li>
-							               <li><a href='#'><span>Triple Pane - Big Bottom</span></a></li>
-							               <li class='last'><a href='#'><span>Quad Pane - Equal</span></a></li>
+							            <ul id="window_arrangePanes">
+							               <li class='arrangePane' panes='1' id="window_singlePane"><a href='#'><span><img src="img/white-onepane.png" alt = "One Pane"/></span></a></li>
+							               <li class='arrangePane' panes='2a' id="window_twoPaneHorizontal"><a href='#'><span><img src="img/white-twopanea.png" alt = "Two Panes - Side by Side"/></span></a></li>
+							               <li class='arrangePane' panes='2b' id="window_twoPaneVertical"><a href='#'><span><img src="img/white-twopaneb.png" alt = "Two Panes - Top & Bottom"/></span></a></li>
+							               <li class='arrangePane' panes='3' id="window_threePane"><a href='#'><span><img src="img/white-threepane.png" alt = "Three Panes - Big Bottom"/></span></a></li>
+							               <li class='arrangePane' panes='3a' id="window_threePaneBigLeft"><a href='#'><span><img src="img/white-threepanea.png" alt = "Three Panes - Big Left"/></span></a></li>
+							               <li class='arrangePane' panes='3b' id="window_threePaneBigRight"><a href='#'><span><img src="img/white-threepaneb.png" alt = "Three Panes - Big Right"/></span></a></li>
+							               <li class='arrangePane' panes='4' id="window_fourPane"><a href='#'><span><img src="img/white-fourpane.png" alt = "Four Panes Equal Size"/></span></a></li>
+							               <li class='arrangePane last' panes='5' id="window_fivePane"><a href='#'><span><img src="img/white-fivepane.png" alt = "Five Panes - Big Right"/></span></a></li>
 							            </ul>
 							         </li>
 							      </ul>
@@ -89,7 +92,7 @@
         </div>
 
         <div id="editorContainer">
-                <div id="bottomWindow">
+                
                 		<div id="toolBarSide">
                                         <div class="toolBarItemSide">X</div>
                                         <div class="toolBarItemSide">X</div>
@@ -121,7 +124,7 @@
 						</div>
 						<div style="clear:both;"></div>
                         
-                </div>
+                
         </div>
 </div>
 

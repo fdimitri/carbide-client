@@ -49,31 +49,50 @@ function waitForSocketConnection(socket, callback) {
 
 	}, 10); // wait 10ms for the connection...
 }
-
+function getCodeMirror(target) {
+	var cm;
+	$('.CodeMirror').each(function() {
+		if (this.CodeMirror.getOption('srcPath') == target) {
+			console.log("Found codemirror match")
+			cm = this.CodeMirror;
+		}
+		else {
+			console.log("Comparison failed: " + this.CodeMirror.getOption('srcPath') + " != " + target)
+		}
+	});
+	if (!cm) {
+		console.log("getCodeMirror unable to find instance related to " + target);
+		return;
+	}
+	console.log("Returning CodeMirror instance")
+	return(cm);
+}
 function cliMsgProcDocument(jObj) {
 	if (jObj.command == 'insertDataSingleLine') {
 		jObj = jObj.insertDataSingleLine;
 		var inputData = jObj.data;
 		var lineData = jObj.line;
 		var chData = jObj.char;
-
-		console.log("Calling replaceRange with ");
-		$('.CodeMirror').each(function() {
-			if (lineData > this.CodeMirror.lineCount()) {
-				console.log("We need more lines!");
-				var x = this.CodeMirror.lineCount;
-				while (x <= lineData) {
-					this.CodeMirror.replaceRange('\n', {
-						line: x,
-						ch: this.CodeMirror.getLine(x).length
-					});
-					x++;
-				}
+		var targetDocument = jObj.document;
+		var cm = getCodeMirror(targetDocument);
+		if (!cm) {
+			console.log("Unable to find codeMirror instance incliMsgProcDocument");
+			return false;
+		}
+		if (lineData > cm.lineCount()) {
+			console.log("We need more lines!");
+			var x = cm.lineCount;
+			while (x <= lineData) {
+				cm.replaceRange('\n', {
+					line: x,
+					ch: cm.getLine(x).length
+				});
+				x++;
 			}
-			this.CodeMirror.replaceRange(inputData, {
-				line: lineData,
-				ch: chData
-			});
+		}
+		cm.replaceRange(inputData, {
+			line: lineData,
+			ch: chData
 		});
 	}
 	if (jObj.command == 'deleteDataSingleLine') {
@@ -82,17 +101,21 @@ function cliMsgProcDocument(jObj) {
 		var lineData = jObj.line;
 		var chData = jObj.char;
 		var delLength = jObj.length;
+		var targetDocument = jObj.document;
+		var cm = getCodeMirror(targetDocument);
+		if (!cm) {
+			console.log("Unable to find codeMirror instance in cliMsgProcDocument");
+			return false;
+		}
+		
 		console.log("Calling replaceRange with ");
-		$('.CodeMirror').each(function() {
-			this.CodeMirror.replaceRange('', {
-				line: lineData,
-				ch: chData
-			}, {
-				line: lineData,
-				ch: (chData + delLength)
-			});
+		cm.replaceRange('', {
+			line: lineData,
+			ch: chData
+		}, {	
+			line: lineData,
+			ch: (chData + delLength)
 		});
-
 	}
 
 }
@@ -147,6 +170,7 @@ function cliMsgProcChat(jObj) {
 				if ($(this).attr('chatUser') == User) {
 					console.log("User already exists in userBox");
 					userExists = true;
+					return false;
 				}
 			});
 			if (!userExists) $(Channel).append(msgDiv);
@@ -166,7 +190,6 @@ ws.onopen = function() {
 
 $(document).delegate(".cInputBox", "keypress", function(ev) {
 	var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-	console.log("Delegate keypress!");
 	if (keycode == '13') {
 		var statusJSON = {
 			"commandSet": "chat",
@@ -177,9 +200,7 @@ $(document).delegate(".cInputBox", "keypress", function(ev) {
 			},
 		};
 		wsSendMsg(JSON.stringify(statusJSON));
-		console.log(ws);
-		console.log("Pressed enter, we should send something over the non-existent websocket for this");
-		console.log("Origin was " + $(this).attr("chatRoom") + " I think");
+		console.log("Sending message to " + $(this).attr("chatRoom"));
 		$(this).val('');
 	}
 });
