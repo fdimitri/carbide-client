@@ -15,6 +15,35 @@ body {
 	
 }
 
+.activePane {
+}
+
+#toolBarTabs {
+	display:inline;
+}
+.windowPaneTab { 
+	padding-left:20px;
+	margin-left:5px;
+	height:20px;
+	border-style:solid;
+	border-color:#000000;
+	border-width:2;
+	background-color:#e0e0e0;
+	display:inline;
+}
+.windowPaneTabClose {
+	margin-left:8px;
+	margin-right:0;
+	background-color: #939393;
+	width:20px;
+	display:inline;
+	
+}
+
+#editorContainer {
+	overflow: hidden;
+}
+
 
 .paneMaximized {
 	
@@ -45,7 +74,7 @@ height:calc(100% - 40px);
 .paneMinimize {
 	float:left;
 }
-.paneMaximize {
+.paneMinMax {
 	float:left;
 }
 .paneClose {
@@ -66,6 +95,7 @@ height:calc(100% - 40px);
 }
 .tabBar ul .ui-tabs-nav {
 	height: 11px;
+	width:100%;
 }
 #windows .ui-tabs-panel {
 	height: calc(100% - 36px);
@@ -139,6 +169,32 @@ height:calc(100% - 40px);
 .cInputBox {
 	width: 100%;
 }
+.cMsgT {
+	font: monospace;
+	font-size: 0.6em;
+}
+.cMsgT tr td {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+.cMsgT tr td:nth-child(1) {
+	text-align: top;
+	width: 100px;
+	border-right: 1px dotted black;
+
+}
+.cMsgT tr td:nth-child(2) {
+	width: calc(100%-100px);
+}
+
+.cMsgT tr td:nth-child(2) p {
+	display: inline;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+
 .cMsg {
 	border: 1px solid black;
 	border-radius: 4px;
@@ -182,9 +238,7 @@ height:calc(100% - 40px);
 	border-right-width: 5px;
 	height:100%;
 }
-.ui-menu {
-	width: 150px;
-}
+
 #editorContextWindow01 {
 	position: absolute;
 	display: none;
@@ -221,4 +275,11 @@ height:calc(100% - 40px);
 }
 .jstree-contextmenu {
 	z-index:99999;
+}
+
+
+.preAceEdit {
+        margin: 0;
+        height: calc(100% - 20px);
+        width:100%;
 }

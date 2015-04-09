@@ -1,3 +1,5 @@
+
+
 $(
 	function () {
 		var pos = $("#windows").offset();
@@ -8,12 +10,156 @@ $(
 			$("#topBar").height() -
 			28 );
 		
+	
+		
 	}
 );
 
 
 
+$(
+	function () {		
+		
+		$('body').click(function(event) {
+    
+		    
+		    if($(event.target).is('.paneMaximize')) {
+		    	maximizePane($(event.target).closest(".windowPane").attr("id"));
+		    }
+		    else if($(event.target).is('.paneRestore')) {
+		    	restorePane($(event.target).closest(".windowPane").attr("id"));
+		    }
+		    else if($(event.target).is('.paneMinimize')) {
+		    	minimizePane($(event.target).closest(".windowPane").attr("id"));
+		    }
 
+		    else if($(event.target).is('.paneClose')) {
+		    	if ($(event.target).closest(".windowPane").find("[role='tab']").length > 1) { //if there is more than 1 tab ask them to confirm
+		    		closePaneConfirm($(event.target).closest(".windowPane").attr("id"));
+		    	}
+		    	else {
+		    		closePane($(event.target).closest(".windowPane").attr("id"));
+		    		closeWindowPaneTab($(event.target).closest(".windowPane").attr("id"));
+		    	}
+		    }
+		   	else if($(event.target).is('.windowPaneTabClose')) {
+		   			
+		   			if ($(event.target).closest(".windowPane").find("[role='tab']").length > 1) { //if there is more than 1 tab ask them to confirm
+			    		closePaneConfirm($(event.target).closest(".windowPaneTab").attr("pane"));
+			    	}
+			    	else {
+			    		closeWindowPaneTab($(event.target).closest(".windowPaneTab").attr("pane"));
+			    		closePane($(event.target).closest(".windowPaneTab").attr("pane"));
+			    	}
+		   	}
+		   	else if($(event.target).is('.windowPaneTab')) {
+		   			restorePane($(event.target).closest(".windowPaneTab").attr("pane"));
+		   			focusPane($(event.target).closest(".windowPaneTab").attr("pane"));
+		   	}
+			else if($(event.target).is('.tabBar a')) {
+				
+				//console.log("TRIGGERED " + $(event.target).attr("id") + " " + $(event.target).attr("class") + " "  + $(event.target).prop("tagName"));
+			}
+			
+			if($(event.target).is('.pane')) { //if they click on a pane, make that pane active
+				$(event.target).addClass("activePane");
+				
+			}
+			
+		});
+		
+	}
+);		
+		
+/////////////////////////////////////////////////////		
+		
+function focusPane(paneId) {
+	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
+	$("div #" + paneId).removeClass("lowZ"); //remove lowZ class from this element
+	$("div #" + paneId).addClass("highZ"); //add highZ class to this element so its focus comes to the front
+}
+function maximizePane(paneId) {
+	// This is the html for a Maximize button: <span class="paneMaximize ui-icon ui-icon-extlink">
+	
+	var thisPane = 	$("div #" + paneId);
+
+	//these lines prevent jquery shenanigans (resizing the parent window)
+	thisPane.parent("div").css({position: 'relative'});
+	thisPane.parent("div").css({maxHeight: thisPane.parent("div").height()});
+	thisPane.parent("div").css({minHeight: thisPane.parent("div").height()});
+	thisPane.parent("div").css({maxwidth: thisPane.parent("div").width()});
+	thisPane.parent("div").css({minwidth: thisPane.parent("div").width()});
+	
+	var spanMinMax = thisPane.find(".paneMinMax");
+
+	spanMinMax.addClass("paneRestore"); //add class for restore
+	spanMinMax.removeClass("paneMaximize"); //remove class for maximize
+	spanMinMax.removeClass("ui-icon-extlink"); //remove the icon for maximize
+	spanMinMax.addClass("ui-icon-newwin"); //add icon for restore
+	
+	thisPane.attr("oldx", thisPane.position().left);
+	thisPane.attr("oldy", thisPane.position().top);
+	thisPane.attr("oldwidth", thisPane.width());
+	thisPane.attr("oldheight", thisPane.height());
+	thisPane.addClass("maximizedPane");
+	thisPane.css({top: 5, left: 5, position:'absolute'});
+	thisPane.css("display", "block");
+	thisPane.height(thisPane.parent().height()-10);
+	thisPane.width(thisPane.parent().width()-10);
+
+}
+function restorePane(paneId) {
+	var thisPane = 	$("div #" + paneId);
+	var spanMinMax = thisPane.find(".paneMinMax");
+	spanMinMax.removeClass("paneRestore");
+	spanMinMax.addClass("paneMaximize");
+	thisPane.height(thisPane.attr("oldheight"));
+	thisPane.width(thisPane.attr("oldwidth"));
+	thisPane.css("display", "block");
+	thisPane.removeClass("maximizedPane");
+	spanMinMax.removeClass("ui-icon-newwin"); //remove icon for restore
+	spanMinMax.addClass("ui-icon-extlink"); //add the icon for maximize
+
+	thisPane.css({ top: thisPane.attr("oldy"), left: thisPane.attr("oldx"), position:'absolute'});
+}
+function minimizePane(paneId) {
+	var thisPane = 	$("div #" + paneId);
+	var spanMinMax = thisPane.find(".paneMinMax");
+	thisPane.attr("oldx", thisPane.position().left);
+	thisPane.attr("oldy", thisPane.position().top);
+	thisPane.attr("oldwidth", thisPane.width());
+	thisPane.attr("oldheight", thisPane.height());	
+	thisPane.removeClass("maximizedPane");
+	thisPane.css("display", "none");
+}
+
+function closePaneConfirm(paneId) {
+
+	$( "#dialog-confirm" ).dialog({
+      resizable: false,
+      height:230,
+      modal: true,
+      buttons: {
+        "Close Window": function() {
+        	$( this ).dialog( "close" );
+        	closePane(paneId);
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+	
+}
+function closePane(paneId) {
+	$("div #" + paneId).remove();
+}
+function closeWindowPaneTab(paneAttr) {
+	
+	$("div .windowPaneTab[pane=" + paneAttr + "]").remove();
+	
+	
+}
 function customMenu(node) {
 	var cloneCount = $('div[id^=pane]').length;
 	// The default set of all items
@@ -67,6 +213,7 @@ function customMenu(node) {
 	}
 
 	return items;
+	
 }
 
 
@@ -119,6 +266,8 @@ function initFileTree(data) {
 		contextmenu: {
 			items: customMenu
 		}
+
+	
 	});
 }
 
@@ -135,7 +284,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	var tabNameNice = filename;
 	var tabs = $(".tabBar").tabs();
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
-	if ($("#" + tabName).length) {
+	if ($("#" + paneId).find("#" + tabName).length) {
 		console.log("We already have this tab open!");
 		var listItem = $("#" + tabName);
 		$("#" + paneId).tabs("option", "active", listItem.index());
@@ -143,7 +292,6 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	}
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
-
 	$("#" + paneId).tabs().find(".ui-tabs-nav").append(
 		"<li><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
@@ -156,6 +304,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 		'chatTarget': filename,
 		'srcPath' : srcPath,
 	}, ];
+	console.log("AJAX POST gto createConte with srcPath = " + srcPath);
 	$.ajax({
 		url: "/createContent.php",
 		type: 'post',
@@ -196,7 +345,24 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
 			if (tabType == 'file') {
-				var cm = $.fn.buildCodeMirror($("#" + tabName).find('textarea'), $("#" + tabName).find('textarea').attr('srcPath'));
+				//var te = $("#" + tabName).find('textarea');
+				var te = $("#" + tabName).find('.preAceEdit');
+				console.log("Searching " + tabName + " to add editor to..");
+				console.log($("#" + tabName));
+				console.log("find() Reports:");
+				console.log(te);
+				//var cm = $.fn.buildCodeMirror(te, te.attr('srcPath'));
+				$.fn.buildAce("#" + te.attr('id'), te.attr('srcPath'), "#statusBar")
+				var statusJSON = {
+					"commandSet" : "document",
+					"command" : "getContents",
+					"documentTarget" : te.attr('srcPath'),
+					"getContents" : {
+						"document" : te.attr('srcPath'),
+					},
+				};
+				var rval = wsSendMsg(JSON.stringify(statusJSON));
+				
 			}
 
 		},
@@ -204,7 +370,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 			$("#" + tabName + " .ui-icon-close").click();
 		},
 	});
-	tabs.tabs("refresh");
+	tabs.tabs("refresh").tabs({ active:num_Tabs});
 	return (num_Tabs + 1);
 
 }
@@ -266,9 +432,147 @@ $(document).ready(function() {
 	});
 	var statusJSON = {
 		"commandSet": "FileTree",
-		"fileTreeCommand": "getFileTreeJSON",
+		"command": "getFileTreeJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
+	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
+	    var fileExt = myFileName.match(/\.\w+/);
+	    var myLang;
+	    if (fileExt == ".rb") {
+	        myLang = "ruby";
+	    }
+	    else {
+	        myLang = "html";
+	    }
+	    console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
+	    console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
+   	    console.log("The pre should exist right now..");
+	    console.log($(mySelector));
+		$(mySelector).each(
+			function() {
+                var editor = ace.edit(mySelector.replace(/\#/, ''));
+                $(mySelector).ace = editor;
+                $(editor).attr('srcPath', $(mySelector).attr('srcPath'));
+                var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+                // create a simple selection status indicator
+                //var statusBar = new StatusBar(editor, $(statusBar));
+                $(editor).attr('ignore', 'FALSE')
+                editor.setTheme("ace/theme/dawn");
+                editor.session.setMode("ace/mode/ruby");
+                console.log(editor);
+        		var statusJSON = {
+        		    "commandSet": "document",
+        			"command" : "getContents",
+        			"targetDocument" : $(editor).attr('srcPath'),
+        			"getContents" : {
+        				"document" : $(editor).attr('srcPath'),
+        			},
+        		};
+		   	    console.log("The pre should still exist right now..");
+			    console.log($(mySelector));
+
+	    		wsSendMsg(JSON.stringify(statusJSON));
+                
+				editor.getSession().on("change", function(e) {
+				    console.log("Change on editor");
+				    console.log(editor);
+				    console.log(e);
+				    $.fn.aceChange(editor, e)
+				});
+			}
+		);
+	}
+
+	$.fn.aceChange = function(editor, e) {
+        console.log(e);
+        if ($(editor).attr('ignore') == 'TRUE') return;
+        var action = e.data.action;
+        if (action == 'insertText') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var text = e.data.text;
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "insertDataSingleLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"insertDataSingleLine" : {
+    				"type" : "input",
+    				"ch" : startChar,
+    				"line" : startLine,
+    				"data" : text,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+        }
+        if (action == 'removeText') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var text = e.data.text;
+			var statusJSON = {
+				"commandSet" : "document",
+				"command": "deleteDataSingleLine",
+    			"document" : $(editor).attr('srcPath'),
+				"deleteDataSingleLine": {
+					"type": "input",
+					"ch": startChar,
+					"line": startLine,
+					"data": text,
+				},
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+        }
+        if (action == 'insertLines') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var endChar = e.data.range.end.column;
+            var endLine = e.data.range.end.row;
+            var linesChanged = e.data.lines;
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "insertDataMultiLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"insertDataMultiLine" : {
+    				"type" : "input",
+    				"startChar" : startChar,
+    				"startLine" : startLine,
+    				"endChar" : endChar,
+    				"endLine" : endLine,
+    				"data" : linesChanged,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+
+        }
+        if (action == 'removeLines') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var endChar = e.data.range.end.column;
+            var endLine = e.data.range.end.row;
+            var linesChanged = JSON.stringify(e.data.lines);
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "deleteDataMultiLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"deleteDataMultiLine" : {
+    				"type" : "input",
+    				"startChar" : startChar,
+    				"startLine" : startLine,
+    				"endChar" : endChar,
+    				"endLine" : endLine,
+    				"data" : linesChanged,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+        }
+        
+        // e.type, etc
+    }
+
+
 	$.fn.buildCodeMirror = function(mySelector, myFileName) {
 		var cmOption = {
 			lineNumbers: true,
@@ -326,7 +630,7 @@ $(document).ready(function() {
 					"data": change.text,
 				},
 			};
-			ws.send(JSON.stringify(statusJSON));
+			wsSendMsg(JSON.stringify(statusJSON));
 		}
 		if (change.origin == "paste") {
 			if (change.removed.length == 1 && change.removed[0].length == 0 && change.text.length == 1) {
@@ -360,7 +664,7 @@ $(document).ready(function() {
 						"data": change.removed,
 					},
 				};
-			ws.send(JSON.stringify(statusJSON));
+			wsSendMsg(JSON.stringify(statusJSON));
 
 		}
 		else {
@@ -420,7 +724,7 @@ $('#jsTree2').jstree({
 		}, {
 			"id": "chat4",
 			"parent": "chatroot",
-			"text": "3rd shift rulez",
+			"text": "3rd_shift_rulez",
 			"type": "chat",
 			"li_attr": {
 				"class": "jsTreeChat"
@@ -449,10 +753,11 @@ $('#jsTree2').jstree({
 
 
 	},
-	"plugins": ["contextmenu", "dnd", "crrm", "types"],
-	contextmenu: {
-		items: customMenu
-	}
+	/*THIS NEEDS TO BE FIXED TO RESTORE CONTEXT MENU*/
+	"plugins": [/*"contextmenu", */"dnd", "crrm", "types"]//,
+	//contextmenu: {
+	//	items: customMenu
+	//}
 });
 
 
@@ -480,7 +785,8 @@ $('.drag')
 		'obj': $(this),
 		'nodes': nodes
 	}, jsTreeDiv);
-}); $(document)
+}); 
+$(document)
 .on('dnd_move.vakata', function(e, data) {
 	var t = $(data.event.target);
 	if (!t.closest('.jstree').length) {
@@ -499,6 +805,7 @@ $('.drag')
 	}
 })
 .on('dnd_stop.vakata', function(e, data) {
+	console.log("VAKATA " + e + " " + data);
 	var t = $(data.event.target);
 	if (!t.closest('.jstree').length) {
 		if (t.closest('.menuList').length) {
@@ -556,6 +863,9 @@ $('.drag')
 });
 $(function() {
 	$("#fileContainer").resizable({
+		resize: function() {
+        //THIS IS WHERE WE SHOULD RESIZE #rightWindow
+        },
 		handles: 'e'
 	});
 

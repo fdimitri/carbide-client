@@ -1,36 +1,20 @@
 <html><head>
 <!--jquery.filetree.tar_1.gz-->
-<link rel="stylesheet" href="superfish-master/dist/css/superfish.css">
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="codemirror-5.1/lib/codemirror.css">
-<link rel="stylesheet" href="codemirror-5.1/theme/rubyblue.css">
-<link rel="stylesheet" href="codemirror-5.1/addon/hint/show-hint.css">
-<link rel="stylesheet" href="codemirror-5.1/custom/match-highlight/match-highlight.css">
 <link rel="stylesheet" href="NewGUI.css">
 <link rel="stylesheet" href="jstree/themes/default/style.min.css" />
-<link rel="stylesheet" href="carbide/quartzmenu/styles.css" />
+<link rel="stylesheet" href="quartzmenu/styles.css" />
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.js"></script>
 <script src="jstree/jstree.js"></script>
-<script src="carbide/quartzmenu/script.js"></script>
+<script src="quartzmenu/script.js"></script>
 
 
-<script src="codemirror-5.1/lib/codemirror.js"></script>
-<script src="codemirror-5.1/addon/selection/active-line.js"></script>
-<script src="codemirror-5.1/addon/edit/matchbrackets.js"></script>
-<script src="codemirror-5.1/mode/xml/xml.js"></script>
-<script src="codemirror-5.1/mode/css/css.js"></script>
-<script src="codemirror-5.1/mode/javascript/javascript.js"></script>
-<script src="codemirror-5.1/mode/htmlmixed/htmlmixed.js"></script>
-<script src="codemirror-5.1/addon/hint/show-hint.js"></script>
-<script src="codemirror-5.1/addon/hint/xml-hint.js"></script>
-<script src="codemirror-5.1/addon/hint/html-hint.js"></script>
-<script src="codemirror-5.1/addon/search/searchcursor.js"></script>
-<script src="codemirror-5.1/addon/search/match-highlighter.js"></script>
 
-<script src="codemirror-5.1/custom/autocomplete/autocomplete.js"></script>
-<script src="superfish-master/dist/js/superfish.js"></script>
+<script src="ace-builds/src/ace.js"></script>
+<script src="ace-builds/src/ext-statusbar.js"></script>
+
 <script src="WebSocketsHandler.js"></script>
 <script src="NewGUI.js"></script>
 <script src="menu.js"></script>
@@ -39,7 +23,7 @@
 <div id="mainContainer">
         <div id="topBar">
                 <div id="menuBar">
-                        <div id='cssmenu'>
+                        <div id="cssmenu">
 							<ul>
 							   <li><a href='#'><span style="font-weight:800;color:#fff;">CARBIDE</span></a></li>
 							   <li class='active has-sub'><a href='#'><span>File</span></a>
@@ -61,17 +45,25 @@
 							   <li class='active has-sub'><a href='#'><span>Window</span></a>
 							      <ul>
 							         <li id="window_newPane"><a href='#'><span>New Pane</span></a></li>
-							         <li class='has-sub'><a href='#'><span>Default Layouts</span></a>
+							         <li class='has-sub window_defaultLayouts'><a href='#'><span>Default Layouts</span></a>
 							            <ul id="window_arrangePanes">
-							               <li class='arrangePane' panes='1' id="window_singlePane"><a href='#'><span><img src="img/white-onepane.png" alt = "One Pane"/></span></a></li>
-							               <li class='arrangePane' panes='2a' id="window_twoPaneHorizontal"><a href='#'><span><img src="img/white-twopanea.png" alt = "Two Panes - Side by Side"/></span></a></li>
-							               <li class='arrangePane' panes='2b' id="window_twoPaneVertical"><a href='#'><span><img src="img/white-twopaneb.png" alt = "Two Panes - Top & Bottom"/></span></a></li>
-							               <li class='arrangePane' panes='3' id="window_threePane"><a href='#'><span><img src="img/white-threepane.png" alt = "Three Panes - Big Bottom"/></span></a></li>
-							               <li class='arrangePane' panes='3a' id="window_threePaneBigLeft"><a href='#'><span><img src="img/white-threepanea.png" alt = "Three Panes - Big Left"/></span></a></li>
-							               <li class='arrangePane' panes='3b' id="window_threePaneBigRight"><a href='#'><span><img src="img/white-threepaneb.png" alt = "Three Panes - Big Right"/></span></a></li>
-							               <li class='arrangePane' panes='4' id="window_fourPane"><a href='#'><span><img src="img/white-fourpane.png" alt = "Four Panes Equal Size"/></span></a></li>
-							               <li class='arrangePane last' panes='5' id="window_fivePane"><a href='#'><span><img src="img/white-fivepane.png" alt = "Five Panes - Big Right"/></span></a></li>
-							            </ul>
+							               
+								               <li class='arrangePane' panes='1'><a href='#'><span><img src="img/white-onepane.png" alt = "One Pane"/></span></a></li>
+								               <li class='arrangePane' panes='2a'><a href='#'><span><img src="img/white-twopanea.png" alt = "Two Panes - Side by Side"/></span></a></li>
+								               <li class='arrangePane' panes='2b'><a href='#'><span><img src="img/white-twopaneb.png" alt = "Two Panes - Top & Bottom"/></span></a></li>
+										
+							           
+							               		<li class='arrangePane' panes='3a'><a href='#'><span><img src="img/white-threepanea.png" alt = "Three Panes - Big Left"/></span></a></li>
+							               		<li class='arrangePane' panes='3b'><a href='#'><span><img src="img/white-threepaneb.png" alt = "Three Panes - Big Right"/></span></a></li>
+							               		<li class='arrangePane' panes='3c'><a href='#'><span><img src="img/white-threepanec.png" alt = "Three Panes - Big Bottom"/></span></a></li>
+							               		<li class='arrangePane' panes='3d'><a href='#'><span><img src="img/white-threepaned.png" alt = "Three Panes - Big Top"/></span></a></li>
+							         
+							               		<li class='arrangePane' panes='4'><a href='#'><span><img src="img/white-fourpane.png" alt = "Four Panes Equal Size"/></span></a></li>
+							               		<li class='arrangePane' panes='5a'><a href='#'><span><img src="img/white-fivepanea.png" alt = "Five Panes - Big Right"/></span></a></li>
+							               		<li class='arrangePane' panes='5b'><a href='#'><span><img src="img/white-fivepaneb.png" alt = "Five Panes - Big Left"/></span></a></li>
+							               		<li class='arrangePane' panes='5c'><a href='#'><span><img src="img/white-fivepanec.png" alt = "Five Panes - Big Bottom"/></span></a></li>
+							            
+							             </ul>
 							         </li>
 							      </ul>
 							   </li>
@@ -84,16 +76,18 @@
                 </div>
                 <div style="clear:both;"></div>
                 <div id="toolBarTop">
+                	
+                        <!--<div class="toolBarItemTop">[button]</div>
                         <div class="toolBarItemTop">[button]</div>
-                        <div class="toolBarItemTop">[button]</div>
-                        <div class="toolBarItemTop">[button]</div>
+                        <div class="toolBarItemTop">[button]</div>-->
+                        <div id="toolBarTabs"></div>
                 </div>
                 <div style="clear:both;"></div>
         </div>
 
         <div id="editorContainer">
                 
-                		<div id="toolBarSide">
+                	<div id="toolBarSide">
                                         <div class="toolBarItemSide">X</div>
                                         <div class="toolBarItemSide">X</div>
                                         <div class="toolBarItemSide">X</div>
@@ -112,7 +106,7 @@
 									<div id="jsTree2">
 									</div>
 
-								</div>
+				</div>
                                 <div style="border:0px;clear:both;"></div>
 
                         </div>
@@ -120,13 +114,19 @@
                         <div id="rightWindow">
 							<div id="windows">
 							</div>
+					
 							<!-- <div class="windowRowClear"> </div> This clears the float and puts windows on the next line-->
-						</div>
-						<div style="clear:both;"></div>
+			</div>
+			<div style="clear:both;"></div>
                         
                 
         </div>
 </div>
 
 <div id="log"> </div>
+<div id="dialog-confirm" title="Close Window Pane?" style="display:none;">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All your tabs will be closed. Are you sure?</p>
+</div>
 </body></html>
+
+

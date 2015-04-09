@@ -40,14 +40,20 @@ if ($tabType == 'chat') {
 	);
 }
 else if ($tabType == 'file') {
-	$newDiv = '<div id="' . $tabName . '_';
-	$html = $newDiv . 'Container" class="eContainer">' .
-	$newDiv . 'EditBox" class="eEditBox"><textarea id="' . $tabName . '" srcpath="' . $data->srcPath . '"></textarea></div>' .
-	'</div>';
+	$html = file_get_contents('createContentFile.html');
+	$html = str_replace('%tabName%', $tabName, $html);
+	$html = str_replace('%srcPath%', $data->srcPath, $html);
+
+	$script = file_get_contents('createContentFile.js');
+	$script = str_replace('%tabName%', $tabName, $script);
+	$script =  str_replace('%srcPath%', $data->srcPath, $script);
+	$script =  str_replace('%paneId%', $data->paneId, $script);
+
+
 	$rval = array(
 		'success' => TRUE, 
 		'html' => $html,
-		'script' => 'function test() { console.log("Hi from file creation PHP and ' . $tabName . '!"); }; test();',
+		'script' => $script,
 	);
 }
 

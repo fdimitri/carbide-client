@@ -67,7 +67,82 @@ function getCodeMirror(target) {
 	console.log("Returning CodeMirror instance")
 	return(cm);
 }
+
+
+function getAceEditorByName(name) {
+    var aceEditors = $('.ace_editor');
+    console.log("getAceEditorByName(" + name + ")");
+    var rval = false;
+    aceEditors.each(function() {
+       if ($(this).attr('srcpath') == name) {
+           console.log("Found editor for " + name);
+           rval = ace.edit(this);
+           return(false);
+       }
+    });
+    return(rval);
+}
+
 function cliMsgProcDocument(jObj) {
+    var editor = getAceEditorByName(jObj.targetDocument);
+    if (editor == false) {
+    	console.log("Unable to find editor, ignoring message");
+    	return(false);
+    }
+    console.log("cliMsgProcDocument finding editor:");
+    console.log(editor);
+    $(editor).attr('ignore', 'TRUE')
+	if (jObj.command == 'insertDataSingleLine') {
+		jObj = jObj.insertDataSingleLine;
+        var Range = require("ace/range").Range;		
+		var inputData = jObj.data;
+		var lineData = jObj.line;
+		var chData = jObj.char;
+		var targetDocument = jObj.document;
+		var r;
+		r = new Range(lineData, chData, lineData, chData + inputData.length);
+		editor.getSession().replace(r, inputData);
+	}
+	else if (jObj.command == 'deleteDataSingleLine') {
+		console.log("Enter deleteDataSingleLine")
+		jObj = jObj.deleteDataSingleLine;
+		var inputData = jObj.data;
+		var lineData = jObj.line;
+		var chData = jObj.char;
+		var delLength = jObj.length;
+		var targetDocument = jObj.document;
+		var Range = require("ace/range").Range;	
+		r = new Range(lineData, chData, lineData, chData + inputData.length - 1);
+		console.log("Calling getSession.remove range");
+		editor.getSession().remove(r);
+	}
+
+	if (jObj.command == 'insertDataMultiLine') {
+	    jObj = jObj.insertDataMultiLine;
+	    console.log(jObj);
+		var targetDocument = jObj.document;
+		var r, curLine, prevLine, p;
+		var Range = require("ace/range").Range;	
+		curLine = jObj.startLine;
+		jObj.data.forEach(function(entry) {
+		    console.log("jobj.data.each inserting at " + curLine);
+            r = new Range(curLine, 0, curLine, entry.length + 1);
+		    editor.getSession().replace(r, entry + '\n');
+		    curLine += 1;
+		});
+	}
+	if (jObj.command == 'deleteDataMultiLine') {
+		jObj = jObj.deleteDataSingleLine;
+		var targetDocument = jObj.document;
+	}
+	if (jObj.command == 'documentSetContents') {
+	    var dsc = jObj.documentSetContents;
+	    editor.setValue(dsc.data, -1);
+	}
+    $(editor).attr('ignore', 'FALSE');
+}
+
+function cm_cliMsgProcDocument(jObj) {
 	if (jObj.command == 'insertDataSingleLine') {
 		jObj = jObj.insertDataSingleLine;
 		var inputData = jObj.data;
@@ -137,6 +212,7 @@ function cliMsgProcChat(jObj) {
 		var Text = jObj.msg;
 		var Channel = '#' + jObj.chat + '_ChatBox';
 		var msgDiv = "<div class='cMsg'><span class='cMsgUser'>" + User + "</span><span class='cMsgMsg'>" + Text + "</span></div>";
+		var msgDiv = "<table class='cMsgT'><tr><td>" + User + "</td><td><p>" + Text + "</p></td></table>";
 		console.log("Attempting to update div with ID via append: " + Channel);
 		console.log("Whether or not jQuery found the div? You tell me. " + $(Channel));
 		$(Channel).append(msgDiv);

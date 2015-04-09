@@ -21,148 +21,19 @@ else {
     
 }
 
-$oldScript = '
-$(function() {
-	$("#pane01").click(function() {
-		$(".windowPane").addClass("lowZ");
-		$(".windowPane").removeClass("highZ");
-		$("#pane01").removeClass("lowZ");
-		$("#pane01").addClass("highZ");
-	});
-});
+$oldScript = file_get_contents('createPaneScript.js');
 
-$(function() {
-	$("#editorContextWindow01").menu({
-		select: function(event, ui) {
-			$("#editorContextWindow01").hide();
-			alert("Menu element clicked!");
-		}
-	});
-
-	$("#pane01").on("contextmenu", function(event) {
-		$("#editorContextWindow01").show();
-		$("#editorContextWindow01").position({
-			collision: "none",
-			my: "left top",
-			of: event
-		});
-		console.log(event);
-
-		return false;
-	});
-
-	$(document).click(function(event) {
-		$("#editorContextWindow01").hide();
-	});
-
-	$("#editorContextWindow01").on("contextmenu", function(event) {
-		return false;
-	});
-	$("#editorContextWindow01").hide();
-	$(".windowPane").addClass("lowZ");
-	$(".windowPane").removeClass("highZ");
-	$("#pane01").removeClass("lowZ");
-	$("#pane01").addClass("highZ");
-
-});
-
-
-$(function() {
-	var containerHeight = 0;
-	var containerWidth = 0;
-	var newHeight = 0;
-	$("#pane01").resizable({
-		containment: "parent",
-		//alsoResize: ".cContainer",
-		resize: function( event, ui ) {
-
-			containerHeight = ui.size.height;
-			containerWidth = ui.size.width;
-
-			if( $(ui.element).find(".cContainer").length) {
-	
-				
-
-				newHeight = $(ui.element).find(".cContainer").height() - $(ui.element).find(".cInputBoxContainer").height();
-			//	$(ui.element).find(".cOutputs").css("height", newHeight);
-
-			}
-			//else { console.log("there is no chat window."); }
-			
-
-			
-		},
-		start: function(event, ui) {
-			$(".windowPane").addClass("lowZ");
-			$(".windowPane").removeClass("highZ");
-			//ui.element.addClass("activeWindow");
-			$(".windowPane").each(function() {
-				var cssObj = {
-					top: $(this).position().top,
-					left: $(this).position().left
-				};
-				$(this).css(cssObj);
-			});
-			$(".windowPane").each(function() {
-				$(this).css("position", "absolute");
-
-			});
-			ui.element.addClass("highZ");
-
-		}
-
-	});
-	$("#pane01").draggable({
-		containment: "parent",
-		handle: ".paneHeader",
-		start: function(event, ui) {
-			$(".windowPane").addClass("lowZ");
-			$(".windowPane").removeClass("highZ");
-			$(".windowPane").each(function() {
-				var cssObj = {
-					top: $(this).position().top,
-					left: $(this).position().left
-				};
-				$(this).css(cssObj);
-			});
-			$(".windowPane").each(function() {
-				$(this).css("position", "absolute");
-
-			});
-			//$( this ).addClass("activeWindow");
-
-			$(this).addClass("highZ");
-		}
-
-	});
-	var tabs = $("#tabBar01").tabs();
-	$("#tabBar01 ul").sortable();
-	tabs.delegate("span.ui-icon-close", "click", function() {
-		var panelId = $(this).closest("li").remove().attr("aria-controls");
-		$("#" + panelId).remove();
-		tabs.tabs("refresh");
-	});
-	tabs.bind("keyup", function(event) {
-		if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {
-			var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
-			$("#" + panelId).remove();
-			tabs.tabs("refresh");
-		}
-	});
-
-});
-      
-';
 $oldHTML = '
 <div id="pane01" class="windowPane ui-widget-content">
-	<div class="paneHeader ui-widget-header"><span class="paneTitle">Pane 01</span><div class="paneBox"><span class="paneMinimize ui-icon ui-icon-minus"></span><span class="paneMaximize ui-icon ui-icon-extlink"></span><span class="paneClose ui-icon ui-icon-close"></span></div><div class="clearIcons"></div></div>
+	<div class="paneHeader ui-widget-header"><span class="paneTitle">Pane 01</span><div class="paneBox"><span class="paneMinimize ui-icon ui-icon-minus"></span><span class="paneMinMax paneMaximize ui-icon ui-icon-extlink"></span><span class="paneClose ui-icon ui-icon-close"></span></div><div class="clearIcons"></div></div>
 	<div id="tabBar01" class="tabBar">
 
 		<ul class="menuList jstree-drop">
-			<!--<li id="add_tab"><span class="ui-icon ui-icon-folder-open"></span></li>-->
+			
 		</ul>
 
-		<div id="tabs-01">
+		';
+		/*
 			<ul id="editorContextWindow01" class="editorContextMenu">
 
 				<li><span class="ui-icon ui-icon-undo"></span>Undo</li>
@@ -182,14 +53,20 @@ $oldHTML = '
 
 
 			</ul>
-		</div>
+			*/
+$oldHTML .= '
+		
 
 	</div>
 
 </div>
 ';
 
-$newScript = preg_replace('/\d+/', sprintf("%02d", $paneCounter), $oldScript);
+$newScript = preg_replace('/%pane%/', sprintf("#pane%02d", $paneCounter), $oldScript);
+$newScript = preg_replace('/%tabBar%/', sprintf("#tabBar%02d", $paneCounter), $newScript);
+$newScript = preg_replace('/%paneX%/', sprintf("pane%02d", $paneCounter), $newScript);
+$newScript = preg_replace('/%paneTitle%/', sprintf("Pane #%02d", $paneCounter), $newScript);
+
 $newHTML = preg_replace('/\d+/', sprintf("%02d", $paneCounter), $oldHTML);
 
 $rval = array(
@@ -200,5 +77,9 @@ $rval = array(
     
 file_put_contents('test.out', print_r($rval, TRUE), FILE_APPEND);
 echo json_encode($rval);
+
+
+//newPaneTab = preg_replace('/\d+/', sprintf("%02d", $paneCounter), $newPaneTab);
+
 
 ?>

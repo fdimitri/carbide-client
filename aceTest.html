@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ACE Editor StatusBar Demo</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+  <script src="/cheef-jquery-ace-2314998/jquery-ace.js"></script>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+    }
+    #statusBar {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 20px;
+        background-color: rgb(245, 245, 245);
+        color: gray;
+    }
+    .ace_status-indicator {
+        color: gray;
+        position: absolute;
+        right: 0;
+        border-left: 1px solid;
+    }
+  </style>
+  <script>
+var ws = new WebSocket("ws://172.17.0.42:8080/");
+ws.onmessage = function(evt) {
+	console.log("onmessage fired: " + evt);
+	console.log($.parseJSON(evt.data));
+	var jObj = $.parseJSON(evt.data);
+	if (!jObj.commandSet) {
+		console.log("Missing commandSet  -- this will break file editing");
+		return;
+	}
+	else if (jObj.commandSet == "document") {
+		cliMsgProcDocument(jObj);
+	}
+	else {
+		console.log("Received non-chat command: " + jObj.commandSet);
+	}
+};
+
+ws.onerror = function(error) {
+	console.log(error);
+
+};
+
+function wsSendMsg(msg) {
+	waitForSocketConnection(ws, function() {
+		console.log("Sent msg to server over websocket: " + msg);
+		ws.send(msg);
+	});
+}
+
+function waitForSocketConnection(socket, callback) {
+	setTimeout(function() {
+		if (socket.readyState === 1) {
+			if (callback != null) {
+				callback();
+			}
+			return;
+
+		}
+		else {
+			waitForSocketConnection(socket, callback);
+		}
+
+	}, 10); // wait 10ms for the connection...
+}
+
+function getAceEditorByName(name) {
+    var aceEditors = $('.ace_editor');
+    console.log("getAceEditorByName(" + name + ")");
+    var rval = false;
+    aceEditors.each(function() {
+       if ($(this).attr('srcpath') == name) {
+           console.log("Found editor for " + name);
+           rval = ace.edit(this);
+           return(false);
+       }
+    });
+    return(rval);
+}
+
+function cliMsgProcDocument(jObj) {
+    var editor = getAceEditorByName(jObj.targetDocument);
+    console.log("cliMsgProcDocument finding editor:");
+    console.log(editor);
+    if (!editor) {
+    	console.log("Unable to find an editor associated with " + jObj.targetDocument);
+    	return false;
+    }
+    $(editor).attr('ignore', 'TRUE')
+    if (!jObj.command) {
+    	console.log("jObj.command was not set..");
+    	console.log(jObj);
+		$(editor).attr('ignore', 'FALSE');
+		return false;
+    }
+    else {
+    	console.log("Finding command for " + jObj.command)
+    }
+	if (jObj.command == 'insertDataSingleLine') {
+		jObj = jObj.insertDataSingleLine;
+        var Range = require("ace/range").Range;		
+		var inputData = jObj.data;
+		var lineData = jObj.line;
+		var chData = jObj.char;
+		var targetDocument = jObj.document;
+		var r;
+		r = new Range(lineData, chData, lineData, chData + inputData.length);
+		editor.getSession().replace(r, inputData);
+	}
+	else if (jObj.command == 'deleteDataSingleLine') {
+		jObj = jObj.deleteDataSingleLine;
+		var inputData = jObj.data;
+		var lineData = jObj.line;
+		var chData = jObj.char;
+		var delLength = jObj.length;
+		var targetDocument = jObj.document;
+		r = new Range(lineData, chData, lineData, chData + inputData.length);
+		console.log("Calling getSession.remove range");
+		editor.getSession().remove(r);
+	}
+	else if (jObj.command == 'insertDataMultiLine') {
+	    jObj = jObj.insertDataMultiLine;
+	    console.log(jObj);
+		var targetDocument = jObj.document;
+		var r, curLine, prevLine, p;
+		var Range = require("ace/range").Range;	
+		curLine = jObj.startLine;
+		jObj.data.forEach(function(entry) {
+		    console.log("jobj.data.each inserting at " + curLine);
+            r = new Range(curLine, 0, curLine, entry.length + 1);
+		    editor.getSession().replace(r, entry + '\n');
+		    curLine += 1;
+		});
+	}
+	else if (jObj.command == 'deleteDataMultiLine') {
+		jObj = jObj.deleteDataSingleLine;
+		var targetDocument = jObj.document;
+	}
+	else if (jObj.command == 'documentSetContents') {
+	    var dsc = jObj.documentSetContents;
+	    editor.setValue(dsc.data, -1);
+	}
+	else {
+		console.log("Unrecognized command: " + jObj.command);
+	}
+    $(editor).attr('ignore', 'FALSE');
+}
+
+ws.onclose = function() {
+	console.log("Websocket was closed..");
+	console.log(ws);
+};
+ws.onopen = function() {
+	console.log("Websocket now open!");
+	console.log(ws);
+};
+
+
+  </script>
+</head>
+<body>
+
+<pre id="editor" srcPath="/server/source/test.rb"></pre>
+<div id="statusBar">ace rocks!</div>
+    
+<!-- load ace -->
+<script src="ace-builds/src/ace.js"></script>
+<!-- load ace statusbar extension -->
+<script src="ace-builds/src/ext-statusbar.js"></script>
+<script>
+$(document).ready(function() {
+	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
+	    var fileExt = myFileName.match(/\.\w+/);
+	    var myLang;
+	    if (fileExt == ".rb") {
+	        myLang = "ruby";
+	    }
+	    else {
+	        myLang = "html";
+	    }
+	    console.log("The pre should exist right now..");
+	    console.log($(mySelector));
+		$(mySelector).each(
+			function() {
+                var editor = ace.edit(mySelector.replace(/\#/, ''));
+                $(mySelector).ace = editor;
+                $(editor).attr('srcPath', $(mySelector).attr('srcPath'));
+                var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+                // create a simple selection status indicator
+                //var statusBar = new StatusBar(editor, $(statusBar));
+                $(editor).attr('ignore', 'FALSE')
+                editor.setTheme("ace/theme/dawn");
+                editor.session.setMode("ace/mode/ruby");
+                console.log(editor);
+                console.log($(editor).parent().parent());
+        		var statusJSON = {
+        		    "commandSet": "document",
+        			"command" : "getContents",
+        			"targetDocument" : $(editor).attr('srcPath'),
+        			"getContents" : {
+        				"document" : $(editor).attr('srcPath'),
+        			},
+        		};
+    		    wsSendMsg(JSON.stringify(statusJSON));
+				editor.getSession().on("change", function(e) {
+				    console.log("Change on editor");
+				    $.fn.aceChange(editor, e)
+				});
+			}
+		);
+	}
+
+	$.fn.aceChange = function(editor, e) {
+        console.log(e);
+        if ($(editor).attr('ignore') == 'TRUE') return;
+        var action = e.data.action;
+        if (action == 'insertText') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var text = e.data.text;
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "insertDataSingleLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"insertDataSingleLine" : {
+    				"type" : "input",
+    				"ch" : startChar,
+    				"line" : startLine,
+    				"data" : text,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+        }
+        if (action == 'removeText') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var text = e.data.text;
+			var statusJSON = {
+				"commandSet" : "document",
+				"command": "deleteDataSingleLine",
+    			"document" : $(editor).attr('srcPath'),
+				"deleteDataSingleLine": {
+					"type": "input",
+					"ch": startChar,
+					"line": startLine,
+					"data": text,
+				},
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+        }
+        if (action == 'insertLines') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var endChar = e.data.range.end.column;
+            var endLine = e.data.range.end.row;
+            var linesChanged = e.data.lines;
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "insertDataMultiLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"insertDataMultiLine" : {
+    				"type" : "input",
+    				"startChar" : startChar,
+    				"startLine" : startLine,
+    				"endChar" : endChar,
+    				"endLine" : endLine,
+    				"data" : linesChanged,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+
+        }
+        if (action == 'removeLines') {
+            var startChar = e.data.range.start.column;
+            var startLine = e.data.range.start.row;
+            var endChar = e.data.range.end.column;
+            var endLine = e.data.range.end.row;
+            var linesChanged = JSON.stringify(e.data.lines);
+    		var statusJSON = {
+    		    "commandSet": "document",
+    			"command" : "deleteDataMultiLine",
+    			"document" : $(editor).attr('srcPath'),
+    			"deleteDataMultiLine" : {
+    				"type" : "input",
+    				"startChar" : startChar,
+    				"startLine" : startLine,
+    				"endChar" : endChar,
+    				"endLine" : endLine,
+    				"data" : linesChanged,
+    			}
+    		};
+    		wsSendMsg(JSON.stringify(statusJSON));
+    		console.log(statusJSON);
+        }
+        
+        // e.type, etc
+    }
+
+	$.fn.buildAce("#editor", "/server/source/test.rb", "#statusBar")
+
+    // Create an editor ace.edit(ID selector)
+    // editor.getSession().on('change', function(e) {
+    // });
+    //editor.on('input', function(e) {
+});
+</script>
+</body>
+</html>

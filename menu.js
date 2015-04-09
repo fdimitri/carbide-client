@@ -1,33 +1,276 @@
 $(document).ready(function() {
-    $(".arrangePane").click(function() {
-        arrangePanes($(this).attr('panes'));
-    });
     
+    
+    
+    
+    
+    
+	$(".arrangePane").click(function() {
+	        var paneType =  $(this).attr('panes');
+	        var neededPanes = paneType.match(/\d/);
+	    if (numWindowPanes() < neededPanes) {
+	        var createPanes = neededPanes - numWindowPanes();
+	        while (createPanes--) {
+	            createNewPane();
+	        }
+	    }
+	    if (numWindowPanes() > neededPanes) {
+	         //Destroy extra panes here
+	    }
+	    waitForWindowPane(neededPanes, arrangePanes, paneType);
+
+	});
+
+
+   
     $("#window_newPane").click(function() {
         createNewPane();
     });
-    // $("#window_singlePane").click(function() {
-    //     arrangePanes("1");
-    // });
-    // $("#window_twoPaneHorizontal").click(function() {
-    //     arrangePanes("2a");
-    // });
-    // $("#window_twoPaneVertical").click(function() {
-    //     arrangePanes("2b");
-    // });
-    // $("#window_threePane").click(function() {
-    //     arrangePanes("3");
-    // });
-    // $("#window_threePaneBigLeft").click(function() {
-    //     arrangePanes("3a");
-    // });
-    // $("#window_threePaneBigRight").click(function() {
-    //     arrangePanes("3b");
-    // });
-    // $("#window_fourPane").click(function() {
-    //     arrangePanes("4");
-    // });
-    // $("#window_fivePane").click(function() {
-    //     arrangePanes("5");
-    // });
+
 });
+
+
+function numWindowPanes() {
+    return ($('.windowPane').length);
+}
+
+function resizePanes(layout) {
+    if (layout == '3pane1') {
+        // blah blah
+    }
+}
+
+function waitForWindowPane(conditions, callback, callBackVar) {
+    setTimeout(function() {
+        if (numWindowPanes() >= conditions) {
+            if (callback != null) {
+                callback(callBackVar);
+            }
+            return;
+        }
+        else {
+            console.log("WAITING: " + numWindowPanes() + " UNTIL " + conditions)
+            waitForWindowPane(conditions, callback, callBackVar);
+        }
+    }, 50); // wait 10ms for the connection...
+}
+
+
+function arrangePanes(paneFormat) {
+
+	var currentTab = "";
+	var mainPane = "";
+	var paneCount = 0;
+	var iPC = 0;
+	var currentWindow = "";
+    var theWindowPane = $(".windowPane");
+    
+    /*this stops the parent element from automatically resizing, which I'm sure must be a bug in jquery*/
+	$(".windowPane").parent().css({position: 'relative'});
+	$(".windowPane").parent().css({maxHeight: $(".windowPane").parent("div").height()});
+	$(".windowPane").parent().css({minHeight: $(".windowPane").parent("div").height()});
+	$(".windowPane").parent().css({maxWidth: $(".windowPane").parent("div").width()});
+	$(".windowPane").parent().css({minWidth: $(".windowPane").parent("div").width()});
+
+    
+	if (paneFormat == "1") {
+		mainPane = $(".windowPane").eq(0); //store the first pane, which will become our only pane
+
+        /*the following is how to cycle through every pane except the first, which we will need some day for condensing the tabs
+		$(".windowPane:not(:first)").each(function() { //cycle through all panes except the 1st
+		});
+        */		
+		
+		/*  //REPLACED BY function maximizePane(paneId)
+		$(mainPane).parent().css({position: 'relative'});
+		$(mainPane).css({top: 5, left: 5, position:'absolute'});
+		$(mainPane).addClass("paneMaximized");
+		
+		$(mainPane).height($(mainPane).parent("div").height()-10);
+		$(mainPane).width($(mainPane).parent("div").width()-10);
+		*/
+		maximizePane($(".windowPane").eq(0).attr("id"));
+		
+	}
+	else if (paneFormat == "2a") { //2 Panes side by side
+
+		setTimeout(function(){  //this is how REAL optimization is done! Take notes!
+			theWindowPane.css("display", "block");
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+		    currentWindow.height(theWindowPane.parent("div").height() - 10);
+			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+			currentWindow = theWindowPane.eq(1);
+		    currentWindow.css({top: 5, left: theWindowPane.parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height(theWindowPane.parent("div").height() - 10);
+			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+		}, 100);
+	}
+	else if (paneFormat == "2b") { //2 Panes top and bottom
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
+			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width() - 10);
+
+		}, 100);
+
+	}
+	else if (paneFormat == "3a") { //3 Panes big pane on the left
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 10);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+		}, 100);
+
+	}
+	else if (paneFormat == "3b") { //3 Panes big pane on the right
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 10);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height() - 12);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+		}, 100);
+
+	}	
+	else if (paneFormat == "3c") { //3 Panes big pane on the bottom
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width() - 15);
+		}, 100);
+	}
+	else if (paneFormat == "3d") { //3 Panes big pane on the top
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
+			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+		}, 100);
+
+	}	
+	else if (paneFormat == "4") { //4 Panes equal size
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
+		}, 100);
+
+	}	
+	else if (paneFormat == "5a") { //5 panes, tall one on right
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
+			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(4).css({top: 5, left: $(".windowPane").parent("div").width()*.8 + 10, position:'absolute'});
+			$(".windowPane").eq(4).height($(".windowPane").parent("div").height() - 15);
+			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.2 - 20);
+
+		}, 100);
+
+	}	
+	else if (paneFormat == "5b") { //5 panes, tall one on left
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.2 - 20);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
+			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
+			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()/2 - 15);
+			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.4 - 20);
+
+		}, 100);
+
+	}	
+	else if (paneFormat == "5c") { //4 Panes equal size
+
+		setTimeout(function(){ 
+			$(".windowPane").css("display", "block");
+			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
+			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()*.4 - 20);
+			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()*.4 - 20);
+			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()*.4 - 20);
+			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()*.4 - 20);
+			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()*.8 + 10, left: 5, position:'absolute'});
+			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()*.2 - 10);
+			$(".windowPane").eq(4).width($(".windowPane").parent("div").width() - 12);
+
+		}, 100);
+
+	}	
+}
+    
+    
