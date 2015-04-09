@@ -43,14 +43,8 @@ $(
 		    	}
 		    }
 		   	else if($(event.target).is('.windowPaneTabClose')) {
-		   			
-		   			if ($(event.target).closest(".windowPane").find("[role='tab']").length > 1) { //if there is more than 1 tab ask them to confirm
-			    		closePaneConfirm($(event.target).closest(".windowPaneTab").attr("pane"));
-			    	}
-			    	else {
-			    		closeWindowPaneTab($(event.target).closest(".windowPaneTab").attr("pane"));
-			    		closePane($(event.target).closest(".windowPaneTab").attr("pane"));
-			    	}
+		   			closeWindowPaneTab($(event.target).closest(".windowPaneTab").attr("pane"));
+		   			closePane($(event.target).closest(".windowPaneTab").attr("pane"));
 		   	}
 		   	else if($(event.target).is('.windowPaneTab')) {
 		   			restorePane($(event.target).closest(".windowPaneTab").attr("pane"));
@@ -61,11 +55,12 @@ $(
 				//console.log("TRIGGERED " + $(event.target).attr("id") + " " + $(event.target).attr("class") + " "  + $(event.target).prop("tagName"));
 			}
 			
-			if($(event.target).is('.pane')) { //if they click on a pane, make that pane active
-				$(event.target).addClass("activePane");
-				
-			}
 			
+			if($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, give it the activePane class (and remove that class from others)
+				$(".windowPane").removeClass("activePane");
+				$(event.target).closest(".windowPane").addClass("activePane"); 
+				var activePaneId = $(event.target).closest(".windowPane").attr('id');
+			}
 		});
 		
 	}
@@ -269,6 +264,18 @@ function initFileTree(data) {
 
 	
 	});
+	$('div .jstree').on('dblclick','.jstree-anchor', function (e) {
+	   var instance = $.jstree.reference(this),
+	   node = instance.get_node(this);
+   
+	   if(node.type == "file"  || node.type == "chat") {
+	   	console.log("calling new tab from file tree");
+	   	console.log($(".activePane").attr("id"));
+		newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+	   	console.log(node);
+	   }
+	});
+	
 }
 
 function initChatTree(data) {
@@ -284,7 +291,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	var tabNameNice = filename;
 	var tabs = $(".tabBar").tabs();
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
-	if ($("#" + paneId).find("#" + tabName).length) {
+	if ($("#" + tabName).length) {
 		console.log("We already have this tab open!");
 		var listItem = $("#" + tabName);
 		$("#" + paneId).tabs("option", "active", listItem.index());
@@ -351,7 +358,6 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 				console.log($("#" + tabName));
 				console.log("find() Reports:");
 				console.log(te);
-				//var cm = $.fn.buildCodeMirror(te, te.attr('srcPath'));
 				$.fn.buildAce("#" + te.attr('id'), te.attr('srcPath'), "#statusBar")
 				var statusJSON = {
 					"commandSet" : "document",
@@ -371,6 +377,8 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 		},
 	});
 	tabs.tabs("refresh").tabs({ active:num_Tabs});
+	
+	
 	return (num_Tabs + 1);
 
 }
@@ -407,7 +415,13 @@ function createNewPane() {
 				console.log("Script receieved! Evaluating! Smelloscope!");
 				eval(result.script);
 			}
+			if (result.paneId) {
+				$(".windowPane").removeClass("activePane");
+				$(result.paneId).addClass("activePane");
+			}
 			console.log("Successfully loaded data for new pane");
+		
+			
 		},
 		error: function(data, error, xqhr) {
 			console.log("Error creating new pane: " + data);
@@ -573,113 +587,6 @@ $(document).ready(function() {
     }
 
 
-	$.fn.buildCodeMirror = function(mySelector, myFileName) {
-		var cmOption = {
-			lineNumbers: true,
-			styleActiveLine: true,
-			matchBrackets: true,
-		};
-		$(mySelector).each(
-			function() {
-				console.log('Create new CodeMirror instance');
-				var cm = CodeMirror.fromTextArea(this, {
-					lineNumbers: true,
-					styleActiveLine: true,
-					matchBrackets: true,
-					ownerArea: this,
-					fileName: myFileName,
-					srcPath: myFileName,
-					mode: "text/html",
-					highlightSelectionMatches: {
-						showToken: /\w/
-					},
-					extraKeys: {
-						/*					  "'<'": completeAfter,
-											  "'/'": completeIfAfterLt,
-											  "' '": completeIfInTag,
-											  "'='": completeIfInTag,*/
-						"Ctrl-Space": "autocomplete"
-					},
-					value: document.documentElement.innerHTML
-				});
-				cm.on("change", $.fn.cmChange);
-			}
-		);
-	}
-
-	$.fn.cmChange = function(cm, change) {
-		console.log("srcPath for cm is " + cm.getOption('srcPath'))
-		var totalText = cm.getValue();
-		var statusText = "Change type: " + change.origin + "";
-		if (change.origin == "+input") {
-			statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
-			if (change.text[0].length) {
-				statusText += change.text;
-			}
-			else {
-				change.text = "\n";
-			}
-			var statusJSON = {
-				"commandSet": "document",
-				"command": "insertDataSingleLine",
-				"document": cm.getOption('srcPath'),
-				"insertDataSingleLine": {
-					"type": "input",
-					"ch": change.to.ch,
-					"line": change.to.line,
-					"data": change.text,
-				},
-			};
-			wsSendMsg(JSON.stringify(statusJSON));
-		}
-		if (change.origin == "paste") {
-			if (change.removed.length == 1 && change.removed[0].length == 0 && change.text.length == 1) {
-				/* Simplest case */
-				statusText += "@ " + change.to.line + ":" + change.to.ch + " text: ";
-				if (change.text[0].length) {
-					statusText += change.text;
-				}
-			}
-
-		}
-		if ((change.origin == "+delete" || change.origin == "cut")) {
-			if (change.removed.length == 1) {
-				/* This is a simple single line modification */
-				var startPosition = change.to.ch - change.removed[0].length;
-				var endPosition = change.to.ch;
-				statusText += "@ " + change.to.line + ":" + startPosition + "-" + endPosition + " text: ";
-				statusText += change.removed;
-				console.log("Change information: ");
-				console.log(change);
-				// var docName = cm.getOption('ownerArea');
-				// console.log(docName);
-				var statusJSON = {
-					"commandSet" : "document",
-					"command": "deleteDataSingleLine",
-					"document": cm.getOption('srcPath'),
-					"deleteDataSingleLine": {
-						"type": "input",
-						"ch": startPosition,
-						"line": change.to.line,
-						"data": change.removed,
-					},
-				};
-			wsSendMsg(JSON.stringify(statusJSON));
-
-		}
-		else {
-			/* This is a multi-line delete/cut which needs to be handled differently */
-		}
-
-	}
-
-	var statusBarInstance = cm.getOption('ownerArea').id;
-	$('#statusBar_' + statusBarInstance).text(statusText);
-	console.log('Attempting to update #statusBar_' + statusBarInstance + " to " + statusText);
-	//	console.log(change);
-	//	console.log(cm.getCursor());
-
-}
 
 
 

@@ -14,7 +14,13 @@ body {
 	padding: 0;
 	
 }
-
+.sortHelper {
+	background-color:#FCFCFC;
+	text-align:center;
+	border-style:solid;
+	border-color:#000000;
+	border-width:1px;
+}
 .activePane {
 }
 

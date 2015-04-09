@@ -73,6 +73,7 @@ $rval = array(
     'success' => TRUE,
     'html' => $newHTML,
     'script' => $newScript,
+    'paneId' => sprintf("#pane%02d", $paneCounter),
     );
     
 file_put_contents('test.out', print_r($rval, TRUE), FILE_APPEND);

@@ -1,9 +1,14 @@
 $(function() {
-var tabs = $( "%tabBar%" ).tabs();
+	initializeSortable();
+	function initializeSortable() {
+		var tabs = $( "%tabBar%" ).tabs();
         
         tabs.find( ".ui-tabs-nav" ).sortable({
             connectWith: '.ui-tabs-nav',
-            helper: "clone",
+            helper: function(){
+            	var retVal = '<div class="sortHelper">' + $(this).find("a").html() + '</div>';
+            	return(retVal);
+            },
             appendTo: "body",
             receive: function (event, ui) {
                 var receiver = $(this).parent(),
@@ -31,8 +36,9 @@ var tabs = $( "%tabBar%" ).tabs();
                 
             }
         });
-   
 
+	}
+	var tabs = $( "%tabBar%" ).tabs();
 
 /*	$("a").draggable({
 
