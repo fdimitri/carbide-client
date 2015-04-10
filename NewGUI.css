@@ -90,8 +90,23 @@ height:calc(100% - 40px);
 	float:left;
 }
 
+#windows .ui-widget-content {
+	background: #4c4c4c; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #000000 4%, #383838 37%, #111111 60%, #2b2b2b 76%, #131313 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4c4c4c), color-stop(4%,#000000), color-stop(37%,#383838), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* IE10+ */
+background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* W3C */
+}
 #windows .ui-widget-header {
-    background: rgba(43, 47, 58, 0.9);
+background: #4c4c4c; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #000000 4%, #595959 12%, #474747 22%, #474747 22%, #666666 25%, #2c2c2c 52%, #111111 60%, #2b2b2b 76%, #1c1c1c 96%, #1c1c1c 96%, #131313 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4c4c4c), color-stop(4%,#000000), color-stop(12%,#595959), color-stop(22%,#474747), color-stop(22%,#474747), color-stop(25%,#666666), color-stop(52%,#2c2c2c), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(96%,#1c1c1c), color-stop(96%,#1c1c1c), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* IE10+ */
+background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* W3C */
     color: #9ea2a5;
     font-weight: bold;
     height:16px
@@ -104,7 +119,9 @@ height:calc(100% - 40px);
 	width:100%;
 }
 #windows .ui-tabs-panel {
-	height: calc(100% - 36px);
+	padding: 1px;
+/*height: calc(100% - 36px);*/
+height:100%;
 }
 #windows .ui-tabs .ui-tabs-nav li {
     height:15px;
@@ -134,10 +151,16 @@ height:calc(100% - 40px);
 	float: left;
 }
 #toolBarTop {
-	background-color: #cFFFFc;
+background: #4c4c4c; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #000000 4%, #383838 37%, #111111 60%, #2b2b2b 76%, #131313 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4c4c4c), color-stop(4%,#000000), color-stop(37%,#383838), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* IE10+ */
+background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60%,#2b2b2b 76%,#131313 100%); /* W3C */
 	border-style: solid;
 	border-width: 2px;
-	border-color: #c0FF0a;
+	border-color: #000;
 }
 #rightWindow {
 	position: absolute;
@@ -145,32 +168,38 @@ height:calc(100% - 40px);
 }
 
 .cChatBox {
-	height:100%;
+	height:calc(100% - 24px);
 	float: left;
 	border: 1px solid black;
 	width: calc(80% - 4px);
 	border-radius: 4px;
 	margin: 0px;
+	background: rgba(255,255,255,0.95);
+	overflow-y: auto;
 }
 .cUserBox {
-	height:100%;
+	height:calc(100% - 24px);
 	float: right;
 	border: 1px solid black;
 	width: calc(20% - 4px);
 	border-radius: 4px;
 	margin: 0px;
+	background: rgba(255,255,255,0.95);
 }
 .cInputBox {
 	width: 100%;
 }
 .AriaTab {
 	min-height: 320px;
+
 }
 .cContainer {
 	height: 100%;
 }
 .cInputBoxContainer {
-	width: 100%;
+  width: calc(100% - 8px);
+  bottom: 8px;
+  position: absolute;
 }
 .cInputBox {
 	width: 100%;

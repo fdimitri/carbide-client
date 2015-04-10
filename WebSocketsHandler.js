@@ -213,6 +213,7 @@ function cliMsgProcChat(jObj) {
 		var Channel = '#' + jObj.chat + '_ChatBox';
 		var msgDiv = "<div class='cMsg'><span class='cMsgUser'>" + User + "</span><span class='cMsgMsg'>" + Text + "</span></div>";
 		var msgDiv = "<table class='cMsgT'><tr><td>" + User + "</td><td><p>" + Text + "</p></td></table>";
+		$(Channel).animate({ scrollTop: $(Channel)[0].scrollHeight}, 333);
 		console.log("Attempting to update div with ID via append: " + Channel);
 		console.log("Whether or not jQuery found the div? You tell me. " + $(Channel));
 		$(Channel).append(msgDiv);

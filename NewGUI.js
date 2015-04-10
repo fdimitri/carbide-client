@@ -52,7 +52,8 @@ $(
 		   	}
 			else if($(event.target).is('.tabBar a')) {
 				
-				//console.log("TRIGGERED " + $(event.target).attr("id") + " " + $(event.target).attr("class") + " "  + $(event.target).prop("tagName"));
+				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
+				$(event.target).closest("li").addClass("activeTab");
 			}
 			
 			
@@ -163,11 +164,17 @@ function customMenu(node) {
 	$(".windowPane").each(function() {
 		var paneNumber = $(this).attr('id').match(/\d+/);
 		var objName = "openPane" + paneNumber;
+		var windowPane = this;
 		var tempPane = {
 			objName: {
 				label: "Open in Pane " + paneNumber,
 				action: function() {
-					alert("Open file in pane " + paneNumber);
+					//alert("Open file in pane " + paneNumber);
+					console.log(	$(windowPane).attr('id'));
+					console.log(	node.text);
+					
+					newTab(node.text, $(windowPane).find(".tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+		
 				}
 			}
 		}
@@ -269,10 +276,9 @@ function initFileTree(data) {
 	   node = instance.get_node(this);
    
 	   if(node.type == "file"  || node.type == "chat") {
-	   	console.log("calling new tab from file tree");
-	   	console.log($(".activePane").attr("id"));
+
 		newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
-	   	console.log(node);
+//	   	console.log(node);
 	   }
 	});
 	
@@ -378,6 +384,8 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	});
 	tabs.tabs("refresh").tabs({ active:num_Tabs});
 	
+	$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
+	$('a[href="#' + tabName + '"]').parent("li").addClass("activeTab");
 	
 	return (num_Tabs + 1);
 
@@ -418,6 +426,11 @@ function createNewPane() {
 			if (result.paneId) {
 				$(".windowPane").removeClass("activePane");
 				$(result.paneId).addClass("activePane");
+				if (result.paneId != "#pane01") {
+					var newY = $(result.paneId).parent().height()/2 - $(result.paneId).height()/2;
+					var newX = $(result.paneId).parent().width()/2 - $(result.paneId).width()/2 - $("#toolBarSide").width() - $("#leftBar").width();
+					$(result.paneId).css({top: newY, left: newX, position:'absolute'});
+				}
 			}
 			console.log("Successfully loaded data for new pane");
 		
@@ -488,9 +501,9 @@ $(document).ready(function() {
 	    		wsSendMsg(JSON.stringify(statusJSON));
                 
 				editor.getSession().on("change", function(e) {
-				    console.log("Change on editor");
-				    console.log(editor);
-				    console.log(e);
+				    //console.log("Change on editor");
+				    //console.log(editor);
+				    //console.log(e);
 				    $.fn.aceChange(editor, e)
 				});
 			}
