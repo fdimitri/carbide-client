@@ -54,7 +54,25 @@ $(function() {
 	
 	tabs.delegate("span.ui-icon-close", "click", function() {
 			var panelId = $(this).closest("li").remove().attr("aria-controls");
-			$("#" + panelId).remove();
+			var $paneId = $("#" + panelId);
+			$paneId.remove();
+			console.log("This:");
+			console.log($(this));
+			console.log("This.parent(li):");
+			console.log($(this).parents('li'));
+			if ($(this).parents('li').attr('type') == 'chat') {
+				var chatName = $(this).parents('li').attr('filename');
+				var statusJSON = {
+					"commandSet": "chat",
+					"chatCommand": "leaveChannel",
+					"chatTarget": chatName,
+					"leaveChannel": {
+						"status" : true,
+					},
+				};
+				console.log(statusJSON);
+				wsSendMsg(JSON.stringify(statusJSON));
+			}
 			tabs.tabs("refresh");
 	});
 	tabs.bind("keyup", function(event) {
@@ -188,78 +206,6 @@ $(function() {
 
 	});
 	
-	/*
-	var tabs = $("#tabBar01").tabs();
-	$("#tabBar01 ul").sortable({
-		connectWith: ".tabBar ul",
-		helper: "clone",
-		appendTo: "body",
-		items: "> li",
-		stop: function( event, ui ) {
-			console.log(" Sorting has Stopped!");
-			//$("a", ui.item).click();
-			
-		},
-		receive: function(event, ui ) {
-			var ariaName = $(ui.item).closest("li").attr("aria-controls");
-			var appendLocation = $(event.target).parent();
-			
-			console.log($(event.target).prop("tagName"));
-			console.log($(event.target).parent().attr("id")); 
-			console.log("DEBUG THE SENDER: " + $(ui.sender).prop("tagName") + " and " + $(ui.sender).parent().attr("id"));
-
-			var clonedDiv = $("#" + ariaName).detach();
-		//	var clonedDiv = $("#" + ariaName).clone();
-		//	$("#" + ariaName).remove();
-		
-			
-			clonedDiv.appendTo(appendLocation);
-			
-			//var stringToReplace = "/" + $(ui.sender).parent().attr("id") + "/g"; //this is the ID of the first tabbar, ie tabBar01
-			var stringToReplace = new RegExp($(ui.sender).parent().attr("id"),'g'); //this is the ID of the first tabbar, ie tabBar01
-			var stringReplacement = $(event.target).parent().attr("id"); //this is the ID of the new tabbar we just dropped in, ie tabBar02
-			var hayStack = $(event.target).parent().html(); //get the html of the new panes tabbar
-			var updatedHayStack = "";
-			
-			
-			
-			updatedHayStack = hayStack.replace(stringToReplace,stringReplacement); //substitute all instances of tabBar01 with tabBar02
-			$(event.target).parent().html(updatedHayStack);			
-			
-			console.log("We are attempting to replace all instances of " + stringToReplace + " with " + stringReplacement);
-			console.log("In the following html: " + hayStack);
-			console.log("To the following html: " + updatedHayStack);
-			
-			//$(".tabBar").each().tabs("refresh");
-			
-			tabs.tabs("refresh").tabs({ active:0});
-			
-			//NOTES FOR MYSELF: aria-controls needs to be updated with the new tab bar name. so does the A target and the div ID
-			//so lets just change every instance of the old ID (tabBar01) with the new ID (tabBar02 in this case)
-			//the position of the tab after it's sorted into a new box can be found with .index() and used to select that new tab.
-			
-			
-			//$("#" + ariaName).click();
-			
-
-			//HERE ARE THE FACTS: (and just the facts)
-			// $(event.target) = where it was dragged to
-			// $(ui.sender) = where it came from
-			// $(ui.item) = the thing that was dragged
-			// var ariaName = an attribute on the original item that was dragged that shows the ID of its corresponding aria controls
-			// we need to clone the aria tab from ui.sender and add it to the new pane, then delete the old one...
-			
-			///$(event.target)
-//			$(event.target).("#" + ariaName).tabs().append("<div class='AriaTab' id='" + ariaName + "'></div>");
-			
-		//	console.log($(ui.sender).parent().find("#" + ariaName).prop("tagName"));
-		//	$(ui.sender).parent().find("#" + ariaName).remove();
-			
-			console.log($(event.target).parent().find(".aria-tab"));
-			
-		}
-	});
-*/
 
         
 

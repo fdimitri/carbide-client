@@ -49,24 +49,6 @@ function waitForSocketConnection(socket, callback) {
 
 	}, 10); // wait 10ms for the connection...
 }
-function getCodeMirror(target) {
-	var cm;
-	$('.CodeMirror').each(function() {
-		if (this.CodeMirror.getOption('srcPath') == target) {
-			console.log("Found codemirror match")
-			cm = this.CodeMirror;
-		}
-		else {
-			console.log("Comparison failed: " + this.CodeMirror.getOption('srcPath') + " != " + target)
-		}
-	});
-	if (!cm) {
-		console.log("getCodeMirror unable to find instance related to " + target);
-		return;
-	}
-	console.log("Returning CodeMirror instance")
-	return(cm);
-}
 
 
 function getAceEditorByName(name) {
@@ -142,58 +124,6 @@ function cliMsgProcDocument(jObj) {
     $(editor).attr('ignore', 'FALSE');
 }
 
-function cm_cliMsgProcDocument(jObj) {
-	if (jObj.command == 'insertDataSingleLine') {
-		jObj = jObj.insertDataSingleLine;
-		var inputData = jObj.data;
-		var lineData = jObj.line;
-		var chData = jObj.char;
-		var targetDocument = jObj.document;
-		var cm = getCodeMirror(targetDocument);
-		if (!cm) {
-			console.log("Unable to find codeMirror instance incliMsgProcDocument");
-			return false;
-		}
-		if (lineData > cm.lineCount()) {
-			console.log("We need more lines!");
-			var x = cm.lineCount;
-			while (x <= lineData) {
-				cm.replaceRange('\n', {
-					line: x,
-					ch: cm.getLine(x).length
-				});
-				x++;
-			}
-		}
-		cm.replaceRange(inputData, {
-			line: lineData,
-			ch: chData
-		});
-	}
-	if (jObj.command == 'deleteDataSingleLine') {
-		jObj = jObj.deleteDataSingleLine;
-		var inputData = jObj.data;
-		var lineData = jObj.line;
-		var chData = jObj.char;
-		var delLength = jObj.length;
-		var targetDocument = jObj.document;
-		var cm = getCodeMirror(targetDocument);
-		if (!cm) {
-			console.log("Unable to find codeMirror instance in cliMsgProcDocument");
-			return false;
-		}
-		
-		console.log("Calling replaceRange with ");
-		cm.replaceRange('', {
-			line: lineData,
-			ch: chData
-		}, {	
-			line: lineData,
-			ch: (chData + delLength)
-		});
-	}
-
-}
 
 function cliMsgProcFileTree(jObj) {
 	console.log("MsgProcFileTree:");
@@ -213,10 +143,8 @@ function cliMsgProcChat(jObj) {
 		var Channel = '#' + jObj.chat + '_ChatBox';
 		var msgDiv = "<div class='cMsg'><span class='cMsgUser'>" + User + "</span><span class='cMsgMsg'>" + Text + "</span></div>";
 		var msgDiv = "<table class='cMsgT'><tr><td>" + User + "</td><td><p>" + Text + "</p></td></table>";
-		$(Channel).animate({ scrollTop: $(Channel)[0].scrollHeight}, 333);
-		console.log("Attempting to update div with ID via append: " + Channel);
-		console.log("Whether or not jQuery found the div? You tell me. " + $(Channel));
 		$(Channel).append(msgDiv);
+		$(Channel).animate({ scrollTop: $(Channel)[0].scrollHeight}, 333);
 		console.log("Append to " + Channel);
 	}
 	else if (jObj.command == "userJoin") {

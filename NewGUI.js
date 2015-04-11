@@ -1,4 +1,5 @@
-
+var activeTabs = [];
+var activePanes = [];
 
 $(
 	function () {
@@ -54,13 +55,28 @@ $(
 				
 				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
 				$(event.target).closest("li").addClass("activeTab");
+				
+				var activeTabId = $(event.target).closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
+				var thisTabLocation = $.inArray(activeTabId,activeTabs);
+				if (thisTabLocation > -1) {
+					activeTabs.splice(thisTabLocation,1);
+				}
+				
+				activeTabs.push(activeTabId);
+				console.log(activeTabs);
 			}
 			
 			
 			if($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, give it the activePane class (and remove that class from others)
 				$(".windowPane").removeClass("activePane");
 				$(event.target).closest(".windowPane").addClass("activePane"); 
+				
 				var activePaneId = $(event.target).closest(".windowPane").attr('id');
+				var thisPaneLocation = $.inArray(activePaneId,activePanes);
+				if (thisPaneLocation > -1) {
+					activePanes.splice(thisPaneLocation,1);
+				}
+				activePanes.push(activePaneId);
 			}
 		});
 		
@@ -73,6 +89,16 @@ function focusPane(paneId) {
 	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
 	$("div #" + paneId).removeClass("lowZ"); //remove lowZ class from this element
 	$("div #" + paneId).addClass("highZ"); //add highZ class to this element so its focus comes to the front
+	var reversePanes = activePanes;
+	reversePanes.reverse();
+	for (var i = 1; i < reversePanes.length; i++) {
+		$("div #" + reversePanes[i]).zIndex(50-i);
+		console.log("setting the Z index of ");
+		console.log(reversePanes[i]);
+		console.log(" to ");
+		console.log(50-i);
+	}
+
 }
 function maximizePane(paneId) {
 	// This is the html for a Maximize button: <span class="paneMaximize ui-icon ui-icon-extlink">
@@ -306,7 +332,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
 	$("#" + paneId).tabs().find(".ui-tabs-nav").append(
-		"<li><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
+		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
 	$("#" + paneId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = [{
@@ -387,6 +413,13 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
 	$('a[href="#' + tabName + '"]').parent("li").addClass("activeTab");
 	
+	var activeTabId = $('a[href="#' + tabName + '"]').closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
+	var thisTabLocation = $.inArray(activeTabId,activeTabs);
+	if (thisTabLocation > -1) {
+		activeTabs.splice(thisTabLocation,1);
+	}
+	activeTabs.push(activeTabId);
+	
 	return (num_Tabs + 1);
 
 }
@@ -426,6 +459,16 @@ function createNewPane() {
 			if (result.paneId) {
 				$(".windowPane").removeClass("activePane");
 				$(result.paneId).addClass("activePane");
+				
+				var activePaneId = result.paneId;
+				activePaneId = activePaneId.slice(1);
+				var thisPaneLocation = $.inArray(activePaneId,activePanes);
+				if (thisPaneLocation > -1) {
+					activePanes.splice(thisPaneLocation,1);
+				}
+				activePanes.push(activePaneId); //after having removed this pane from any prior instances in the array we push it to the end
+				console.log(activePanes);
+				
 				if (result.paneId != "#pane01") {
 					var newY = $(result.paneId).parent().height()/2 - $(result.paneId).height()/2;
 					var newX = $(result.paneId).parent().width()/2 - $(result.paneId).width()/2 - $("#toolBarSide").width() - $("#leftBar").width();
@@ -462,6 +505,12 @@ $(document).ready(function() {
 		"command": "getFileTreeJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
+	// var statusJSON = {
+	// 	"commandSet": "base",
+	// 	"command": "getChatTreeJSON",
+	// };
+	// wsSendMsg(JSON.stringify(statusJSON));
+
 	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
 	    var fileExt = myFileName.match(/\.\w+/);
 	    var myLang;
@@ -473,7 +522,6 @@ $(document).ready(function() {
 	    }
 	    console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
 	    console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
-   	    console.log("The pre should exist right now..");
 	    console.log($(mySelector));
 		$(mySelector).each(
 			function() {
@@ -485,7 +533,7 @@ $(document).ready(function() {
                 //var statusBar = new StatusBar(editor, $(statusBar));
                 $(editor).attr('ignore', 'FALSE')
                 editor.setTheme("ace/theme/dawn");
-                editor.session.setMode("ace/mode/ruby");
+                editor.session.setMode("ace/mode/" + myLang);
                 console.log(editor);
         		var statusJSON = {
         		    "commandSet": "document",
@@ -781,12 +829,26 @@ $(document)
 });
 
 });
+
 $(function() {
 	$("#fileContainer").resizable({
 		resize: function() {
-        //THIS IS WHERE WE SHOULD RESIZE #rightWindow
-        },
+			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
+		},
 		handles: 'e'
 	});
 
+
+
+
+	console.log($(document).height());
+	$("#toolBarSide").height($(document).height() - 10);
+	var te = $("#toolBarSide ul");
+	te.width($("#toolBarSide").height() - 2);
+
+	$("#toolBarSide").tabs({
+		activate: function(event, ui) {
+			var active = $('#tabs').tabs('option', 'active');
+		}
+	});
 });

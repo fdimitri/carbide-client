@@ -1,3 +1,49 @@
+
+#sidewaysWrapper {
+    position: relative;
+    width: 488px;
+}
+#sidewaysTabs {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 52px;
+    -webkit-transform-origin: 0 0;
+       -moz-transform-origin: 0 0;
+         -o-transform-origin: 0 0;
+            transform-origin: 0 0;
+    -webkit-transform: rotate(-90deg) translate(-488px, 0px);
+       -moz-transform: rotate(-90deg) translate(-488px, 0px);
+         -o-transform: rotate(-90deg) translate(-488px, 0px);
+            transform: rotate(-90deg) translate(-488px, 0px);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+#sidewaysTabs li {
+    float: left;
+    width: 120px;
+    height: 50px;
+    border: 1px solid #000;
+    text-align:center;
+}
+#sidewaysTabs li a {
+    display: block;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+    background-color: #ddd;
+}
+#sidewaysTabs li a:hover {
+    background-color: #bbb;
+}
+
+
+
+
 html {
 	height: 100%;
 	margin: 0;
@@ -14,6 +60,7 @@ body {
 	padding: 0;
 	
 }
+
 .sortHelper {
 	background-color:#FCFCFC;
 	text-align:center;
@@ -68,7 +115,7 @@ height:calc(100% - 40px);
 	z-index:15;
 }
 .highZ {
-	z-index:20;
+	z-index:50;
 }
 .clearIcons {
 	clear:both;
@@ -141,14 +188,16 @@ height:100%;
 	display: inline;
 }
 .toolBarItemSide {
-	display: block;
 }
 #toolBarSide {
 	float: left;
 }
 #leftBar {
 	height: 100%;
-	float: left;
+	position:relative;
+	left:50px;
+	top:0px;
+	float:left;
 }
 #toolBarTop {
 background: #4c4c4c; /* Old browsers */
@@ -190,7 +239,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	width: 100%;
 }
 .AriaTab {
-	min-height: 320px;
+	/*min-height: 320px;*/
 
 }
 .cContainer {
@@ -205,27 +254,32 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	width: 100%;
 }
 .cMsgT {
-	font: monospace;
-	font-size: 0.6em;
+	font-family: monospace;
+	font-size: 0.8em;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	border-collapse: collapse;
 }
 .cMsgT tr td {
-	word-break: break-all;
+	word-break: break-word;
 	word-wrap: break-word;
 	white-space: pre-wrap;
+	vertical-align: top;
 }
 .cMsgT tr td:nth-child(1) {
-	text-align: top;
 	width: 100px;
-	border-right: 1px dotted black;
-
 }
 .cMsgT tr td:nth-child(2) {
 	width: calc(100%-100px);
+	text-align: left;
 }
 
 .cMsgT tr td:nth-child(2) p {
-	display: inline;
-	word-break: break-all;
+	border-left: 1px dotted rgba(0,0,0,0.9);
+	border-radius:2px;
+	display: block;
+	word-break: break-word;
 	word-wrap: break-word;
 	white-space: pre-wrap;
 }
@@ -318,3 +372,49 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
         height: calc(100% - 20px);
         width:100%;
 }
+
+
+
+
+#toolBarSide {
+    margin-left: 20px;
+    width: 250px;
+}
+
+#toolBarSide > ul {
+    -webkit-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
+    -webkit-transform-origin: 0 50%;
+    height:22px;
+background: #4c4c4c; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #000000 4%, #595959 12%, #474747 22%, #474747 22%, #666666 25%, #2c2c2c 52%, #111111 60%, #2b2b2b 76%, #1c1c1c 96%, #1c1c1c 96%, #131313 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4c4c4c), color-stop(4%,#000000), color-stop(12%,#595959), color-stop(22%,#474747), color-stop(22%,#474747), color-stop(25%,#666666), color-stop(52%,#2c2c2c), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(96%,#1c1c1c), color-stop(96%,#1c1c1c), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* IE10+ */
+background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#595959 12%,#474747 22%,#474747 22%,#666666 25%,#2c2c2c 52%,#111111 60%,#2b2b2b 76%,#1c1c1c 96%,#1c1c1c 96%,#131313 100%); /* W3C */
+margin-left: 20px;
+}
+
+#toolBarSide > ul > li {
+    height:14px;
+    margin-top:6px;
+}
+
+#toolBarSide > ul > li > a {
+    margin-top:-10px;
+    font-size: 0.8em;
+}
+
+
+#toolBarSide > div {
+    height: 100%;
+    padding: 4px;
+    margin-left: 0px;
+    font-size: 0.8em;
+}
+
+
+#toolBarSide .ui-tabs { direction: rtl !important; margin-right:16px !important; }
+#toolBarSide .ui-tabs .ui-tabs-nav li.ui-tabs-selected {float: right !important; }
+#toolBarSide li.ui-state-default {float: right !important; }
+#toolBarSide .ui-tabs .ui-tabs-nav li a { float: right !important; }
