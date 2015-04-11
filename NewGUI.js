@@ -1,21 +1,63 @@
 var activeTabs = [];
 var activePanes = [];
 
-$(
-	function () {
+$(function() {
+	$("#fileContainer").resizable({
+		resize: function() {
+			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
+		},
+		handles: 'e'
+	});
+
+
+		$("#toolBarSide").tabs({
+			activate: function(event, ui) {
+				var active = $('#tabs').tabs('option', 'active');
+			}
+		});
+
+	$(document).on('resize', function() {
+		console.log($(document).height());
+	});
+	$(window).trigger('resize');
+});
+
+	function resetSizes() {
 		var pos = $("#windows").offset();
 		console.log("Windows position:");
 		console.log(pos);
 		$("#editorContainer").height(
 			$("body").height() - 
-			$("#topBar").height() -
-			28 );
-		
-	
-		
-	}
-);
+			$("#topBar").height());
+		$("#editorContainer").width($(window).width());
 
+
+		$("#toolBarSide").height($(window).height() - 10);
+		var te = $("#toolBarSide ul");
+		var rw = $("#rightWindow");
+		var wd = $("#windows");
+		var rwWidth = $("#toolBarSide").outerWidth() + 21;
+		te.width($("#toolBarSide").height() - 2);	
+		console.log("Resize event setting #rightWindow left to " + rwWidth)
+		rw.css("left", rwWidth);
+		//rw.css("left", 0);
+		rw.css("width", $(window).width() - rwWidth -20);
+		rw.css("height", $(window).height() - rw.position()['top']);
+		
+		wd.css("width", rw.width());
+		wd.css("height", rw.height());
+		
+
+	}
+
+$(document).ready(function() {
+	resetSizes();
+	$(window).trigger('resize');
+});
+
+$(window).resize(function() {
+	 resetSizes();
+});
 
 
 $(
@@ -55,6 +97,7 @@ $(
 				
 				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
 				$(event.target).closest("li").addClass("activeTab");
+				
 				
 				var activeTabId = $(event.target).closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
 				var thisTabLocation = $.inArray(activeTabId,activeTabs);
@@ -128,6 +171,9 @@ function maximizePane(paneId) {
 	thisPane.css("display", "block");
 	thisPane.height(thisPane.parent().height()-10);
 	thisPane.width(thisPane.parent().width()-10);
+	
+
+	
 
 }
 function restorePane(paneId) {
@@ -492,14 +538,14 @@ function createNewPane() {
 
 
 $(document).ready(function() {
-	var left = $("#leftBar").width() + $("#toolBarSide").width();
-	var screenWidth = $('body').width();
-	console.log("Setting new width to " + (screenWidth - (left + 24)));
-	$("#rightWindow").width(screenWidth - left - 224);
-	$("#rightWindow").offset({
-		'left': left + 224,
-		'top': '64'
-	});
+	// var left = $("#leftBar").width() + $("#toolBarSide").width();
+	// var screenWidth = $('body').width();
+	// console.log("Setting new width to " + (screenWidth - (left + 24)));
+	// $("#rightWindow").width(screenWidth - left - 224);
+	// $("#rightWindow").offset({
+	// 	'left': left + 224,
+	// 	'top': '64'
+	// });
 	var statusJSON = {
 		"commandSet": "FileTree",
 		"command": "getFileTreeJSON",
@@ -508,7 +554,7 @@ $(document).ready(function() {
 	// var statusJSON = {
 	// 	"commandSet": "base",
 	// 	"command": "getChatTreeJSON",
-	// };
+	// }; 
 	// wsSendMsg(JSON.stringify(statusJSON));
 
 	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
@@ -830,25 +876,3 @@ $(document)
 
 });
 
-$(function() {
-	$("#fileContainer").resizable({
-		resize: function() {
-			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
-		},
-		handles: 'e'
-	});
-
-
-
-
-	console.log($(document).height());
-	$("#toolBarSide").height($(document).height() - 10);
-	var te = $("#toolBarSide ul");
-	te.width($("#toolBarSide").height() - 2);
-
-	$("#toolBarSide").tabs({
-		activate: function(event, ui) {
-			var active = $('#tabs').tabs('option', 'active');
-		}
-	});
-});

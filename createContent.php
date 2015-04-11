@@ -25,14 +25,16 @@ $chatTarget = $data->chatTarget;
 		// 'originId': originId,
 		$script = "console.log('test script eval');";
 if ($tabType == 'chat') {
-	$newDiv = '<div id="' . $chatTarget . '_';
-	$html = $newDiv . 'Container" class="cContainer"><div class="cOutputs">' .
-	$newDiv . 'ChatBox" class="cChatBox" chatRoom="' . $chatTarget . '" ></div>' .
-	$newDiv . 'UserBox" class="cUserBox" chatRoom="' . $chatTarget . '" ></div>' .
-	'<div style="clear:both;"></div></div>' .
-	$newDiv . 'InputBoxContainer" class="cInputBoxContainer" chatRoom="' . $chatTarget . '" >' .
-	'<input chatRoom="' . $chatTarget . '" class="cInputBox" id="' . $chatTarget . 'cInputBox type="text" role="textbox" value="" /></div>' .
-	'</div>';
+	$html = file_get_contents('createContentChat.html');
+	$html = str_replace('%tabName%', $tabName, $html);
+	$html = str_replace('%srcPath%', $data->srcPath, $html);
+	$html = str_replace('%chatTarget%', $data->chatTarget, $html);
+
+	$script = file_get_contents('createContentChat.js');
+	$script = str_replace('%tabName%', $tabName, $script);
+	$script =  str_replace('%srcPath%', $data->srcPath, $script);
+	$script =  str_replace('%paneId%', $data->paneId, $script);
+	$script = str_replace('%chatTarget%', $data->chatTarget, $script);
 	$rval = array(
 		'success' => TRUE, 
 		'html' => $html,

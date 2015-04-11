@@ -1,3 +1,12 @@
+#editorContainer {
+	background-color:#FF0000;
+}
+body {
+	background-color:#0000FF;
+}
+#windows {
+	background-color:#00FF00;
+}
 
 #sidewaysWrapper {
     position: relative;
@@ -192,6 +201,10 @@ height:100%;
 #toolBarSide {
 	float: left;
 }
+
+#toolBarSide .ui-tabs-anchor {
+  outline: none;
+}
 #leftBar {
 	height: 100%;
 	position:relative;
@@ -385,6 +398,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
     -webkit-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
     -webkit-transform-origin: 0 50%;
     height:22px;
+    margin-top:13px;
 background: #4c4c4c; /* Old browsers */
 background: -moz-linear-gradient(-45deg, #4c4c4c 0%, #000000 4%, #595959 12%, #474747 22%, #474747 22%, #666666 25%, #2c2c2c 52%, #111111 60%, #2b2b2b 76%, #1c1c1c 96%, #1c1c1c 96%, #131313 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4c4c4c), color-stop(4%,#000000), color-stop(12%,#595959), color-stop(22%,#474747), color-stop(22%,#474747), color-stop(25%,#666666), color-stop(52%,#2c2c2c), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(96%,#1c1c1c), color-stop(96%,#1c1c1c), color-stop(100%,#131313)); /* Chrome,Safari4+ */
