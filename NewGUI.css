@@ -1,12 +1,3 @@
-#editorContainer {
-	background-color:#FF0000;
-}
-body {
-	background-color:#0000FF;
-}
-#windows {
-	background-color:#00FF00;
-}
 
 #sidewaysWrapper {
     position: relative;
@@ -84,24 +75,54 @@ body {
 	display:inline;
 }
 .windowPaneTab { 
-	padding-left:20px;
+	margin-top: 4px;
+	cursor: pointer;
+	width: 6em;
+	padding-left:4px;
+	
 	margin-left:5px;
 	height:20px;
-	border-style:solid;
-	border-color:#000000;
-	border-width:2;
+	border: 1px solid rgba(0,0,0,0.5);
+	border-radius:4px;
 	background-color:#e0e0e0;
-	display:inline;
+	display:inline-block;
+	overflow: hidden;
 }
-.windowPaneTabClose {
-	margin-left:8px;
-	margin-right:0;
-	background-color: #939393;
-	width:20px;
-	display:inline;
+
+.windowPaneTabText {
 	
 }
 
+.windowPaneTabClose {
+	/*background-color: #939393;*/
+	/*width:20px;*/
+	/*display:inline;*/
+}
+.windowPaneTabFocus {
+	
+}
+.windowPaneTabIcons {
+	float:right;
+	display: inline-block;
+}
+.windowPaneTabIcon {
+	display: inline-block;
+	border-radius:7px;
+	
+}
+.ui-icon:hover {
+	background-color: rgba(240,240,255,0.5);
+}
+
+
+.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 #editorContainer {
 	overflow: hidden;
 }
@@ -198,12 +219,19 @@ height:100%;
 }
 .toolBarItemSide {
 }
-#toolBarSide {
-	float: left;
-}
+
 
 #toolBarSide .ui-tabs-anchor {
   outline: none;
+}
+#toolBarSide .ui-tabs-active:after {
+	content: "";
+	position: absolute;
+	bottom: -10px;
+	left: calc(50% - 10px);
+	border-width: 10px 10px 0;
+	border-style: solid;
+	border-color: #E0E0E0 transparent;
 }
 #leftBar {
 	height: 100%;
@@ -392,11 +420,23 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 #toolBarSide {
     margin-left: 20px;
     width: 250px;
+    float:left;
+	min-height:600px;
 }
 
 #toolBarSide > ul {
     -webkit-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
     -webkit-transform-origin: 0 50%;
+    -ms-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
+    -ms-transform-origin: 0 50%;
+    -moz-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
+    -moz-transform-origin: 0 50%;
+    -o-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
+    -o-transform-origin: 0 50%;
+    
+    transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
+    transform-origin: 0 50%;
+
     height:22px;
     margin-top:13px;
 background: #4c4c4c; /* Old browsers */
@@ -432,3 +472,26 @@ margin-left: 20px;
 #toolBarSide .ui-tabs .ui-tabs-nav li.ui-tabs-selected {float: right !important; }
 #toolBarSide li.ui-state-default {float: right !important; }
 #toolBarSide .ui-tabs .ui-tabs-nav li a { float: right !important; }
+
+
+#window_arrangePanes {
+	width:500px !important;
+	line-height: 0 !important;
+	
+	
+}
+#window_arrangePanes .arrangePane {
+	display:inline-block !important;
+	width:80px !important;
+	overflow:hidden !important;
+	border-width:2 !important;
+	border-style: solid !important;
+	border-color: #000000 !important;
+	margin: 0 !important;
+}
+#window_arrangePanes a {
+	display:inline-block !important;
+	width:80px !important;	
+
+
+}

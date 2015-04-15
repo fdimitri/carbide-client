@@ -1,5 +1,7 @@
 var activeTabs = [];
 var activePanes = [];
+var lastPaneFormat = 0;
+var deletedPanes = 0;
 
 $(function() {
 	$("#fileContainer").resizable({
@@ -46,6 +48,13 @@ $(function() {
 		
 		wd.css("width", rw.width());
 		wd.css("height", rw.height());
+		arrangePanes(lastPaneFormat);
+		$("body").css({maxHeight: $(window).height()});
+		$("body").css("overflow", "hidden");
+		
+		$(".maximizedPane").height($(".maximizedPane").parent().height()-10);
+		$(".maximizedPane").width($(".maximizedPane").parent().width()-10);
+
 		
 
 	}
@@ -82,16 +91,23 @@ $(
 		    	}
 		    	else {
 		    		closePane($(event.target).closest(".windowPane").attr("id"));
-		    		closeWindowPaneTab($(event.target).closest(".windowPane").attr("id"));
+		    		
 		    	}
 		    }
 		   	else if($(event.target).is('.windowPaneTabClose')) {
-		   			closeWindowPaneTab($(event.target).closest(".windowPaneTab").attr("pane"));
+		   			
 		   			closePane($(event.target).closest(".windowPaneTab").attr("pane"));
 		   	}
-		   	else if($(event.target).is('.windowPaneTab')) {
-		   			restorePane($(event.target).closest(".windowPaneTab").attr("pane"));
-		   			focusPane($(event.target).closest(".windowPaneTab").attr("pane"));
+		   	else if($(event.target).is('.windowPaneTab') || $(event.target).is('.windowPaneTabText')) { //if a window pane tab is clicked...
+		   		
+		   			var paneId = $(event.target).closest(".windowPaneTab").attr("pane");
+		   			if ($("#" + paneId).hasClass("maximizedPane")) { //this is what we do if the pane is maximized.
+		   					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //for now we'll just focus the page
+		   			}
+		   			else {
+			   			restorePane($(event.target).closest(".windowPaneTab").attr("pane")); //if the pane wasn't maximized we'll restore it
+			   			focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focs it.
+		   			}
 		   	}
 			else if($(event.target).is('.tabBar a')) {
 				
@@ -110,16 +126,20 @@ $(
 			}
 			
 			
-			if($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, give it the activePane class (and remove that class from others)
-				$(".windowPane").removeClass("activePane");
-				$(event.target).closest(".windowPane").addClass("activePane"); 
-				
-				var activePaneId = $(event.target).closest(".windowPane").attr('id');
-				var thisPaneLocation = $.inArray(activePaneId,activePanes);
-				if (thisPaneLocation > -1) {
-					activePanes.splice(thisPaneLocation,1);
+			if($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, make it the active pane
+
+
+				// $(".windowPane").removeClass("activePane");
+				// $(event.target).closest(".windowPane").addClass("activePane"); 
+				// var activePaneId = $(event.target).closest(".windowPane").attr('id');
+				// var thisPaneLocation = $.inArray(activePaneId,activePanes);
+				// if (thisPaneLocation > -1) {
+				// 	activePanes.splice(thisPaneLocation,1);
+				// }
+				// activePanes.push(activePaneId);
+				if(!$(event.target).is('.paneClose')) { //don't trigger when we are closing a pane
+					focusPane($(event.target).closest(".windowPane").attr('id'));
 				}
-				activePanes.push(activePaneId);
 			}
 		});
 		
@@ -129,17 +149,36 @@ $(
 /////////////////////////////////////////////////////		
 		
 function focusPane(paneId) {
-	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
-	$("div #" + paneId).removeClass("lowZ"); //remove lowZ class from this element
-	$("div #" + paneId).addClass("highZ"); //add highZ class to this element so its focus comes to the front
-	var reversePanes = activePanes;
+//	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
+//	$("div #" + paneId).removeClass("lowZ"); //remove lowZ class from this element
+//	$("div #" + paneId).addClass("highZ"); //add highZ class to this element so its focus comes to the front
+
+	if (paneId.indexOf('#') !== -1) {
+		paneId = paneId.slice(1);
+	}
+	console.log(paneId);
+	var thisPaneLocation = $.inArray(paneId,activePanes); //find this pane in the active panes. if it exists remove it
+	if (thisPaneLocation > -1) {
+		activePanes.splice(thisPaneLocation,1);
+	}
+	activePanes.push(paneId); //after having removed this pane from any prior instances in the array we push it to the end
+
+
+	$(".windowPane").removeClass("activePane");
+	$("div #" + paneId).addClass("activePane");
+	
+	$("div #" + paneId).zIndex(50); //50 is the z-index of the active pane!
+	$(".windowPane").not("#" + paneId).zIndex(1); //set all other panes to z-index 1 in case some of them are not on the active list
+	
+
+
+	var reversePanes = Array.prototype.slice.call(activePanes);
 	reversePanes.reverse();
-	for (var i = 1; i < reversePanes.length; i++) {
+
+	for (var i = 1; i < reversePanes.length; i++) { //we reverse the order of the active panes so we're going from newest to oldest and set consecutively smaller z-index
 		$("div #" + reversePanes[i]).zIndex(50-i);
-		console.log("setting the Z index of ");
-		console.log(reversePanes[i]);
-		console.log(" to ");
-		console.log(50-i);
+
+
 	}
 
 }
@@ -149,12 +188,12 @@ function maximizePane(paneId) {
 	var thisPane = 	$("div #" + paneId);
 
 	//these lines prevent jquery shenanigans (resizing the parent window)
-	thisPane.parent("div").css({position: 'relative'});
+/*	thisPane.parent("div").css({position: 'relative'});
 	thisPane.parent("div").css({maxHeight: thisPane.parent("div").height()});
 	thisPane.parent("div").css({minHeight: thisPane.parent("div").height()});
 	thisPane.parent("div").css({maxwidth: thisPane.parent("div").width()});
 	thisPane.parent("div").css({minwidth: thisPane.parent("div").width()});
-	
+	*/
 	var spanMinMax = thisPane.find(".paneMinMax");
 
 	spanMinMax.addClass("paneRestore"); //add class for restore
@@ -188,7 +227,22 @@ function restorePane(paneId) {
 	spanMinMax.removeClass("ui-icon-newwin"); //remove icon for restore
 	spanMinMax.addClass("ui-icon-extlink"); //add the icon for maximize
 
-	thisPane.css({ top: thisPane.attr("oldy"), left: thisPane.attr("oldx"), position:'absolute'});
+	var boundBottom = (parseInt(thisPane.attr("oldy")) + parseInt(thisPane.height()));
+	var boundRight = (parseInt(thisPane.attr("oldx")) + parseInt(thisPane.width()));
+	if ((boundBottom > thisPane.parent().height()) || (boundRight > thisPane.parent().width()))
+	{
+		thisPane.css({ top: 10, left: 10, position:'absolute'});
+		if (thisPane.height() > (thisPane.parent().height()-10)) { 
+			thisPane.height(thisPane.parent().height()-10);
+		}
+		if (thisPane.width() > (thisPane.parent().width()-10)) { 
+			thisPane.width(thisPane.parent().width()-10);
+		}
+		
+	}
+	else {
+		thisPane.css({ top: thisPane.attr("oldy"), left: thisPane.attr("oldx"), position:'absolute'});
+	}
 }
 function minimizePane(paneId) {
 	var thisPane = 	$("div #" + paneId);
@@ -220,7 +274,52 @@ function closePaneConfirm(paneId) {
 	
 }
 function closePane(paneId) {
+	deletedPanes = deletedPanes + 1; //we keep track of the number of panes that have been deleted for purposes of adjusting names when new panes are created
+
+	var paneTitleRemove = $("div #" + paneId).find(".paneTitle").text();
 	$("div #" + paneId).remove();
+	
+	var thisPaneLocation = $.inArray(paneId,activePanes); //find this pane in the active panes. if it exists remove it
+	if (thisPaneLocation > -1) {
+		activePanes.splice(thisPaneLocation,1);
+	}
+	
+	
+	var paneNumber =  parseInt(paneTitleRemove.match(/\d+/)[0]);
+	$("div .windowPane").each(function() { //check every window pane for higher numbered panes and reduce their name by 1
+		var thisNumber = $(this).find(".paneTitle").text();
+		thisNumber = parseInt(thisNumber.match(/\d+/)[0]);
+		if (thisNumber > paneNumber) { //process the current pane if it was numbered higher than the original pane
+			var newNumber = thisNumber - 1;
+			var s1 = newNumber+""; //turn the number into a string to add leading zeros to numbers less than 10
+			var s2 = thisNumber+""; //turn the old number into a string also because we need it to use as a selector
+			while (s1.length < 2) {
+				s1 = "0" + s1;
+			}
+			while (s2.length < 2) {
+				s2 = "0" + s2;
+			}
+
+			
+			if ($(this).find(".paneTitle").html().match(/Pane \d+/g)) //if the pane was titled Pane XX we should rename it to avoid confusion
+			{
+				
+				$(this).find(".paneTitle").html("Pane "+s1);
+			}
+
+
+			
+			var paneSearch = "Pane " + s2; //we search the window pane tabs, copy the icon box, and insert the new name where appropriate
+			var foundPane = $("div .windowPaneTab[panetitle='" + paneSearch + "']");
+			var windowPaneBox = foundPane.children(".windowPaneTabIcons").get(0).outerHTML; //this is the icon box
+			foundPane.empty().append("Pane " + s1 + windowPaneBox); //add the new name and the new icon box
+			foundPane.attr("panetitle", "Pane " + s1); //update the pane title attribute which is used for searching
+			
+		}
+	});
+
+	closeWindowPaneTab(paneId); //close the window pane tab of the closed pane
+
 }
 function closeWindowPaneTab(paneAttr) {
 	
@@ -236,6 +335,7 @@ function customMenu(node) {
 	$(".windowPane").each(function() {
 		var paneNumber = $(this).attr('id').match(/\d+/);
 		var objName = "openPane" + paneNumber;
+
 		var windowPane = this;
 		var tempPane = {
 			objName: {
@@ -476,8 +576,10 @@ createNewPane();
 
 function createNewPane() {
 	paneCounter++;
+	console.log("DELETED PANES IS " + deletedPanes);
 	var MyObject = [{
 		'paneCounter': paneCounter,
+		'delPanes' : deletedPanes,
 	}, ];
 
 	$.ajax({
@@ -503,18 +605,11 @@ function createNewPane() {
 				eval(result.script);
 			}
 			if (result.paneId) {
-				$(".windowPane").removeClass("activePane");
-				$(result.paneId).addClass("activePane");
 				
-				var activePaneId = result.paneId;
-				activePaneId = activePaneId.slice(1);
-				var thisPaneLocation = $.inArray(activePaneId,activePanes);
-				if (thisPaneLocation > -1) {
-					activePanes.splice(thisPaneLocation,1);
-				}
-				activePanes.push(activePaneId); //after having removed this pane from any prior instances in the array we push it to the end
-				console.log(activePanes);
+				focusPane(result.paneId);
 				
+				
+
 				if (result.paneId != "#pane01") {
 					var newY = $(result.paneId).parent().height()/2 - $(result.paneId).height()/2;
 					var newX = $(result.paneId).parent().width()/2 - $(result.paneId).width()/2 - $("#toolBarSide").width() - $("#leftBar").width();
@@ -679,12 +774,7 @@ $(document).ready(function() {
     			"document" : $(editor).attr('srcPath'),
     			"deleteDataMultiLine" : {
     				"type" : "input",
-    				"startChar" : startChar,
-    				"startLine" : startLine,
-    				"endChar" : endChar,
-    				"endLine" : endLine,
-    				"data" : linesChanged,
-    			}
+      			}
     		};
     		wsSendMsg(JSON.stringify(statusJSON));
     		console.log(statusJSON);
@@ -876,3 +966,29 @@ $(document)
 
 });
 
+
+function moveTab (receiver,sender,tab,tabs) { //receiver = window pane jquery object, sender = window pane jquery object,
+															//tab = DOM object of the li of the tab, tabs = jquery object of tabbar.tabs
+
+                    
+                var tab$ = $(tab);
+                var toAppend = receiver.find(".tabBar");
+                // Find the id of the associated panel
+                 var panelId = tab$.attr( "aria-controls" );
+                
+                
+                tab$ = $(tab$.removeAttr($.makeArray(tab.attributes).
+                              map(function(item){ return item.name;}).
+                              join(' ')).remove());
+                tab$.find('a').removeAttr('id tabindex role class');
+
+                toAppend.append(tab$);
+
+                $($( "#" + panelId ).remove()).appendTo(receiver);
+                //var newIndex = $(this).data("ui-sortable").currentItem.index();
+               	//var newIndex = ui.item.index();
+               	tabs.tabs("refresh");
+                //tabs.tabs({ active:newIndex});
+          
+	
+}

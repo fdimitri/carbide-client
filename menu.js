@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     
     
@@ -8,14 +9,20 @@ $(document).ready(function() {
 	$(".arrangePane").click(function() {
 	        var paneType =  $(this).attr('panes');
 	        var neededPanes = paneType.match(/\d/);
-	    if (numWindowPanes() < neededPanes) {
-	        var createPanes = neededPanes - numWindowPanes();
+	        var totalPanes = numWindowPanes();
+	    if (totalPanes < neededPanes) {
+	        var createPanes = neededPanes - totalPanes;
 	        while (createPanes--) {
 	            createNewPane();
 	        }
 	    }
-	    if (numWindowPanes() > neededPanes) {
+	    if (totalPanes > neededPanes) {
 	         //Destroy extra panes here
+	         var loopForPanes = parseInt(neededPanes) + 1;
+	         for (var i = loopForPanes; i<=totalPanes; i++) {
+	         	console.log("i is " + i);
+	         	console.log($('.windowPane').eq(i-1).children(".tabBar").children(".menuList").children("li").length);
+	         }
 	    }
 	    waitForWindowPane(neededPanes, arrangePanes, paneType);
 
@@ -64,15 +71,9 @@ function arrangePanes(paneFormat) {
 	var iPC = 0;
 	var currentWindow = "";
     var theWindowPane = $(".windowPane");
+    lastPaneFormat = paneFormat; //save the pane format in case we resize the window
     
-    /*this stops the parent element from automatically resizing, which I'm sure must be a bug in jquery*/
-	$(".windowPane").parent().css({position: 'relative'});
-	$(".windowPane").parent().css({maxHeight: $(".windowPane").parent("div").height()});
-	$(".windowPane").parent().css({minHeight: $(".windowPane").parent("div").height()});
-	$(".windowPane").parent().css({maxWidth: $(".windowPane").parent("div").width()});
-	$(".windowPane").parent().css({minWidth: $(".windowPane").parent("div").width()});
 
-    
 	if (paneFormat == "1") {
 		mainPane = $(".windowPane").eq(0); //store the first pane, which will become our only pane
 

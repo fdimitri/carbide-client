@@ -1,3 +1,5 @@
+
+
 $(function() {
 	initializeSortable();
 	function initializeSortable() {
@@ -5,18 +7,21 @@ $(function() {
         
         tabs.find( ".ui-tabs-nav" ).sortable({
             connectWith: '.ui-tabs-nav',
-            helper: function(){
-            	var retVal = '<div class="sortHelper">' + $(this).find("a").html() + '</div>';
+            helper: function(event, ui){
+            	var retVal = '<div class="sortHelper">' + $(ui).find("a").html() + '</div>';
+
             	return(retVal);
             },
             appendTo: "body",
             receive: function (event, ui) {
+
                 var receiver = $(this).parent(),
                     sender = $(ui.sender[0]).parent(),
                     tab = ui.item[0],
                     tab$ = $(ui.item[0]),
                 // Find the id of the associated panel
                      panelId = tab$.attr( "aria-controls" );
+               	var newIndex = ui.item.index();
                 
                 
                 tab$ = $(tab$.removeAttr($.makeArray(tab.attributes).
@@ -28,7 +33,6 @@ $(function() {
 
                 $($( "#" + panelId ).remove()).appendTo(receiver);
                 //var newIndex = $(this).data("ui-sortable").currentItem.index();
-               	var newIndex = ui.item.index();
                	tabs.tabs("refresh");
                 tabs.tabs({ active:newIndex});
                 
@@ -93,14 +97,14 @@ $(function() {
 
 
 
-$(function() {
+/*$(function() {
 	$("%pane%").click(function() {
 		$(".windowPane").addClass("lowZ");
 		$(".windowPane").removeClass("highZ");
 		$("%pane%").removeClass("lowZ");
 		$("%pane%").addClass("highZ");
 	});
-});
+});*/
 
 /*$(function() {
 	$("#editorContextWindow01").menu({
@@ -147,6 +151,8 @@ $(function() {
 		cancel: ".maximizedPane",
 		resize: function( event, ui ) {
 
+			
+			
 			containerHeight = ui.size.height;
 			containerWidth = ui.size.width;
 			// This should resize Ace Editor, we need to trigger it to resize when the pre size changes
@@ -168,8 +174,7 @@ $(function() {
 			
 		},
 		start: function(event, ui) {
-			$(".windowPane").addClass("lowZ");
-			$(".windowPane").removeClass("highZ");
+
 			//ui.element.addClass("activeWindow");
 			$(".windowPane").each(function() {
 				var cssObj = {
@@ -180,9 +185,10 @@ $(function() {
 			});
 			$(".windowPane").each(function() {
 				$(this).css("position", "absolute");
+				ui.element.removeClass("activePane");
 
 			});
-			ui.element.addClass("highZ");
+			focusPane(ui.element.attr("id"));
 
 		}
 
@@ -192,8 +198,7 @@ $(function() {
 		handle: ".paneHeader",
 		cancel: ".maximizedPane",
 		start: function(event, ui) {
-			$(".windowPane").addClass("lowZ");
-			$(".windowPane").removeClass("highZ");
+			$(".windowPane").removeClass("activePane");
 			$(".windowPane").each(function() {
 				var cssObj = {
 					top: $(this).position().top,
@@ -207,7 +212,7 @@ $(function() {
 			});
 			//$( this ).addClass("activeWindow");
 
-			$(this).addClass("highZ");
+			focusPane($(this).attr("id"));
 		}
 
 	});
@@ -217,7 +222,7 @@ $(function() {
 
 });
 
-var newPaneTab = '<div class="windowPaneTab" pane="%paneX%">%paneTitle%<div class="windowPaneTabClose">X</div></div>';
+var newPaneTab = '<div class="windowPaneTab noSelect" pane="%paneX%" panetitle="%paneTitle%"><span class="windowPaneTabText">%paneTitle%</span><div class="windowPaneTabIcons"><span class="windowPaneTabIcon windowPaneTabFocus ui-icon ui-icon-extlink" style="visibility:hidden"></span><span class="windowPaneTabIcon windowPaneTabClose ui-icon ui-icon-close"></span></div></div>';
 $("#toolBarTop").append(newPaneTab);
 
    

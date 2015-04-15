@@ -86,6 +86,7 @@ function cliMsgProcDocument(jObj) {
 		editor.getSession().replace(r, inputData);
 	}
 	else if (jObj.command == 'deleteDataSingleLine') {
+		// Will not delete an actual line, we need to fix this
 		console.log("Enter deleteDataSingleLine")
 		jObj = jObj.deleteDataSingleLine;
 		var inputData = jObj.data;
@@ -93,10 +94,27 @@ function cliMsgProcDocument(jObj) {
 		var chData = jObj.char;
 		var delLength = jObj.length;
 		var targetDocument = jObj.document;
-		var Range = require("ace/range").Range;	
-		r = new Range(lineData, chData, lineData, chData + inputData.length - 1);
-		console.log("Calling getSession.remove range");
-		editor.getSession().remove(r);
+		var Range = require("ace/range").Range;
+		// MAJOR HACK, ask for document contents if we're deleting a newline character since Ace is ass..
+		if (1 && inputData == "\n") {
+							var statusJSON = {
+					"commandSet" : "document",
+					"command" : "getContents",
+					"documentTarget" : $(editor).attr('srcPath'),
+					"getContents" : {
+						"document" : $(editor).attr('srcPath'),
+					},
+				};
+				var rval = wsSendMsg(JSON.stringify(statusJSON));
+
+		}
+		else {
+			r = new Range(lineData, chData, lineData, chData + inputData.length);
+			console.log("Calling getSession.remove range");
+			console.log(r);
+			console.log(jObj);
+			editor.getSession().remove(r);
+		}
 	}
 
 	if (jObj.command == 'insertDataMultiLine') {
@@ -159,6 +177,23 @@ function cliMsgProcChat(jObj) {
 		});
 		$(Channel).append(msgDiv);
 	}
+	else if (jObj.command == "userLeave") {
+		console.log("Received userLeave command");
+		
+		jObj = jObj.userLeave;
+		var User = jObj.user;
+		var Channel = '#' + jObj.chat + '_UserBox';
+
+		//var msgDiv = "<div class='cUser' chatUser='" + User + "'>" + User + "</div>";
+		$(Channel + " .cUser").each(function() {
+			if ($(this).attr('chatUser') == User) {
+				console.log("Found matching user.. calling remove")
+				console.log(this);
+				console.log($(this));
+				$(this).remove();
+			}
+		});
+	}
 	else if (jObj.command == "setChatTreeJSON") {
 		var myData = jObj.setChatTreeJSON;
 		console.log(myData.chatTree);
@@ -195,19 +230,19 @@ ws.onopen = function() {
 	console.log(ws);
 };
 
-$(document).delegate(".cInputBox", "keypress", function(ev) {
-	var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-	if (keycode == '13') {
-		var statusJSON = {
-			"commandSet": "chat",
-			"chatCommand": "sendMessage",
-			"chatTarget": $(this).attr("chatRoom"),
-			"sendMessage": {
-				"msg": $(this).val(),
-			},
-		};
-		wsSendMsg(JSON.stringify(statusJSON));
-		console.log("Sending message to " + $(this).attr("chatRoom"));
-		$(this).val('');
-	}
-});
+// $(document).delegate(".cInputBox", "keypress", function(ev) {
+// 	var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+// 	if (keycode == '13') {
+// 		var statusJSON = {
+// 			"commandSet": "chat",
+// 			"chatCommand": "sendMessage",
+// 			"chatTarget": $(this).attr("chatRoom"),
+// 			"sendMessage": {
+// 				"msg": $(this).val(),
+// 			},
+// 		};
+// 		wsSendMsg(JSON.stringify(statusJSON));
+// 		console.log("Sending message to " + $(this).attr("chatRoom"));
+// 		$(this).val('');
+// 	}
+// });
