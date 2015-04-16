@@ -3,8 +3,16 @@ var activePanes = [];
 var lastPaneFormat = 0;
 var deletedPanes = 0;
 
+ $(document).on('keydown', function ( e ) {
+
+    
+     if ( e.altKey && ( String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R' ) ) { //ALT-R keypress
+        console.log("keydown acknowledged")
+		}
+});
+
 $(function() {
-	$("#fileContainer").resizable({
+	$("#toolBarSide").resizable({
 		resize: function() {
 			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
 		},
@@ -98,7 +106,7 @@ $(
 		   			
 		   			closePane($(event.target).closest(".windowPaneTab").attr("pane"));
 		   	}
-		   	else if($(event.target).is('.windowPaneTab') || $(event.target).is('.windowPaneTabText')) { //if a window pane tab is clicked...
+		   	else if($(event.target).is('.windowPaneTab') || $(event.target).is('.windowPaneTabText') || $(event.target).is('.windowPaneTabFocus')) { //if a window pane tab is clicked...
 		   		
 		   			var paneId = $(event.target).closest(".windowPaneTab").attr("pane");
 		   			if ($("#" + paneId).hasClass("maximizedPane")) { //this is what we do if the pane is maximized.
@@ -243,6 +251,7 @@ function restorePane(paneId) {
 	else {
 		thisPane.css({ top: thisPane.attr("oldy"), left: thisPane.attr("oldx"), position:'absolute'});
 	}
+	$(".windowPaneTab[pane='"+paneId+"']").find(".windowPaneTabFocus").css("visibility","hidden");
 }
 function minimizePane(paneId) {
 	var thisPane = 	$("div #" + paneId);
@@ -253,6 +262,9 @@ function minimizePane(paneId) {
 	thisPane.attr("oldheight", thisPane.height());	
 	thisPane.removeClass("maximizedPane");
 	thisPane.css("display", "none");
+	//now find the pane in the windowPaneTabs and show the restore button
+	$(".windowPaneTab[pane='"+paneId+"']").find(".windowPaneTabFocus").css("visibility","visible");
+	console.log($(".windowPaneTab[pane='"+paneId+"']").find(".windowPaneTabFocus").length);
 }
 
 function closePaneConfirm(paneId) {
@@ -478,7 +490,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
 	$("#" + paneId).tabs().find(".ui-tabs-nav").append(
-		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
+		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
 	$("#" + paneId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = [{
@@ -576,7 +588,6 @@ createNewPane();
 
 function createNewPane() {
 	paneCounter++;
-	console.log("DELETED PANES IS " + deletedPanes);
 	var MyObject = [{
 		'paneCounter': paneCounter,
 		'delPanes' : deletedPanes,
@@ -774,6 +785,11 @@ $(document).ready(function() {
     			"document" : $(editor).attr('srcPath'),
     			"deleteDataMultiLine" : {
     				"type" : "input",
+    				"startLine" : startLine,
+    				"endLine" : endLine,
+    				"startChar" : startChar,
+    				"endChar" : endChar,
+    				"lines" : linesChanged,
       			}
     		};
     		wsSendMsg(JSON.stringify(statusJSON));
@@ -967,28 +983,59 @@ $(document)
 });
 
 
-function moveTab (receiver,sender,tab,tabs) { //receiver = window pane jquery object, sender = window pane jquery object,
-															//tab = DOM object of the li of the tab, tabs = jquery object of tabbar.tabs
+function moveTab (tabs, tabs2, receiver, sender, tab) { 
 
-                    
-                var tab$ = $(tab);
-                var toAppend = receiver.find(".tabBar");
+
+				
+                tab.appendTo(receiver.find("ul"));
                 // Find the id of the associated panel
-                 var panelId = tab$.attr( "aria-controls" );
+                var panelId = tab.attr( "aria-controls" );
+                // Remove the panel
                 
+                $( "#" + panelId ).appendTo(receiver);
+                tabs.tabs('refresh');
+                var newIndex = receiver.find("li").length;
+                newIndex = newIndex - 1;
+                console.log("NEWINDEX " + newIndex);
+                tabs.tabs({ active:newIndex});
+                
+                //var tabs2 = sender.children(".tabBar").tabs();
+                tabs2.tabs('refresh');
+                var sendIndex = sender.find("li").length;
+                sendIndex = sendIndex - 1;
+                console.log("SENDINDEX " + sendIndex);
+                tabs2.tabs({ active:sendIndex})
+                
+				/*console.log(tabs);
+				console.log(receiver);
+				console.log(sender);
+				console.log(tab);
+
+				var tab$ = $(tab);
+                var theUL$ = tab$.closest("ul");
+	            var panelId = tab$.attr( "aria-controls" );
+			
+				var newIndex = receiver.find("li").length;
+                newIndex = newIndex - 1; //it's a 0 based index
+                if (newIndex < 0) { 
+                	newIndex = 0;
+                }
+                //console.log(panelId);
+                //console.log(newIndex);
+                //console.log(theUL$);
                 
                 tab$ = $(tab$.removeAttr($.makeArray(tab.attributes).
                               map(function(item){ return item.name;}).
                               join(' ')).remove());
                 tab$.find('a').removeAttr('id tabindex role class');
 
-                toAppend.append(tab$);
+                theUL$.append(tab$);
 
                 $($( "#" + panelId ).remove()).appendTo(receiver);
                 //var newIndex = $(this).data("ui-sortable").currentItem.index();
                	//var newIndex = ui.item.index();
                	tabs.tabs("refresh");
-                //tabs.tabs({ active:newIndex});
-          
+                tabs.tabs({ active:newIndex});
+          */
 	
 }

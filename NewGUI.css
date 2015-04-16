@@ -210,6 +210,10 @@ height:100%;
 	position:relative;
 	top:-16px;
 }
+/*#windows .ui-icon .ui-icon-arrowrefresh-1-s {
+	position:relative;
+	top:-16px;
+}*/
 #windows .ui-tabs .ui-tabs-nav li a {
     position:relative;
     top:-3px
@@ -255,6 +259,8 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 #rightWindow {
 	position: absolute;
 	height: calc(100% - 92px);
+	background-color:#FFFFFF;
+	z-index:3;
 }
 
 .cChatBox {
@@ -362,12 +368,6 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	height: 80%;
 }
 
-#fileContainer {
-	padding: 5px;
-	overflow: hidden;
-	border-right-width: 5px;
-	height:100%;
-}
 
 #editorContextWindow01 {
 	position: absolute;
@@ -406,8 +406,13 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 .jstree-contextmenu {
 	z-index:99999;
 }
-
-
+.reloadButton {
+		position:relative;
+	top:-6px;
+	margin: 0.4em 0.2em 0 0;
+	cursor: pointer;
+	display:inline-block;
+}
 .preAceEdit {
         margin: 0;
         height: calc(100% - 20px);
@@ -416,12 +421,14 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 
 
 
-
 #toolBarSide {
     margin-left: 20px;
     width: 250px;
     float:left;
 	min-height:600px;
+	z-index:3;
+	border-right-width: 2px;
+
 }
 
 #toolBarSide > ul {

@@ -15,6 +15,9 @@ $(function() {
             appendTo: "body",
             receive: function (event, ui) {
 
+			var tabs2 = $(ui.sender[0]).parent().find(".tabBar").tabs();
+			moveTab(tabs,tabs2,$(this).parent(),$(ui.sender[0]).parent(),$(ui.item[0]));
+			/*
                 var receiver = $(this).parent(),
                     sender = $(ui.sender[0]).parent(),
                     tab = ui.item[0],
@@ -22,6 +25,17 @@ $(function() {
                 // Find the id of the associated panel
                      panelId = tab$.attr( "aria-controls" );
                	var newIndex = ui.item.index();
+                
+                
+                console.log("A List of things used in Move Tab:");
+                console.log("tab:");
+                console.log(tab);
+                console.log("tab$:");
+                console.log(tab$);
+                console.log("newIndex:");
+                console.log(newIndex);
+ 				console.log("This:")
+ 				console.log($(this));
                 
                 
                 tab$ = $(tab$.removeAttr($.makeArray(tab.attributes).
@@ -35,7 +49,7 @@ $(function() {
                 //var newIndex = $(this).data("ui-sortable").currentItem.index();
                	tabs.tabs("refresh");
                 tabs.tabs({ active:newIndex});
-                
+                */
                 
                 
             }

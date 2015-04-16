@@ -132,8 +132,12 @@ function cliMsgProcDocument(jObj) {
 		});
 	}
 	if (jObj.command == 'deleteDataMultiLine') {
-		jObj = jObj.deleteDataSingleLine;
+		console.log("Recvd msg for deleteDataMultiLine")
+		jObj = jObj.deleteDataMultiLine;
 		var targetDocument = jObj.document;
+		var doc = editor.getSession().getDocument();
+		console.log("Called getSession().getDocument(), calling removeLines()")
+		doc.removeLines(jObj.startLine, jObj.endLine - 1);
 	}
 	if (jObj.command == 'documentSetContents') {
 	    var dsc = jObj.documentSetContents;
@@ -191,7 +195,7 @@ function cliMsgProcChat(jObj) {
 				console.log(this);
 				console.log($(this));
 				$(this).remove();
-			}
+			}a
 		});
 	}
 	else if (jObj.command == "setChatTreeJSON") {

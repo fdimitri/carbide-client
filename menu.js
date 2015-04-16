@@ -20,8 +20,19 @@ $(document).ready(function() {
 	         //Destroy extra panes here
 	         var loopForPanes = parseInt(neededPanes) + 1;
 	         for (var i = loopForPanes; i<=totalPanes; i++) {
+	         	var tabs = $('.windowPane').eq(0).children(".tabBar").tabs();
+	         	var tabs2 = $('.windowPane').eq(i).children(".tabBar").tabs();
 	         	console.log("i is " + i);
 	         	console.log($('.windowPane').eq(i-1).children(".tabBar").children(".menuList").children("li").length);
+	         	var numTabsToDelete = $('.windowPane').eq(i-1).children(".tabBar").children(".menuList").children("li").length;
+	         	for (var j = 0; j<numTabsToDelete; j++) {
+	     
+	         		var tabToMove = $('.windowPane').eq(i-1).children(".tabBar").find("li");
+	         	
+
+	         		moveTab(tabs,tabs2,$('.windowPane').eq(0).find(".tabBar"),$(tabToMove).closest(".tabBar"),tabToMove);
+	         	}
+	         	
 	         }
 	    }
 	    waitForWindowPane(neededPanes, arrangePanes, paneType);
