@@ -117,6 +117,10 @@ $(
 			   			focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focs it.
 		   			}
 		   	}
+		   	else if ($(event.target).is('.addNewTab')) {
+		   		dialog.dialog( "open" );
+		   	
+		   	}
 			else if($(event.target).is('.tabBar a')) {
 				
 				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
@@ -137,29 +141,84 @@ $(
 			if($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, make it the active pane
 
 
-				// $(".windowPane").removeClass("activePane");
-				// $(event.target).closest(".windowPane").addClass("activePane"); 
-				// var activePaneId = $(event.target).closest(".windowPane").attr('id');
-				// var thisPaneLocation = $.inArray(activePaneId,activePanes);
-				// if (thisPaneLocation > -1) {
-				// 	activePanes.splice(thisPaneLocation,1);
-				// }
-				// activePanes.push(activePaneId);
+		
 				if(!$(event.target).is('.paneClose')) { //don't trigger when we are closing a pane
 					focusPane($(event.target).closest(".windowPane").attr('id'));
 				}
 			}
 		});
 		
+		// modal dialog init: custom buttons and a "close" callback resetting the form inside
+	var dialog = $( "#newTabDialog" ).dialog({
+		autoOpen: false,
+		modal: true,
+		buttons: {
+			Add: function() {
+				addTab();
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			form[ 0 ].reset();
+		}
+	});
+	// addTab form: calls addTab function on submit and closes the dialog
+	var form = dialog.find( "form" ).submit(function( event ) {
+		//newTab();
+		dialog.dialog( "close" );
+		event.preventDefault();
+	});
 	}
 );		
 		
 /////////////////////////////////////////////////////		
+function closeTab(tab){
+	
+			var numberOfTabs = tab.closest(".menuList").find("li").length;
+			var controllerPane = tab.closest(".windowPane").attr("id");
+			var panelId = tab.closest("li").remove().attr("aria-controls");
+			var $paneId = $("#" + panelId);
+			$paneId.remove();
+		
+			if (tab.attr('type') == 'chat') {
+				var chatName = tab.attr('filename');
+				var statusJSON = {
+					"commandSet": "chat",
+					"chatCommand": "leaveChannel",
+					"chatTarget": chatName,
+					"leaveChannel": {
+						"status" : true,
+					},
+				};
+				console.log(statusJSON);
+				wsSendMsg(JSON.stringify(statusJSON));
+			}
+			
+			console.log("NUMTABS = " + numberOfTabs);
+			if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
+				appendAddTabButton(controllerPane);
+			}
+			tabs.tabs("refresh");
+}
+
+
+function removeAddTabButton(paneId)	{
+		$('#' + paneId).find(".addNewTab").remove();
+	    $('#' + paneId).find(".addTabAria").remove();
+}	
+function appendAddTabButton(paneId) {
+	var numToInsert = paneId.replace(/\D/g, ''); //strip everything but numbers, get the pane id number
+	var newLi = '<li class="addNewTab"><a href="#addTab' + numToInsert + '"><span class="ui-icon ui-icon-folder-open"></span><p class="addTabText">+Add Tab</p></a></li>';
+	var newAriaDiv = '<div id="addTab' + numToInsert + '" class="addTabAria"><p class="addTabIntro">Drag a file onto the tab bar above, or click the "Add Tab" button to get started. The contents will appear here. You can add any type of content to this window pane. Files, Chats, Video; whatever you\'ve got.</p></div>';
+    $("#" + paneId).find(".menuList").append(newLi);
+    $("#" + paneId).find(".tabBar").append(newAriaDiv);
+    		
+}
 		
 function focusPane(paneId) {
-//	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
-//	$("div #" + paneId).removeClass("lowZ"); //remove lowZ class from this element
-//	$("div #" + paneId).addClass("highZ"); //add highZ class to this element so its focus comes to the front
 
 	if (paneId.indexOf('#') !== -1) {
 		paneId = paneId.slice(1);
@@ -475,22 +534,34 @@ function initChatTree(data) {
 
 function newTab(filename, paneId, originId, tabType, srcPath) {
 	console.log("Called with filename:" + filename + " paneId:" + paneId + " originId" + originId + " srcPath:" + srcPath);
+	removeAddTabButton(paneId);
+	
 	var num_Tabs = $("#" + paneId + ' .menuList li').length;
 	var tabName = "tab-" + paneId + "-" + filename;
 	tabName = tabName.replace('.', '_');
 	var tabNameNice = filename;
 	var tabs = $(".tabBar").tabs();
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
-	if ($("#" + tabName).length) {
+	
+	//this was our old check to see if a tab was already open. It will no longer work. We have to go by srcpath.
+	/*if ($("#" + tabName).length) {
 		console.log("We already have this tab open!");
 		var listItem = $("#" + tabName);
 		$("#" + paneId).tabs("option", "active", listItem.index());
 		return;
+	}*/
+	if ($("#" + paneId).find('li[srcpath="' + srcPath + '"]').length) {
+		console.log("We already have this tab open!");
+		var listItem = $("#" + paneId).find('li[srcpath="' + srcPath + '"]');
+		$("#" + paneId).tabs("option", "active", listItem.index());
+		return;
 	}
+	
+	
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
 	$("#" + paneId).tabs().find(".ui-tabs-nav").append(
-		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
+		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><!--<span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span>--><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
 	$("#" + paneId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = [{
@@ -894,7 +965,7 @@ $('.drag')
     });
     //end of context menu dragging fix
     */    
-        
+     
 	var jsTreeDiv = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>';
 	var nodes = [{
 		id: true,
@@ -983,9 +1054,29 @@ $(document)
 });
 
 
-function moveTab (tabs, tabs2, receiver, sender, tab) { 
+function moveTab (receiver, sender, tab) { 
 
 
+				//first check if the tab already exists in the receiver pane. If it does, remove the tab from the sender pane and move focus to the tab in the receiver
+				
+				var srcPath = tab.attr("srcpath");
+				var paneId = receiver.closest(".windowPane").attr("id");
+				var movedLiObject = $("#" + paneId).find('li[srcpath="' + srcPath + '"]');
+				var itemType = movedLiObject.attr("type");
+				if (movedLiObject.length > 1) {
+					console.log("We already have this tab open!");
+					movedLiObject.last().remove(); //remove the new LI and then...
+					var senderPaneId = sender.closest(".windowPane").attr("id"); 
+					var thisAriaName = tab.attr( "aria-controls" );
+					var oldPanelId = $("#" + senderPaneId).find("div#" + thisAriaName).remove();	//remove the old aria tab. We'll then..
+					var listItem = movedLiObject; //shift the focus to the correct tab in the new pane.
+					$("#" + paneId).tabs();
+					$("#" + paneId).tabs("option", "active", listItem.index());
+					$("#" + paneId).removeClass("ui-widget");
+					
+					return;
+				}
+				
 				
                 tab.appendTo(receiver.find("ul"));
                 // Find the id of the associated panel
@@ -993,18 +1084,39 @@ function moveTab (tabs, tabs2, receiver, sender, tab) {
                 // Remove the panel
                 
                 $( "#" + panelId ).appendTo(receiver);
-                tabs.tabs('refresh');
-                var newIndex = receiver.find("li").length;
-                newIndex = newIndex - 1;
-                console.log("NEWINDEX " + newIndex);
-                tabs.tabs({ active:newIndex});
                 
-                //var tabs2 = sender.children(".tabBar").tabs();
-                tabs2.tabs('refresh');
-                var sendIndex = sender.find("li").length;
-                sendIndex = sendIndex - 1;
-                console.log("SENDINDEX " + sendIndex);
-                tabs2.tabs({ active:sendIndex})
+                //This is where we have to change the attributes to match the new tab bar. Change: li aria-controls attribute, a href attribute, div (class AriaTab) ID attr,
+                //pre (class preAceEdit) ID attr
+                var numToReplace = sender.attr("id").replace(/\D/g, ''); //the tab bar id number of the sender
+                var numReplaceTo = receiver.attr("id").replace(/\D/g, ''); //the tab bar id number of the receiver
+                var newRegExp = new RegExp(numToReplace,"g");
+    
+    			console.log("REPLACE DATA!!!! " + numToReplace + " is going to turn into " + numReplaceTo + " because " + newRegExp);
+                var newVal = movedLiObject.attr("aria-controls").replace(newRegExp,numReplaceTo);
+
+                movedLiObject.attr("aria-controls",newVal);
+                
+                
+                var aToSearchFor = "#" + panelId; //this is the a-href we need to change.
+                newVal = aToSearchFor.replace(newRegExp,numReplaceTo);
+                receiver.find('a[href=' + aToSearchFor + ']').attr("href", newVal); //replace the A href with the number of the new tabbar
+                
+                var ariaDivToSearchFor = panelId;
+                newVal = ariaDivToSearchFor.replace(newRegExp,numReplaceTo);
+                var foundAriaDiv = receiver.find("#" + ariaDivToSearchFor);
+                foundAriaDiv.attr("id", newVal); //replace the id of the aria controls div with the new number
+                
+                var preToSearchFor = itemType + "_" + panelId;
+                newVal = preToSearchFor.replace(newRegExp,numReplaceTo);
+                var foundPre = receiver.find("#" + preToSearchFor);
+                foundPre.attr("id", newVal); //replace the id of the pre with the new number
+
+                $(".tabBar").tabs("refresh");
+                $(".tabBar").tabs( "option", "active", -1 );
+                 $(".tabBar").tabs("refresh");
+                 
+                 
+                //console.log(tabs2);
                 
 				/*console.log(tabs);
 				console.log(receiver);

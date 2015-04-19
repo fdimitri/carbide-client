@@ -82,8 +82,11 @@ function cliMsgProcDocument(jObj) {
 		var chData = jObj.char;
 		var targetDocument = jObj.document;
 		var r;
-		r = new Range(lineData, chData, lineData, chData + inputData.length);
-		editor.getSession().replace(r, inputData);
+		var session = editor.getSession();
+		var doc = session.getDocument();
+		// r = new Range(lineData, chData, lineData, chData + inputData.length);
+		// editor.getSession().replace(r, inputData);
+		session.insert({row: lineData, column: chData}, inputData);
 	}
 	else if (jObj.command == 'deleteDataSingleLine') {
 		// Will not delete an actual line, we need to fix this
@@ -97,7 +100,7 @@ function cliMsgProcDocument(jObj) {
 		var Range = require("ace/range").Range;
 		// MAJOR HACK, ask for document contents if we're deleting a newline character since Ace is ass..
 		if (1 && inputData == "\n") {
-							var statusJSON = {
+				var statusJSON = {
 					"commandSet" : "document",
 					"command" : "getContents",
 					"documentTarget" : $(editor).attr('srcPath'),
@@ -126,8 +129,10 @@ function cliMsgProcDocument(jObj) {
 		curLine = jObj.startLine;
 		jObj.data.forEach(function(entry) {
 		    console.log("jobj.data.each inserting at " + curLine);
-            r = new Range(curLine, 0, curLine, entry.length + 1);
-		    editor.getSession().replace(r, entry + '\n');
+      //      r = new Range(curLine, 0, curLine, entry.length + 1);
+		    // editor.getSession().replace(r, entry + '\n');
+		    r = { row: curLine, column: 0};
+		    editor.getSession().getDocument().insert(r, entry + "\n")
 		    curLine += 1;
 		});
 	}

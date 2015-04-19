@@ -7,6 +7,7 @@ $(function() {
         
         tabs.find( ".ui-tabs-nav" ).sortable({
             connectWith: '.ui-tabs-nav',
+            cancel: ".addNewTab",
             helper: function(event, ui){
             	var retVal = '<div class="sortHelper">' + $(ui).find("a").html() + '</div>';
 
@@ -15,8 +16,8 @@ $(function() {
             appendTo: "body",
             receive: function (event, ui) {
 
-			var tabs2 = $(ui.sender[0]).parent().find(".tabBar").tabs();
-			moveTab(tabs,tabs2,$(this).parent(),$(ui.sender[0]).parent(),$(ui.item[0]));
+		
+			moveTab($(this).parent(),$(ui.sender[0]).parent(),$(ui.item[0]));
 			/*
                 var receiver = $(this).parent(),
                     sender = $(ui.sender[0]).parent(),
@@ -70,7 +71,11 @@ $(function() {
         }
 	});*/
 	
-	tabs.delegate("span.ui-icon-close", "click", function() {
+	tabs.on("click", "span.ui-icon-close", function() {
+			
+
+			var numberOfTabs = $(this).closest(".menuList").find("li").length;
+			var controllerPane = $(this).closest(".windowPane").attr("id");
 			var panelId = $(this).closest("li").remove().attr("aria-controls");
 			var $paneId = $("#" + panelId);
 			$paneId.remove();
@@ -90,6 +95,11 @@ $(function() {
 				};
 				console.log(statusJSON);
 				wsSendMsg(JSON.stringify(statusJSON));
+			}
+			
+			console.log("NUMTABS = " + numberOfTabs);
+			if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
+				appendAddTabButton(controllerPane);
 			}
 			tabs.tabs("refresh");
 	});
@@ -188,7 +198,7 @@ $(function() {
 			
 		},
 		start: function(event, ui) {
-
+			lastPaneFormat = "";
 			//ui.element.addClass("activeWindow");
 			$(".windowPane").each(function() {
 				var cssObj = {
@@ -212,6 +222,7 @@ $(function() {
 		handle: ".paneHeader",
 		cancel: ".maximizedPane",
 		start: function(event, ui) {
+			
 			$(".windowPane").removeClass("activePane");
 			$(".windowPane").each(function() {
 				var cssObj = {

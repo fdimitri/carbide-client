@@ -27,9 +27,9 @@ $("#%paneId%").on('resize', function() {
 
 $(".tabBar").find(".reloadButton").on('click', function ( e ) {
     console.log("Our paneId is " + $(this).closest(".windowPane").attr("id"));
+    console.log("reload acknowledged.");
     
-    
-        var te = $(this);
+        var te = $(this).closest("li");
 		var statusJSON = {
 			"commandSet" : "document",
 			"command" : "getContents",

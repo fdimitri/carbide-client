@@ -20,19 +20,24 @@ $(document).ready(function() {
 	         //Destroy extra panes here
 	         var loopForPanes = parseInt(neededPanes) + 1;
 	         for (var i = loopForPanes; i<=totalPanes; i++) {
-	         	var tabs = $('.windowPane').eq(0).children(".tabBar").tabs();
-	         	var tabs2 = $('.windowPane').eq(i).children(".tabBar").tabs();
+	         	//var tabs = $('.windowPane').eq(0).children(".tabBar").tabs();
+	         	console.log($('.windowPane').eq(i-1).find(".addTab").length)
+	         	removeAddTabButton($('.windowPane').eq(i-1).attr("id"));
 	         	console.log("i is " + i);
 	         	console.log($('.windowPane').eq(i-1).children(".tabBar").children(".menuList").children("li").length);
 	         	var numTabsToDelete = $('.windowPane').eq(i-1).children(".tabBar").children(".menuList").children("li").length;
 	         	for (var j = 0; j<numTabsToDelete; j++) {
 	     
-	         		var tabToMove = $('.windowPane').eq(i-1).children(".tabBar").find("li");
-	         	
-
-	         		moveTab(tabs,tabs2,$('.windowPane').eq(0).find(".tabBar"),$(tabToMove).closest(".tabBar"),tabToMove);
+	         		var tabToMove = $('.windowPane').eq(i-1).children(".tabBar").find("li").eq(0);
+	         		var senderTabBar = tabToMove.closest(".tabBar");
+					tabToMove.appendTo($('.windowPane').eq(0).find("ul"));
+	         		moveTab($('.windowPane').eq(0).find(".tabBar"),senderTabBar,tabToMove);
 	         	}
 	         	
+	         	
+	         }
+	         for (i = loopForPanes; i<=totalPanes; i++) { //now we close the empty panes
+	         	closePane($('.windowPane').eq(loopForPanes-1).attr("id"));
 	         }
 	    }
 	    waitForWindowPane(neededPanes, arrangePanes, paneType);
