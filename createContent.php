@@ -58,7 +58,23 @@ else if ($tabType == 'file') {
 		'script' => $script,
 	);
 }
+else if ($tabType == 'terminal') {
 
+	$html = file_get_contents('createContentTerminal.html');
+
+	$containerId = $tabName . '_C';
+
+	$html = str_replace('%terminalContainerId%', $containerId, $html);
+
+	$script = file_get_contents('createContentTerminal.js');
+	$script = str_replace('%terminalId%', $tabName, $script);
+
+	$rval = array(
+		'success' => TRUE, 
+		'html' => $html,
+		'script' => $script,
+	);
+}
 echo json_encode($rval);
 return;
 ?>

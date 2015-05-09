@@ -73,8 +73,8 @@ $(function() {
 	
 	tabs.on("click", "span.ui-icon-close", function() {
 			
-
-			var numberOfTabs = $(this).closest(".menuList").find("li").length;
+			closeTab($(this));
+		/*	var numberOfTabs = $(this).closest(".menuList").find("li").length;
 			var controllerPane = $(this).closest(".windowPane").attr("id");
 			var panelId = $(this).closest("li").remove().attr("aria-controls");
 			var $paneId = $("#" + panelId);
@@ -102,6 +102,7 @@ $(function() {
 				appendAddTabButton(controllerPane);
 			}
 			tabs.tabs("refresh");
+			*/
 	});
 	tabs.bind("keyup", function(event) {
 		if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {

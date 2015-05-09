@@ -3,6 +3,10 @@ var activePanes = [];
 var lastPaneFormat = 0;
 var deletedPanes = 0;
 
+
+
+
+
 $(document).on('keydown', function(e) {
 
 
@@ -156,12 +160,31 @@ $(
 				// $(".windowPane").removeClass("activePane");
 				// $(event.target).closest(".windowPane").addClass("activePane"); 
 				// var activePaneId = $(event.target).closest(".windowPane").attr('id');
-				function closeTab(tab) {
+				
+
+			
+					// var thisPaneLocation = $.inArray(activePaneId,activePanes);
+					// if (thisPaneLocation > -1) {
+					// 	activePanes.splice(thisPaneLocation,1);
+					// }
+					// activePanes.push(activePaneId);
+				if (!$(event.target).is('.paneClose')) { //don't trigger when we are closing a pane
+					focusPane($(event.target).closest(".windowPane").attr('id'));
+				}
+			}
+		});
+
+	}
+);
+
+/////////////////////////////////////////////////////		
+function closeTab(tab) {
 
 					var numberOfTabs = tab.closest(".menuList").find("li").length;
 					var controllerPane = tab.closest(".windowPane").attr("id");
 					var panelId = tab.closest("li").remove().attr("aria-controls");
 					var $paneId = $("#" + panelId);
+					//var tabs = tab.find(".tabBar").tabs();
 					$paneId.remove();
 
 					if (tab.attr('type') == 'chat') {
@@ -180,28 +203,13 @@ $(
 
 					console.log("NUMTABS = " + numberOfTabs);
 					if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
+					console.log("calling AppendTab with controllerid " + controllerPane);
 						appendAddTabButton(controllerPane);
 					}
-					tabs.tabs("refresh");
-				}
+					//tabs.tabs("refresh");
+					$("#" + controllerPane).find(".tabBar").tabs().tabs("refresh");
+}
 
-
-			
-					// var thisPaneLocation = $.inArray(activePaneId,activePanes);
-					// if (thisPaneLocation > -1) {
-					// 	activePanes.splice(thisPaneLocation,1);
-					// }
-					// activePanes.push(activePaneId);
-				if (!$(event.target).is('.paneClose')) { //don't trigger when we are closing a pane
-					focusPane($(event.target).closest(".windowPane").attr('id'));
-				}
-			}
-		});
-
-	}
-);
-
-/////////////////////////////////////////////////////		
 
 function focusPane(paneId) {
 	//	$(".windowPane").not("#" + paneId).removeClass("highZ"); //remove highZ class from all the other elements
@@ -519,19 +527,18 @@ function initFileTree(data) {
 
 
 	});
-	$('div .jstree').on('dblclick', '.jstree-anchor', function(e) {
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) {
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);
+console.log("double click detected on " + node.type);
+		if (node.type == "file" || node.type == "chat" || node.type == "terminal") {
 
-		if (node.type == "file" || node.type == "chat") {
 
 			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
 			if ($(".windowPane").length == 0) {
-				var req = createNewPane();
-				req.done(function() {
-					console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
-					// do something with the response
-				});
+				createNewPane();
+				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
+				
 
 			}
 			else {
@@ -544,37 +551,90 @@ function initFileTree(data) {
 
 }
 
+function waitForNewWindow(conditions, callback, filename, originId, tabType, srcPath) {
+    setTimeout(function() {
+        if (numWindowPanes() >= conditions) {
+            if (callback != null) {
+            	console.log("calling a function because numwindowpanes is " + numWindowPanes());
+                callback(filename,  $(".activePane .tabBar").attr('id'), originId, tabType, srcPath);
+            }
+            return;
+        }
+        else {
+            console.log("WAITING: " + numWindowPanes() + " UNTIL " + conditions)
+            waitForNewWindow(conditions, callback, filename, originId, tabType, srcPath);
+        }
+    }, 50); // wait 10ms for the connection...
+}
+
+
 function initChatTree(data) {
 
 }
 
 
-function newTab(filename, paneId, originId, tabType, srcPath) {
-	console.log("Called with filename:" + filename + " paneId:" + paneId + " originId" + originId + " srcPath:" + srcPath);
-	removeAddTabButton(paneId);
-
-	var num_Tabs = $("#" + paneId + ' .menuList li').length;
-	var tabName = "tab-" + paneId + "-" + filename;
+function newTab(filename, tabBarId, originId, tabType, srcPath) {
+	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId" + originId + " srcPath:" + srcPath);
+	
+	if (filename == "Shared Terminal") {
+		var numTerminals = $('li[type="terminal"]').length; //count the terminals
+		filename = "Terminal_" + (numTerminals + 1);
+	}
+	var paneId = $("#" + tabBarId).closest(".windowPane").attr("id");
+	var num_Tabs = $("#" + tabBarId + ' .menuList li').length;
+	var tabName = "tab-" + tabBarId + "-" + filename;
+	var tabSaved = $(".tabBar").tabs();
 	tabName = tabName.replace('.', '_');
 	var tabNameNice = filename;
-	var tabs = $(".tabBar").tabs();
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
-	if ($("#" + tabName).length) {
-		console.log("We already have this tab open!");
-		var listItem = $("#" + tabName);
-		$("#" + paneId).tabs("option", "active", listItem.index());
-		return;
+	//if ($("#" + tabName).length) {
+	if (tabType == "file") {
+		if ($("#" + tabBarId).find("#" + tabName).length) { //check for duplicate files
+			console.log("We already have this tab open!");
+			$("#" + paneId).find(".tabBar").tabs().tabs("refresh");
+			var listItemIndex = $("#" + paneId).find('[srcpath="' + srcPath + '"]').index();
+		
+			$("#" + paneId).find(".tabBar").tabs().tabs("refresh").tabs("option", "active", listItemIndex).tabs("refresh");
+			console.log("attempted to set active tab to " + listItemIndex + " because of ");
+			console.log("#" + paneId);
+			return;
+		}
 	}
+	else if (tabType == "chat") { //a duplicate chat is considered to be any chat active within any pane
+		var foundFile = $('li[filename="' + filename + '"]');
+		if (foundFile.length) {
+			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing chat
+			foundFile.closest(".tabBar").tabs().tabs("refresh");
+			foundFile.closest(".tabBar").tabs().tabs("option", "active", foundFile.index()).tabs("refresh");
+			
+			return;
+		}
+	}
+	else if (tabType == "terminal") {
+		if ($("#" + tabBarId).find("#" + tabName).length) { //only allow 1 terminal per window Pane
+			console.log("We already have this tab open!");
+			$("#" + paneId).find(".tabBar").tabs().tabs("refresh");
+			var listItemIndex = $("#" + paneId).find('[srcpath="' + srcPath + '"]').index();
+		
+			$("#" + paneId).find(".tabBar").tabs().tabs("refresh").tabs("option", "active", listItemIndex).tabs("refresh");
+			console.log("attempted to set active tab to " + listItemIndex + " because of ");
+			console.log("#" + paneId);
+			return;
+		}
+	}
+	removeAddTabButton(tabBarId);
+	
+	
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
-	$("#" + paneId).tabs().find(".ui-tabs-nav").append(
+	$("#" + tabBarId).tabs().find(".ui-tabs-nav").append(
 		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><!--<span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span>--><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
-	$("#" + paneId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
+	$("#" + tabBarId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = [{
 		'tabName': tabName,
 		'tabType': tabType,
-		'paneId': paneId,
+		'paneId': tabBarId,
 		'originId': originId,
 		'chatTarget': filename,
 		'srcPath': srcPath,
@@ -619,7 +679,7 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 				console.log(ws);
 				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
-			if (tabType == 'file') {
+			else if (tabType == 'file') {
 				//var te = $("#" + tabName).find('textarea');
 				var te = $("#" + tabName).find('.preAceEdit');
 				console.log("Searching " + tabName + " to add editor to..");
@@ -645,8 +705,8 @@ function newTab(filename, paneId, originId, tabType, srcPath) {
 		},
 	});
 	//tabs.tabs("refresh").tabs({ active:num_Tabs});
-	tabs.tabs("refresh");
-	$("#" + paneId).tabs({
+	tabSaved.tabs("refresh");
+	$("#" + tabBarId).tabs({
 		active: num_Tabs
 	});
 
@@ -940,6 +1000,15 @@ $(document).ready(function() {
 				"li_attr": {
 					"class": "jsTreeChat"
 				}
+			},
+			{
+				"id": "terminalroot",
+				"parent": "#",
+				"text": "Shared Terminal",
+				"type": "terminal",
+				"li_attr": {
+					"class": "jsTreeTerminal"
+				}
 			}],
 
 
@@ -960,6 +1029,10 @@ $(document).ready(function() {
 			"root": {
 				"icon": "jstree-folder",
 				"valid_children": ["chat"]
+			},
+			"terminal": {
+				"icon": "jstree-file",
+				"valid_children": []
 			}
 
 
@@ -1003,7 +1076,7 @@ $(document).ready(function() {
 			if (!t.closest('.jstree').length) {
 				if (t.closest('.menuList').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat")) {
+					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
 					}
 					else {
@@ -1067,6 +1140,23 @@ $(document).ready(function() {
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
+					else if (draggedItem.hasClass("jsTreeTerminal")) {
+						var thisParent = $(data.event.target).closest('div').attr('id');
+						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
+							console.log("Tab already exists, not adding -- but setting active");
+							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
+							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
+						}
+						else {
+							console.log(data);
+							console.log($("#" + data.data.obj[0].id));
+							console.log($("#" + data.data.obj[0].id).closest('li'));
+							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
+							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'terminal', '');
+							var tabItem = $("#tabs-" + tabCounter);
+							var itemParent = tabItem.closest('div').attr('id');
+						}
+					}
 				}
 			}
 		});
@@ -1077,7 +1167,34 @@ $(document).ready(function() {
 function moveTab(receiver, sender, tab) {
 
 
+
+	var tabType = tab.attr("type");
+	
 	var srcPath = tab.attr("srcpath");
+	
+	
+	if (tabType == "file") {	//check if tab (as file) already exists in the receiver pane, and if so, disallow move
+		if (receiver.closest(".windowPane").find('[type="file"][srcpath="' + srcPath + '"]').length > 1) { //look for a file with the same srcpath
+			var ariaToRemove = tab.attr("aria-controls");
+			tab.remove();
+			sender.closest(".windowPane").find("#" + ariaToRemove).remove();
+			if (sender.closest(".windowPane").find("li").length < 1) { //bring back the add tab button if need be
+				appendAddTabButton(sender.closest(".windowPane").attr("id"));
+				sender.closest(".windowPane").find(".tabBar").tabs().tabs("refresh");
+				receiver.closest(".windowPane").find(".tabBar").tabs().tabs("refresh");
+				var indexToShow = receiver.closest(".windowPane").find('[srcpath = "' + srcPath + '"]').index();
+				receiver.closest(".windowPane").find(".tabBar").tabs().tabs("option", "active", indexToShow).tabs("refresh");
+			}
+			return;
+			
+		}
+	
+	}
+	else if(tabType == "chat") { //we don't allow multiple chats to exist at all, even in different panes, so this shouldn't have to trigger an action at the moment
+		
+		//respond here if it becomes desireable to limit chat movement
+	}
+	
 	var paneId = receiver.closest(".windowPane").attr("id");
 	var sentPaneId = sender.closest(".windowPane").attr("id");
 	var movedLiObject = $("#" + paneId).find('li[srcpath="' + srcPath + '"]');
