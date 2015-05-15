@@ -17,6 +17,9 @@ ws.onmessage = function(evt) {
 	else if (jObj.commandSet == "document") {
 		cliMsgProcDocument(jObj);
 	}
+	else if (jObj.commandSet == "term") {
+		cliMsgProcTerminal(jObj);
+	}
 	else {
 		console.log("Received non-chat command: " + jObj.commandSet);
 	}
@@ -24,7 +27,6 @@ ws.onmessage = function(evt) {
 
 ws.onerror = function(error) {
 	console.log(error);
-
 };
 
 function wsSendMsg(msg) {
@@ -62,6 +64,20 @@ function getAceEditorByName(name) {
 		}
 	});
 	return (rval);
+}
+
+function cliMsgProcTerminal(jObjo) {
+	var term = getTerminalByName(jObjo.terminal);
+	if (jObjo.command == 'putChar') {
+		var jObj = jObjo.putChar;
+		console.log("We found a terminal");
+		console.log(term);
+		term.write(jObj.data);
+//		term.write(jObj.data);
+//	We need the terminal instance from the div referred to by "term"
+
+	}
+
 }
 
 function cliMsgProcDocument(jObjo) {
@@ -272,3 +288,17 @@ ws.onopen = function() {
 // 		$(this).val('');
 // 	}
 // });
+
+function findTerm(termName) {
+	var foundTerminal = false;
+	$(".terminalWindow").each(function() {
+		if ($(this).attr('terminalId') == termName) {
+			foundTerminal = this;
+		}
+	});
+	if (foundTerminal) {
+		return(this);
+	}
+}
+
+
