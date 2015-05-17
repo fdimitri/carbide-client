@@ -15,9 +15,14 @@
 	<script src="jstree/jstree.js"></script>
 	<script src="quartzmenu/script.js"></script>
 
-	<script src="terminaljs/terminal.js"></script>
-
-
+	<!--<script src="terminaljs/terminal.js"></script>-->
+	<script src="newTerminal.js"></script>
+	<script src="termjs/src/term.js"></script>
+	
+	<script src="fileTree.js"></script>
+	<script src="contextMenu.js"></script>
+	
+	
 	<script src="ace-builds/src/ace.js"></script>
 	<script src="ace-builds/src/ext-statusbar.js"></script>
 
@@ -97,7 +102,14 @@
 		</div>
 
 		<div id="editorContainer">
-
+						<ul id="jsTree1-ContextMenu" class="jsTreeContextMenu">	
+					    	<li><a href="#" class="contextMenuParent"><i></i><span class="contextMenuSep">&nbsp;</span>New</a>
+					    		<ul class="contextSubMenu">
+					    			<li id="cm-NewFile"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>File</a></li>
+					    		</ul>
+					    	</li>
+							<li id="cm-Opions"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>Options</a></li>
+						</ul>
 				<div id="toolBarSide">
 				    <ul>
 				        <li><a href="#tabs-1">Files</a>
@@ -108,7 +120,12 @@
 				        </li>
 				    </ul>
 				    <div id="tabs-1">
-				    	<div id="jsTree1"></div>
+			    	
+				    	<div id="jsTree1">
+			    		
+					    
+				    		
+				    	</div>
 				    </div>
 				    <div id="tabs-2">
 				        <div id="jsTree2"></div>

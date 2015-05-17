@@ -7,13 +7,13 @@ var deletedPanes = 0;
 
 
 
-$(document).on('keydown', function(e) {
+/*$(document).on('keydown', function(e) {
 
 
 	if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
 		console.log("keydown acknowledged")
 	}
-});
+});*/
 
 $(function() {
 	$("#toolBarSide").resizable({
@@ -411,145 +411,10 @@ function closeWindowPaneTab(paneAttr) {
 
 }
 
-function customMenu(node) {
-	var cloneCount = $('div[id^=pane]').length;
-	// The default set of all items
-	var menuPanes = {}
-	console.log($(".windowPane"));
-	$(".windowPane").each(function() {
-		var paneNumber = $(this).attr('id').match(/\d+/);
-		var objName = "openPane" + paneNumber;
-
-		var windowPane = this;
-		var tempPane = {
-			objName: {
-				label: "Open in Pane " + paneNumber,
-				action: function() {
-					//alert("Open file in pane " + paneNumber);
-					console.log($(windowPane).attr('id'));
-					console.log(node.text);
-
-					newTab(node.text, $(windowPane).find(".tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
-
-				}
-			}
-		}
-		console.log('menuPanes follows');
-		console.log(menuPanes);
-		menuPanes[$(this).attr('id')] = (tempPane.objName);
-	});
-	console.log('menuPanes follows');
-	console.log(menuPanes);
-
-	var items = {
-
-		openItem: { //open with...
-			label: "Open with...",
-			action: false,
-			submenu: menuPanes,
-
-		},
-		renameItem: { // The "rename" menu item
-			label: "Rename",
-			action: function() {
-				alert("Your new name is Milo.");
-			}
-		},
-		deleteItem: { // The "delete" menu item
-			label: "Delete",
-			action: function() {
-				alert("You have been deleted.");
-			}
-		}
-
-	};
-
-	if ($(node).hasClass("folder")) {
-		// Delete the "delete" menu item
-		delete items.deleteItem;
-		alert("bam!");
-	}
-
-	return items;
-
-}
 
 
-function initFileTree(data) {
-	if (!data) {
-		console.log("Asked to init with no data, using built-ins")
-		data = [{
-			"id": "ftroot0",
-			"parent": "#",
-			"text": "Mockup",
-			"type": "root",
-			"li_attr": {
-				"class": "jsTreeRoot"
-			}
-		}, ]
-	}
-	console.log("Calling jstree() on");
-	console.log($('#jsTree1'));
-	$('#jsTree1').jstree({
-		"core": {
-			// so that create works
-			check_callback: true,
-			'data': data,
-		},
-		"dnd": {
-			is_draggable: function(node) {
-
-				return true;
-			}
-		},
-
-		"types": {
-
-			"file": {
-				"icon": "jstree-file",
-				"valid_children": []
-			},
-			"folder": {
-				"icon": "jstree-folder",
-				"valid_children": ["file"]
-			},
-			"root": {
-				"icon": "jstree-folder",
-				"valid_children": ["file", "folder"]
-			}
 
 
-		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types"],
-		contextmenu: {
-			items: customMenu
-		}
-
-
-	});
-	$('.jstree').on('dblclick', '.jstree-anchor', function(e) {
-		var instance = $.jstree.reference(this),
-			node = instance.get_node(this);
-console.log("double click detected on " + node.type);
-		if (node.type == "file" || node.type == "chat" || node.type == "terminal") {
-
-
-			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
-			if ($(".windowPane").length == 0) {
-				createNewPane();
-				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
-				
-
-			}
-			else {
-				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
-				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
-				//	   	console.log(node);
-			}
-		}
-	});
-
-}
 
 function waitForNewWindow(conditions, callback, filename, originId, tabType, srcPath) {
     setTimeout(function() {
@@ -568,9 +433,7 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
 }
 
 
-function initChatTree(data) {
 
-}
 
 
 function newTab(filename, tabBarId, originId, tabType, srcPath) {
@@ -953,213 +816,6 @@ $(document).ready(function() {
 
 
 
-
-
-	$('#jsTree2').jstree({
-
-		"core": {
-			// so that create works
-			check_callback: true,
-			'data': [{
-				"id": "chatroot",
-				"parent": "#",
-				"text": "Chat Rooms",
-				"type": "root",
-				"li_attr": {
-					"class": "jsRoot"
-				}
-			}, {
-				"id": "chat1",
-				"parent": "chatroot",
-				"text": "StdDev",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat2",
-				"parent": "chatroot",
-				"text": "Java",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat3",
-				"parent": "chatroot",
-				"text": "Coffee",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat4",
-				"parent": "chatroot",
-				"text": "3rd_shift_rulez",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			},
-			{
-				"id": "terminalroot",
-				"parent": "#",
-				"text": "Shared Terminal",
-				"type": "terminal",
-				"li_attr": {
-					"class": "jsTreeTerminal"
-				}
-			}],
-
-
-		},
-		"dnd": {
-			is_draggable: function(node) {
-
-				return true;
-			}
-		},
-
-		"types": {
-
-			"chat": {
-				"icon": "jstree-chat",
-				"valid_children": []
-			},
-			"root": {
-				"icon": "jstree-folder",
-				"valid_children": ["chat"]
-			},
-			"terminal": {
-				"icon": "jstree-file",
-				"valid_children": []
-			}
-
-
-		},
-		/*THIS NEEDS TO BE FIXED TO RESTORE CONTEXT MENU*/
-		"plugins": [ /*"contextmenu", */ "dnd", "crrm", "types"] //,
-			//contextmenu: {
-			//	items: customMenu
-			//}
-	});
-
-
-	$('.drag')
-		.on('mousedown', function(e) {
-			/*
-	//This block of code should make dragging work better with context menus if we need it later
-	var evt = e;
-    if (e.button != 2) return; //Added to make this compatible with draggable
-    evt.stopPropagation();
-    jQuery(this).mouseup( function(e) {
-    e.stopPropagation();
-    var srcElement = jQuery(this);
-    });
-    //end of context menu dragging fix
-    */
-
-			var jsTreeDiv = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>';
-			var nodes = [{
-				id: true,
-				text: $(this).text()
-			}];
-			return $.vakata.dnd.start(e, {
-				'jstree': true,
-				'obj': $(this),
-				'nodes': nodes
-			}, jsTreeDiv);
-		});
-	$(document)
-		.on('dnd_move.vakata', function(e, data) {
-			var t = $(data.event.target);
-			if (!t.closest('.jstree').length) {
-				if (t.closest('.menuList').length) {
-					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {
-						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
-					}
-					else {
-						data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
-					}
-				}
-				else {
-					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
-				}
-			}
-		})
-		.on('dnd_stop.vakata', function(e, data) {
-			console.log("VAKATA " + e + " " + data);
-			var t = $(data.event.target);
-			if (!t.closest('.jstree').length) {
-				if (t.closest('.menuList').length) {
-
-
-					// We probably just need to add hasClass jsTreeChat here as well to allow a chat drop
-					console.log("Data");
-					console.log(data);
-					console.log("Data . Data");
-					console.log(data.data);
-					var draggedItem = $("#" + data.data.obj[0].id);
-
-					console.log(draggedItem);
-					if (draggedItem.hasClass("jsTreeFile")) {
-						console.log("TARGET");
-						console.log(data.event.target);
-						console.log("ID");
-						var thisParent = $(data.event.target).closest('div').attr('id');
-						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
-							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
-							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
-						}
-						else {
-							console.log(data);
-							console.log($("#" + data.data.obj[0].id));
-							//console.log($("#" + data.data.obj[0].id).closest('li').attr('srcPath'));
-							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'file', $("#" + data.data.obj[0].id).attr('srcpath'));
-							var tabItem = $("#tabs-" + tabCounter);
-							var itemParent = tabItem.closest('div').attr('id');
-						}
-					}
-					else if (draggedItem.hasClass("jsTreeChat")) {
-						console.log("Has class jsTreeChat");
-						var thisParent = $(data.event.target).closest('div').attr('id');
-						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
-							console.log("Tab already exists, not adding -- but setting active");
-							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
-							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
-						}
-						else {
-							console.log(data);
-							console.log($("#" + data.data.obj[0].id));
-							console.log($("#" + data.data.obj[0].id).closest('li'));
-							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'chat', '');
-							var tabItem = $("#tabs-" + tabCounter);
-							var itemParent = tabItem.closest('div').attr('id');
-						}
-					}
-					else if (draggedItem.hasClass("jsTreeTerminal")) {
-						var thisParent = $(data.event.target).closest('div').attr('id');
-						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
-							console.log("Tab already exists, not adding -- but setting active");
-							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
-							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
-						}
-						else {
-							console.log(data);
-							console.log($("#" + data.data.obj[0].id));
-							console.log($("#" + data.data.obj[0].id).closest('li'));
-							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'terminal', '');
-							var tabItem = $("#tabs-" + tabCounter);
-							var itemParent = tabItem.closest('div').attr('id');
-						}
-					}
-				}
-			}
-		});
 
 });
 
