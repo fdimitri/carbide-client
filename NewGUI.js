@@ -439,7 +439,7 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
 function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId" + originId + " srcPath:" + srcPath);
 	
-	if (filename == "Shared Terminal") {
+	if (filename == "Default Terminal") {
 		var numTerminals = $('li[type="terminal"]').length; //count the terminals
 		filename = "Terminal_" + (numTerminals + 1);
 	}

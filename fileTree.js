@@ -1,8 +1,8 @@
 $(document).ready(function() {
     
     
-	
-	
+
+
 	
 	
 	$('.drag').on('mousedown', function(e) {
@@ -115,6 +115,9 @@ $(document).ready(function() {
 $(function() {
 	$("#jsTree1-ContextMenu").menu({
 		select: function(event, ui) {
+		    if ($(ui.item).attr("id") == "cm-NewFile") {
+		        console.log("new file requested")
+		    }
 			$("#jsTree1-ContextMenu").hide();
 			
 			
@@ -149,6 +152,7 @@ $(function() {
 	});
 
 	$("#jsTree1-ContextMenu").on("contextmenu", function(event) {
+	    
 		return false;
 	});
 });
@@ -254,11 +258,21 @@ function initFileTree(data) {
 			{
 				"id": "terminalroot",
 				"parent": "#",
-				"text": "Shared Terminal",
+				"text": "Terminals",
+				"type": "root",
+				"li_attr": {
+					"class": "jsRoot"
+				}
+			},
+			{
+				"id": "terminaldefault",
+				"parent": "terminalroot",
+				"text": "Default Terminal",
 				"type": "terminal",
 				"li_attr": {
 					"class": "jsTreeTerminal"
 				}
+				
 			}],
 
 

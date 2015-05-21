@@ -79,17 +79,113 @@ function fileTreeMenu(node) {
 		};
 	}
 	else if ($(node).attr("type") == "folder") {
+	    
 		var items = {
 		};
 	}
 	else if ($(node).attr("type") == "root") {
-		var items = {
-		};
+	    if ($(node).attr("id") == "chatroot") {
+	       	var items = {
+    		    newChat: { // create a new chat room
+    				label: "Create New Chat Room",
+    				action: function() {
+    				    console.log("create new chatroom here.");
+    				    $('#newChatOpen').attr('checked', false);
+    				    $("#newChatTarget").remove();
+    				    $("#dialog-newchat").dialog("open");
+    				}
+			    }
+    		};
+	    
+	    }
+	    else if ($(node).attr("id") == "terminalroot") {
+    		var items = {
+    		    newTerminal: { // create a new terminal
+    				label: "Create New Terminal",
+    				action: function() {
+    				    console.log("create new terminal here.");
+    				    $('#newTerminalOpen').attr('checked', false);
+    				    $("#newTerminalTarget").remove();
+    				    $("#dialog-newterminal").dialog("open");
+    				}
+			    }
+    		};
+	    }
 	}
 
 
 
 	return items;
 
+}
+
+$(document).ready(function() {
+    
+    
+
+    $("#dialog-newterminal").dialog({
+        autoOpen: false
+    });
+    $("#newTerminalSubmit").click(function(e) {
+        
+        var terminalName = $("#newTerminalName").val();
+       
+        if (terminalName === '') {
+            alert("Please enter a name for the terminal.");
+             e.preventDefault();
+        } else {
+            //actions to take before form is submitted.
+            console.log("form submitted with terminal name " + terminalName);
+            e.preventDefault();
+            if($('#newTerminalOpen').is(":checked"))   {
+                console.log("They have requested to open the terminal in window pane:");
+                console.log($("#newTerminalTarget").val());
+                
+            }
+            $("#dialog-newterminal").dialog("close");
+        }
+    });
+    
+    $("#dialog-newchat").dialog({
+        autoOpen: false
+    });
+    $("#newChatSubmit").click(function(e) {
+        
+        var chatName = $("#newChatName").val();
+       
+        if (chatName === '') {
+            alert("Please enter a name for the chat room.");
+             e.preventDefault();
+        } else {
+            //actions to take before form is submitted.
+            console.log("form submitted with chat name " + chatName);
+            e.preventDefault();
+            if($('#newChatOpen').is(":checked"))   {
+                console.log("They have requested to open the chat in window pane:");
+                console.log($("#newChatTarget").val());
+                
+            }
+            $("#dialog-newchat").dialog("close");
+        }
+    });
+    
+});
+function chatCheckBoxChanged() {
+    
+    if($('#newChatOpen').is(":checked"))   {
+        var selectOutput = '<select name="chatselect" id="newChatTarget">';
+        $(".windowPane").each(function() {
+    		var paneNumber = $(this).attr('id').match(/\d+/);
+    		var paneName = $(this).attr('id');
+    
+    		selectOutput = selectOutput + '<option value="' + paneName + '">Pane ' + paneNumber + '</option>';
+    	});
+    	selectOutput = selectOutput + '</select>';
+    	$("#newChatDropDownBox").append(selectOutput);
+    }
+    else {
+       $("#newChatTarget").remove();
+    }
+        
 }
 
