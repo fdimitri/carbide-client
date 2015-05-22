@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://172.17.0.42:8080/");
+var ws = new WebSocket("ws://frank-d.info:8080/");
 ws.onmessage = function(evt) {
 	console.log("onmessage fired: " + evt);
 	console.log($.parseJSON(evt.data));
@@ -78,6 +78,10 @@ function cliMsgProcTerminal(jObjo) {
 
 	}
 
+}
+
+function getMsg(key) {
+	return(TRUE);
 }
 
 function cliMsgProcDocument(jObjo) {

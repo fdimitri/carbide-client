@@ -10,10 +10,9 @@ $(document).ready(function() {
      console.log("Terminal width/height:" + width + "x" + height)
      console.log("Parent width/height:" + $("#%terminalId%").parent().parent().width() + "x" + $("#%terminalId%").parent().parent().height());
      console.log("Terminal should in actuality be " + newCols + "x" + newRows + " in size and not 80x24");
-     term.resize(newCols, newRows);
-    // Set new rows, cols attribute here
+    // Setresize(newCols, newRows); new rows, cols attribute here
     // We must also inform the shell, not sure if term.js does that
-    // resizeTerminal("%terminalId%", "%terminalName%", pheight, pwidth);
+     resizeTerminal("%terminalId", "%terminalName%", newRows, newCols)
 });
 
 

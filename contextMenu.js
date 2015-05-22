@@ -152,12 +152,33 @@ $(document).ready(function() {
     $("#newChatSubmit").click(function(e) {
         
         var chatName = $("#newChatName").val();
-       
+        var key = 'randomizedKeyHere';
         if (chatName === '') {
             alert("Please enter a name for the chat room.");
              e.preventDefault();
         } else {
             //actions to take before form is submitted.
+			var statusJSON = {
+				"commandSet": "base",
+				"command": "createChat",
+				"createChat": {
+					"roomName": chatName,
+					"key": key,
+				},
+			};
+			var rval = wsSendMsg(JSON.stringify(statusJSON));
+			while (!getMsg(key)) {
+				setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+        	}	
+			var result = getMsg(key);
+			if (result['status'] == TRUE) {
+				// Room create successful
+			}
+			else {
+				// Room create failed
+				// Put msg in modal dialog
+			}
+
             console.log("form submitted with chat name " + chatName);
             e.preventDefault();
             if($('#newChatOpen').is(":checked"))   {
@@ -185,6 +206,24 @@ function chatCheckBoxChanged() {
     }
     else {
        $("#newChatTarget").remove();
+    }
+        
+}
+function terminalCheckBoxChanged() {
+    
+    if($('#newTerminalOpen').is(":checked"))   {
+        var selectOutput = '<select name="terminalselect" id="newTerminalTarget">';
+        $(".windowPane").each(function() {
+    		var paneNumber = $(this).attr('id').match(/\d+/);
+    		var paneName = $(this).attr('id');
+    
+    		selectOutput = selectOutput + '<option value="' + paneName + '">Pane ' + paneNumber + '</option>';
+    	});
+    	selectOutput = selectOutput + '</select>';
+    	$("#newTerminalDropDownBox").append(selectOutput);
+    }
+    else {
+       $("#newTerminalTarget").remove();
     }
         
 }

@@ -63,13 +63,11 @@ else if ($tabType == 'terminal') {
 	$html = file_get_contents('createContentTerminal.html');
 
 	$containerId = $tabName . '_C';
-	$containerName = 'Term' . $tabName;
-	$html = str_replace('%terminalId%', $containerId, $html);
-	$html = str_replace('%terminalName%', $containerName, $html);
+
+	$html = str_replace('%terminalContainerId%', $containerId, $html);
 
 	$script = file_get_contents('createContentTerminal.js');
-	$script = str_replace('%terminalId%', $containerId, $script);
-	$script = str_replace('%terminalName%', $containerName, $script);
+	$script = str_replace('%terminalId%', $tabName, $script);
 
 	$rval = array(
 		'success' => TRUE, 

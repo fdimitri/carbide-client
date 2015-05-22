@@ -283,7 +283,7 @@ TermState.prototype._write = function(chunk, encoding, callback) {
 TermState.prototype._graphConvert = function(content) {
 	if(this._modes.graphic) {
 		var result = '';
-		for(i = 0; i < content.length; i++) {
+		for(var i = 0; i < content.length; i++) {
 			result += (content[i] in graphics) ?
 				graphics[content[i]] :
 				content[i];
