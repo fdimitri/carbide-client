@@ -1,6 +1,128 @@
+currentlyRenaming = 0; //shows whether someone is renaming a file, for use with keydown handlers
+typedRename = "";
+
 $(document).ready(function() {
     
     
+/* commented out because there is no need for character-by-character filename verification
+$('#jsTree1').keydown(function(e) {
+		if (currentlyRenaming == 1) { //a rename is active so we check the validity of the key press
+			if (e.keyCode == 27) { 
+  				currentlyRenaming = 0; //cancel the renaming logic
+  			}
+  			else { //escape wasn't pushed so validate
+  				console.log(e.which);
+  				var ref = $('#jsTree1').jstree(true),
+				sel = ref.get_selected();
+				if(sel.length) { 
+					sel = sel[0];
+					console.log(sel);
+					var selectedNodes = ref.get_selected();
+
+					var path = ref.get_path(selectedNodes,"/");
+					path = path.substr(0, path.lastIndexOf("/")) + '/';
+					typedRename = typedRename + String.fromCharCode(e.keyCode);
+					console.log(path + typedRename);
+					
+	  				
+	  				randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + e.which); 
+	  				var statusJSON = {
+					"commandSet": "FileTree",
+					"command": "checkFileName",
+					"key" : randomKey,
+					"filename" : e.keyCode,
+					
+					};
+					wsSendMsg(JSON.stringify(statusJSON));
+				
+					while (!getMsg(key)) {
+						setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+				    }	
+					var result = getMsg(key);
+					if (result['status'] == TRUE) {
+						//this was an acceptable keystoke
+					}
+					else {
+						// unacceptable keystroke
+		  			}
+				}
+  			}
+  	
+		 }
+  
+	});   */
+    
+ $('#jsTree1').on('rename_node.jstree', function (node,obj) {
+
+
+        var newName = obj.node.text;
+        var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + newName); 
+       
+        var oldName = obj.node.original.text;
+        
+        /*
+        var etrigger = 0;
+        var iChars = "!@#$%^&*()+=[]\\\';,/{}|\":<>?";
+        for (var i = 0; i < newName.length; i++) 
+        {
+            if (iChars.indexOf(newName.charAt(i)) != -1) 
+            {
+                etrigger = etrigger + 1;
+            }
+        }
+        console.log(etrigger)
+        if (etrigger > 0) {
+        	$(".renameFailedReason").append('<span class="errorMsg">Special characters are not allowed.</span>');
+        *
+        	$("#dialog-rename").dialog({
+		      modal: true,
+		      buttons: {
+		        Ok: function() {
+		          $( this ).dialog( "close" );
+		          $(".renameFailedReason").find(".errorMsg").remove();
+		        }
+		      }
+		    });
+	        
+	        renameFile(obj.node.original.text); //rename the file back to the original name
+        }
+        */
+        
+    	var statusJSON = {
+			"commandSet": "FileTree",
+			"command": "renameFile",
+			"key" : randomKey,
+			"renameFile" : {
+				"oldName" : oldName,
+				"newName" : newName,
+			},
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+	
+		while (!getMsg(randomKey)) {
+			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+	    }	
+		var result = getMsg(randomKey);
+		if (result['status'] == true) {
+			// Successful file rename. No need to do anything.
+		}
+		else {
+			// Failed, tell the fail reason
+			$(".renameFailedReason").append('<span class="errorMsg">[INSERT FAIL REASON HERE]</span>');
+        	$("#dialog-rename").dialog({
+		      modal: true,
+		      buttons: {
+		        Ok: function() {
+		          $( this ).dialog( "close" );
+		          $(".renameFailedReason").find(".errorMsg").remove();
+		        }
+		      }
+		    });
+		    renameFile(obj.node.original.text); //rename the file back to the original name
+		}
+        
+    
+ });
 
 
 	
@@ -209,104 +331,104 @@ function initFileTree(data) {
 
 
 	});
-	$('#jsTree2').jstree({
+	// $('#jsTree2').jstree({
 
-		"core": {
-			// so that create works
-			check_callback: true,
-			'data': [{
-				"id": "chatroot",
-				"parent": "#",
-				"text": "Chat Rooms",
-				"type": "root",
-				"li_attr": {
-					"class": "jsRoot"
-				}
-			}, {
-				"id": "chat1",
-				"parent": "chatroot",
-				"text": "StdDev",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat2",
-				"parent": "chatroot",
-				"text": "Java",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat3",
-				"parent": "chatroot",
-				"text": "Coffee",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			}, {
-				"id": "chat4",
-				"parent": "chatroot",
-				"text": "3rd_shift_rulez",
-				"type": "chat",
-				"li_attr": {
-					"class": "jsTreeChat"
-				}
-			},
-			{
-				"id": "terminalroot",
-				"parent": "#",
-				"text": "Terminals",
-				"type": "root",
-				"li_attr": {
-					"class": "jsRoot"
-				}
-			},
-			{
-				"id": "terminaldefault",
-				"parent": "terminalroot",
-				"text": "Default Terminal",
-				"type": "terminal",
-				"li_attr": {
-					"class": "jsTreeTerminal"
-				}
+	// 	"core": {
+	// 		// so that create works
+	// 		check_callback: true,
+	// 		'data': [{
+	// 			"id": "chatroot",
+	// 			"parent": "#",
+	// 			"text": "Chat Rooms",
+	// 			"type": "root",
+	// 			"li_attr": {
+	// 				"class": "jsRoot"
+	// 			}
+	// 		}, {
+	// 			"id": "chat1",
+	// 			"parent": "chatroot",
+	// 			"text": "StdDev",
+	// 			"type": "chat",
+	// 			"li_attr": {
+	// 				"class": "jsTreeChat"
+	// 			}
+	// 		}, {
+	// 			"id": "chat2",
+	// 			"parent": "chatroot",
+	// 			"text": "Java",
+	// 			"type": "chat",
+	// 			"li_attr": {
+	// 				"class": "jsTreeChat"
+	// 			}
+	// 		}, {
+	// 			"id": "chat3",
+	// 			"parent": "chatroot",
+	// 			"text": "Coffee",
+	// 			"type": "chat",
+	// 			"li_attr": {
+	// 				"class": "jsTreeChat"
+	// 			}
+	// 		}, {
+	// 			"id": "chat4",
+	// 			"parent": "chatroot",
+	// 			"text": "3rd_shift_rulez",
+	// 			"type": "chat",
+	// 			"li_attr": {
+	// 				"class": "jsTreeChat"
+	// 			}
+	// 		},
+	// 		{
+	// 			"id": "terminalroot",
+	// 			"parent": "#",
+	// 			"text": "Terminals",
+	// 			"type": "root",
+	// 			"li_attr": {
+	// 				"class": "jsRoot"
+	// 			}
+	// 		},
+	// 		{
+	// 			"id": "terminaldefault",
+	// 			"parent": "terminalroot",
+	// 			"text": "Default Terminal",
+	// 			"type": "terminal",
+	// 			"li_attr": {
+	// 				"class": "jsTreeTerminal"
+	// 			}
 				
-			}],
+	// 		}],
 
 
-		},
-		"dnd": {
-			is_draggable: function(node) {
+	// 	},
+	// 	"dnd": {
+	// 		is_draggable: function(node) {
 
-				return true;
-			}
-		},
+	// 			return true;
+	// 		}
+	// 	},
 
-		"types": {
+	// 	"types": {
 
-			"chat": {
-				"icon": "jstree-chat",
-				"valid_children": []
-			},
-			"root": {
-				"icon": "jstree-folder",
-				"valid_children": ["chat"]
-			},
-			"terminal": {
-				"icon": "jstree-file",
-				"valid_children": []
-			}
+	// 		"chat": {
+	// 			"icon": "jstree-chat",
+	// 			"valid_children": []
+	// 		},
+	// 		"root": {
+	// 			"icon": "jstree-folder",
+	// 			"valid_children": ["chat"]
+	// 		},
+	// 		"terminal": {
+	// 			"icon": "jstree-file",
+	// 			"valid_children": []
+	// 		}
 
 
-		},
-		/*THIS NEEDS TO BE FIXED TO RESTORE CONTEXT MENU*/
-		"plugins": [ "contextmenu",  "dnd", "crrm", "types"] ,
-			contextmenu: {
-				items: fileTreeMenu
-			}
-	});
+	// 	},
+	// 	/*THIS NEEDS TO BE FIXED TO RESTORE CONTEXT MENU*/
+	// 	"plugins": [ "contextmenu",  "dnd", "crrm", "types"] ,
+	// 		contextmenu: {
+	// 			items: fileTreeMenu
+	// 		}
+	// });
 	$('.jstree').on('dblclick', '.jstree-anchor', function(e) {
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);
@@ -331,6 +453,141 @@ function initFileTree(data) {
 
 }
 
+function renameFile (newName) {
+
+		currentlyRenaming = 1;
+		var ref = $('#jsTree1').jstree(true),
+			sel = ref.get_selected();
+		if(!sel.length) { return false; }
+		sel = sel[0];
+		
+		
+		
+		
+		ref.edit(sel, newName);
+						
+}
+
+function createFile(fileDirectory) {
+	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
+	var statusJSON = {
+			"commandSet": "FileTree",
+			"command": "createFile",
+			"key" : randomKey,
+			"directory" : fileDirectory,
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+	
+		while (!getMsg(randomKey)) {
+			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+	    }	
+		var result = getMsg(randomKey);
+		if (result['status'] == true) {
+			// Successful file creation
+			// Add the new file
+		}
+		else {
+			//file creation denied. Display dialog with error message.
+		}
+}
+function deleteFile(fileName) {
+	var ref = $('#jsTree1').jstree(true),
+	sel = ref.get_selected();
+	if(!sel.length) { return false; }
+	sel = sel[0];
+	var selectedNodes = ref.get_selected();
+	var fileAndPath = ref.get_path(selectedNodes,"/");
+	console.log("request to delete " + fileAndPath);
+	
+	
+	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
+	var statusJSON = {
+			"commandSet": "FileTree",
+			"command": "deleteFile",
+			"key" : randomKey,
+			"filename" : fileAndPath,
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+	
+		while (!getMsg(randomKey)) {
+			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+	    }	
+		var result = getMsg(randomKey);
+		if (result['status'] == true) {
+			// Successful file delete
+			// Remove the node from the File Tree
+			ref.delete_node(sel);
+		}
+		else {
+			//file deletion denied. Display dialog with error message.
+			var thisDialog = "dialog-info";
+			changeDialogTitle(thisDialog,"Error Deleting File");
+			addDialogIcon (thisDialog, "ui-icon-alert");
+			addDialogInfo (thisDialog, "The file was unable to be deleted.");
+			$("#" + thisDialog).dialog({
+		      modal: true,
+		      buttons: {
+		        Ok: function() {
+		          $( this ).dialog( "close" );
+		        }
+		      }
+		    });
+		}
+}
+
 function initChatTree(data) {
+	if (!data) {
+		console.log("Asked to init with no data, using built-ins")
+		data = [{
+			"id": "ftroot0",
+			"parent": "#",
+			"text": "Chat Rooms",
+			"type": "root",
+			"li_attr": {
+				"class": "jsTreeRoot"
+			}
+		}, ]
+	}
+	console.log("Calling jstree() on");
+	console.log($('#jsTree1'));
+	$('#jsTree2').jstree({
+		"core": {
+			// so that create works
+			'check_callback': true,
+			'data': data,
+		},
+		"dnd": {
+			is_draggable: function(node) {
+
+				return true;
+			}
+		},
+
+		"types": {
+
+			"chat": {
+				"icon": "jstree-chat",
+				"valid_children": []
+			},
+			"root": {
+				"icon": "jstree-folder",
+				"valid_children": ["chat"]
+			},
+			"terminal": {
+				"icon": "jstree-file",
+				"valid_children": []
+			}
+		},
+		"plugins": ["contextmenu", "dnd", "crrm", "types"],
+		 contextmenu: {
+		 	items: fileTreeMenu,
+		 },
+
+
+	});	
+
+}
+
+function initTermTree(data) {
 
 }

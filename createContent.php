@@ -65,10 +65,14 @@ else if ($tabType == 'terminal') {
 	$containerId = $tabName . '_C';
 
 	$html = str_replace('%terminalContainerId%', $containerId, $html);
-
+	$html = str_replace('%terminalId%', $tabName, $html);
+	$html = str_replace("%terminalName%", $data->chatTarget, $html);
+	
 	$script = file_get_contents('createContentTerminal.js');
 	$script = str_replace('%terminalId%', $tabName, $script);
-
+	$script = str_replace('%terminalContainerId%', $containerId, $script);
+	$script = str_replace("%terminalName%", $data->chatTarget, $script);
+	
 	$rval = array(
 		'success' => TRUE, 
 		'html' => $html,

@@ -195,6 +195,27 @@ $(function() {
 			}
 			//else { console.log("there is no chat window."); }
 			
+			var thisActiveTab = $(this).find(".activeTab");
+			console.log("thisActiveTab:");
+			console.log(thisActiveTab);
+			console.log(thisActiveTab.prop('tagName')); 
+			console.log();
+			var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
+			var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
+			width -= 48;
+			height -= 48;
+			width *= 0.8;
+			var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
+			var activeTerminal = getTerminalByName(activeTerminalName);
+			console.log("Got active terminal by name:");
+			console.log(activeTerminal);
+			resizeTerminalByName(activeTerminalName);
+			var rows = activeTerminal.terminal.getRows();
+			var cols = activeTerminal.terminal.getCols();
+			console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
+			$("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
+				resizeTerminalByNameWithSize($(this).attr("terminalId"), cols, rows);
+			});
 
 			
 		},
@@ -215,6 +236,29 @@ $(function() {
 			});
 			focusPane(ui.element.attr("id"));
 
+		},
+		stop: function(event, ui) {
+			
+			// var thisActiveTab = $(this).find(".activeTab");
+			// console.log("thisActiveTab:");
+			// console.log(thisActiveTab);
+			// console.log(thisActiveTab.prop('tagName')); 
+			// console.log();
+			// var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
+			// var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
+			// width -= 48;
+			// height -= 48;
+			// width *= 0.8;
+			
+			// console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
+			// $("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
+			// 	resizeTerminalByNameWithSize($(this).attr("terminalId"), width, height);
+			// });
+
+			// $("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
+			// 	getTerminalSize(this);
+			// });
+
 		}
 
 	});
@@ -223,7 +267,6 @@ $(function() {
 		handle: ".paneHeader",
 		cancel: ".maximizedPane",
 		start: function(event, ui) {
-			
 			$(".windowPane").removeClass("activePane");
 			$(".windowPane").each(function() {
 				var cssObj = {
@@ -247,6 +290,7 @@ $(function() {
         
 
 });
+
 
 var newPaneTab = '<div class="windowPaneTab noSelect" pane="%paneX%" panetitle="%paneTitle%"><span class="windowPaneTabText">%paneTitle%</span><div class="windowPaneTabIcons"><span class="windowPaneTabIcon windowPaneTabFocus ui-icon ui-icon-extlink" style="visibility:hidden"></span><span class="windowPaneTabIcon windowPaneTabClose ui-icon ui-icon-close"></span></div></div>';
 $("#toolBarTop").append(newPaneTab);

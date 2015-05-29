@@ -12,6 +12,9 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.js"></script>
+	
+	<script src="md5.js"></script>
+	
 	<script src="jstree/jstree.js"></script>
 	<script src="quartzmenu/script.js"></script>
 
@@ -152,8 +155,8 @@
 	</div>
 
 	<div id="log"> </div>
-	<div id="dialog-confirm" title="Close Window Pane?" style="display:none;">
-		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All your tabs will be closed. Are you sure?</p>
+	<div id="dialog-info" class="dialog-window" title="Information Dialog" style="display:none;">
+		<div class="dialog-info-space"></div>
 	</div>
 	<div id="dialog-newterminal" title="Create New Terminal" style="display:none;">
 		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your terminal.</p>
@@ -175,6 +178,7 @@
 		<input id="newChatSubmit" type="submit" value="Submit">
 		</form>
 	</div>
+
 	
 </body>
 

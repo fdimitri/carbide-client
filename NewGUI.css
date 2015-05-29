@@ -3,9 +3,44 @@
 	background-color:#000000;
 	height:calc(100% - 40px);
 }
-.terminal {
+
+.terminalHolder { 
+	height:calc(100% - 48px);
+	width:calc(100% - 48px);
+	margin:0px;
+}
+
+.terminalWindow {
+	height: 100%;
+	width: calc(80%);
+	margin:0px;
+}
+
+.terminalInfo {
+	height: 100%;
+	width: calc(20% - 4px);
+	margin:0px;
+	border:0px;
+	padding:0px;
+	float: right;
+	
+}
+
+.terminalUsers {
+	height:100%;
+	width: 100%;
+	border-width:2px;
+	border-style:solid;
+	border-color:#FF0000;
+	background-color:#FFFFFF;
+	margin-top:5px;
+	margin-bottom:5px;
+	overflow:hidden;
 
 }
+
+
+
 .jsTreeContextMenu {
 	display:none;
 	position:absolute;

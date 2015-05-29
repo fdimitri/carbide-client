@@ -40,13 +40,36 @@ function fileTreeMenu(node) {
 			renameItem: { // The "rename" menu item
 				label: "Rename",
 				action: function() {
-					alert("Your new name is Milo.");
+					renameFile();
 				}
 			},
 			deleteItem: { // The "delete" menu item
 				label: "Delete",
 				action: function() {
-					alert("You have been deleted.");
+					var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete File?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTree1').jstree(true);
+					var selectedNodes = ref.get_selected();
+					var fileAndPath = ref.get_path(selectedNodes,"/");
+					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+					addDialogInfo (thisDialog, "You are about to delete file " + fileName + ". You won't be able to recover it. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						modal: true,
+						buttons: {
+							"Delete File": function() {
+								$(this).dialog("close");
+								deleteFile();
+							},
+							Cancel: function() {
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+					
 				}
 			}
 	
@@ -87,11 +110,13 @@ function fileTreeMenu(node) {
 	    if ($(node).attr("id") == "chatroot") {
 	       	var items = {
     		    newChat: { // create a new chat room
-    				label: "Create New Chat Room",
+    				label: "Create New Chat",
     				action: function() {
     				    console.log("create new chatroom here.");
     				    $('#newChatOpen').attr('checked', false);
     				    $("#newChatTarget").remove();
+    				    
+    				    
     				    $("#dialog-newchat").dialog("open");
     				}
 			    }
@@ -111,6 +136,7 @@ function fileTreeMenu(node) {
 			    }
     		};
 	    }
+
 	}
 
 
@@ -127,7 +153,7 @@ $(document).ready(function() {
         autoOpen: false
     });
     $("#newTerminalSubmit").click(function(e) {
-        
+        e.preventDefault();
         var terminalName = $("#newTerminalName").val();
        
         if (terminalName === '') {
@@ -136,7 +162,7 @@ $(document).ready(function() {
         } else {
             //actions to take before form is submitted.
             console.log("form submitted with terminal name " + terminalName);
-            e.preventDefault();
+
             if($('#newTerminalOpen').is(":checked"))   {
                 console.log("They have requested to open the terminal in window pane:");
                 console.log($("#newTerminalTarget").val());
@@ -150,9 +176,9 @@ $(document).ready(function() {
         autoOpen: false
     });
     $("#newChatSubmit").click(function(e) {
-        
+        e.preventDefault();
         var chatName = $("#newChatName").val();
-        var key = 'randomizedKeyHere';
+        var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + chatName); 
         if (chatName === '') {
             alert("Please enter a name for the chat room.");
              e.preventDefault();
@@ -163,16 +189,19 @@ $(document).ready(function() {
 				"command": "createChat",
 				"createChat": {
 					"roomName": chatName,
-					"key": key,
+					"key": randomKey,
 				},
 			};
 			var rval = wsSendMsg(JSON.stringify(statusJSON));
-			while (!getMsg(key)) {
+			while (!getMsg(randomKey)) {
 				setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
         	}	
-			var result = getMsg(key);
-			if (result['status'] == TRUE) {
+			var result = getMsg(randomKey);
+			if (result['status'] == true) {
 				// Room create successful
+				// var nValue = { id:123,text:"Hello world"};
+				// var CurrentNode = jQuery("#jstree2").jstree("get_selected");
+				// var id = $("#jstree2").jstree('create_node', CurrentNode, nValue, 'last');
 			}
 			else {
 				// Room create failed
@@ -180,10 +209,15 @@ $(document).ready(function() {
 			}
 
             console.log("form submitted with chat name " + chatName);
-            e.preventDefault();
+           
             if($('#newChatOpen').is(":checked"))   {
                 console.log("They have requested to open the chat in window pane:");
                 console.log($("#newChatTarget").val());
+                var fileName = $("#newChatTarget").val();
+                var tabBarId = 'unknown';
+                var originId = 'unknown';
+                var srcPath = 'unknown';
+				newTab(fileName, tabBarId, originId, 'chat', srcPath)
                 
             }
             $("#dialog-newchat").dialog("close");
@@ -228,3 +262,33 @@ function terminalCheckBoxChanged() {
         
 }
 
+function addDialogIcon (dialogId, dialogIcon) {
+	
+	//choices for dialogIcon: ui-icon-alert ui-icon-question ui-icon-info ui-icon-folder-collapsed
+	
+	dialogInfo = '<span class="dialogIcon ui-icon ' + dialogIcon + '" style="float:left; margin:0 7px 20px 0;"></span>';
+	$("#" + dialogId).find(".dialog-info-space").prepend(dialogInfo);
+}
+function removeDialogIcon (dialogId) {
+	$("#" + dialogId).find(".dialogIcon").remove();	
+}
+function addDialogInfo (dialogId, dialogMsg) {
+	dialogInfo = '<p class="dialogInfo">' + dialogMsg + '</p><div class="dialogClear" style="clear:both;"></div>';
+	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
+}
+function removeDialogInfo (dialogId) {
+	$("#" + dialogId).find(".dialogInfo").remove();	
+	$("#" + dialogId).find(".dialogClear").remove();	
+}
+function changeDialogTitle (dialogId, dialogTitle) {
+	$("#" + dialogId).prop('title', dialogTitle);
+}
+
+$(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
+	$('.dialog-window').bind('dialogclose', function(event) {
+		 dialogId = $(this).attr('id');
+		 removeDialogIcon(dialogId);
+		 removeDialogInfo(dialogId);
+		 changeDialogTitle(dialogId,"Information Dialog");
+ 	});
+});

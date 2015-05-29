@@ -126,6 +126,9 @@ var normal = 0
   , dcs = 5
   , ignore = 6;
 
+
+
+
 /**
  * Terminal
  */
@@ -411,6 +414,16 @@ each(keys(Terminal.defaults), function(key) {
  */
 
 Terminal.focus = null;
+
+
+Terminal.prototype.getCols = function() {
+  return(this.cols);
+}
+
+Terminal.prototype.getRows = function() {
+  return(this.rows);
+}
+
 
 Terminal.prototype.focus = function() {
   if (Terminal.focus === this) return;
@@ -1148,6 +1161,9 @@ Terminal.prototype.bindMouse = function() {
     return cancel(ev);
   });
 };
+
+
+
 
 /**
  * Destroy Terminal

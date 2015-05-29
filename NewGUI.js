@@ -200,6 +200,19 @@ function closeTab(tab) {
 						console.log(statusJSON);
 						wsSendMsg(JSON.stringify(statusJSON));
 					}
+					if (tab.attr('type') == 'terminal') {
+						var termName = tab.attr('terminalId');
+						var statusJSON = {
+							"commandSet": "terminal",
+							"command": "leaveTerminal",
+							"terminalTarget": termName,
+							"leaveTerminal": {
+								"status": true,
+							},
+						};
+						console.log(statusJSON);
+						wsSendMsg(JSON.stringify(statusJSON));
+					}
 
 					console.log("NUMTABS = " + numberOfTabs);
 					if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
@@ -338,7 +351,11 @@ function minimizePane(paneId) {
 
 function closePaneConfirm(paneId) {
 
-	$("#dialog-confirm").dialog({
+	var thisDialog = "dialog-info";
+	changeDialogTitle(thisDialog,"Close Window Pane?");
+	addDialogIcon (thisDialog, "ui-icon-alert");
+	addDialogInfo (thisDialog, "All your tabs will be closed. Are you sure?");
+	$("#" + thisDialog).dialog({
 		resizable: false,
 		height: 230,
 		modal: true,
@@ -349,6 +366,7 @@ function closePaneConfirm(paneId) {
 			},
 			Cancel: function() {
 				$(this).dialog("close");
+
 			}
 		}
 	});
@@ -474,6 +492,9 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		}
 	}
 	else if (tabType == "terminal") {
+		
+		/*WE ACTUALLY WANT TO ALLOW MULTIPLE TERMINALS PER PANE!!!!!!!!!!!!!!!
+		
 		if ($("#" + tabBarId).find("#" + tabName).length) { //only allow 1 terminal per window Pane
 			console.log("We already have this tab open!");
 			$("#" + paneId).find(".tabBar").tabs().tabs("refresh");
@@ -483,7 +504,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			console.log("attempted to set active tab to " + listItemIndex + " because of ");
 			console.log("#" + paneId);
 			return;
-		}
+		}*/
 	}
 	removeAddTabButton(tabBarId);
 	
@@ -667,6 +688,12 @@ $(document).ready(function() {
 		"command": "getFileTreeJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getChatListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
 	// var statusJSON = {
 	// 	"commandSet": "base",
 	// 	"command": "getChatTreeJSON",

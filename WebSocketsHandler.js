@@ -66,22 +66,9 @@ function getAceEditorByName(name) {
 	return (rval);
 }
 
-function cliMsgProcTerminal(jObjo) {
-	var term = getTerminalByName(jObjo.terminal);
-	if (jObjo.command == 'putChar') {
-		var jObj = jObjo.putChar;
-		console.log("We found a terminal");
-		console.log(term);
-		term.write(jObj.data);
-//		term.write(jObj.data);
-//	We need the terminal instance from the div referred to by "term"
-
-	}
-
-}
 
 function getMsg(key) {
-	return(TRUE);
+	return(true);
 }
 
 function cliMsgProcDocument(jObjo) {
@@ -265,8 +252,96 @@ function cliMsgProcChat(jObj) {
 		}
 
 	}
+	
+	else if (jObj.command == 'addChat') {
+		var addChat = jObj.addChat;
+		var node = addChat.node;
+		//var currentNode = $('#jstree2').find("[id='chatroot']");
+		//var currentNode = $('#jsTree2').select_node("chatroot");
+		// var id = $("#jstree2").jstree('create_node', currentNode, node, 'last');
+		// console.log(node);
+		// console.log(currentNode);
+		// console.log(id);
+		var ref = $('#jsTree2').jstree(true);
+		var currentNode = ref.get_selected();
+		console.log(currentNode);
+		console.log($('#jsTree2'));
+		console.log(ref);
+		var creation = ref.create_node(currentNode, node);
+	}
 
 }
+
+
+function cliMsgProcTerminal(jObj) {
+	console.log("Entered cliMsgProcTerminal");
+	console.log(jObj);
+	var term = getTerminalByName(jObj.terminal).terminal;
+	if (jObj.command == 'putChar') {
+		var jObj = jObj.putChar;
+		console.log("We found a terminal");
+		console.log(term);
+		term.write(jObj.data);
+//		term.write(jObj.data);
+//	We need the terminal instance from the div referred to by "term"
+
+	}
+
+	if (jObj.command == "userJoin") {
+		jObj = jObj.userJoin;
+		var User = jObj.user;
+		var Terminal = '#' + jObj.term + '_UserBox';
+		console.log($(Terminal));
+		var msgDiv = "<div class='cUser' termUser='" + User + "'>" + User + "</div>";
+		$(Terminal + " .cUser").each(function() {
+			if ($(this).attr('termUser') == User) return;
+		});
+		$(Terminal).append(msgDiv);
+	}
+	else if (jObj.command == "userLeave") {
+		console.log("Received userLeave command");
+		jObj = jObj.userLeave;
+		var User = jObj.user;
+		var Terminal = '#' + jObj.term + '_UserBox';
+		//var msgDiv = "<div class='cUser' termUser='" + User + "'>" + User + "</div>";
+		$(Terminal).children(".cUser").each(function() {
+			if ($(this).attr('termUser') == User) {
+				console.log("Found matching user.. calling remove");
+				console.log(this);
+				console.log($(this));
+				$(this).remove();
+			}
+		});
+	}
+	else if (jObj.command == "setTermTreeJSON") {
+		var myData = jObj.setTermTreeJSON;
+		console.log(myData.termTree);
+		initTermTree($.parseJSON(myData.termTree));
+	}
+
+	else if (jObj.command == "userList") {
+		jObj = jObj.userList;
+		var userList = jObj.list;
+		var Terminal = '#' + jObj.term + '_UserBox';
+		for (val of userList) {
+			var User = val;
+			var msgDiv = "<div class='cUser' termUser='" + User + "'>" + User + "</div>";
+			var userExists = false;
+			$(Terminal + " div").each(function() {
+				if ($(this).attr('termUser') == User) {
+					console.log("User already exists in userBox");
+					userExists = true;
+					return false;
+				}
+			});
+			if (!userExists) $(Terminal).append(msgDiv);
+		}
+
+	}
+
+}
+
+
 ws.onclose = function() {
 	console.log("Websocket was closed..");
 	console.log(ws);
@@ -303,6 +378,7 @@ function findTerm(termName) {
 	if (foundTerminal) {
 		return(this);
 	}
+	return false;
 }
 
 
