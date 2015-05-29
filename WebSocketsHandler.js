@@ -256,18 +256,7 @@ function cliMsgProcChat(jObj) {
 	else if (jObj.command == 'addChat') {
 		var addChat = jObj.addChat;
 		var node = addChat.node;
-		//var currentNode = $('#jstree2').find("[id='chatroot']");
-		//var currentNode = $('#jsTree2').select_node("chatroot");
-		// var id = $("#jstree2").jstree('create_node', currentNode, node, 'last');
-		// console.log(node);
-		// console.log(currentNode);
-		// console.log(id);
-		var ref = $('#jsTree2').jstree(true);
-		var currentNode = ref.get_selected();
-		console.log(currentNode);
-		console.log($('#jsTree2'));
-		console.log(ref);
-		var creation = ref.create_node(currentNode, node);
+		$("#jsTreeChat").jstree('create_node', 'chatroot', node, 'last');
 	}
 
 }
@@ -278,7 +267,7 @@ function cliMsgProcTerminal(jObj) {
 	console.log(jObj);
 	var term = getTerminalByName(jObj.terminal).terminal;
 	if (jObj.command == 'putChar') {
-		var jObj = jObj.putChar;
+		jObj = jObj.putChar;
 		console.log("We found a terminal");
 		console.log(term);
 		term.write(jObj.data);
@@ -313,11 +302,6 @@ function cliMsgProcTerminal(jObj) {
 			}
 		});
 	}
-	else if (jObj.command == "setTermTreeJSON") {
-		var myData = jObj.setTermTreeJSON;
-		console.log(myData.termTree);
-		initTermTree($.parseJSON(myData.termTree));
-	}
 
 	else if (jObj.command == "userList") {
 		jObj = jObj.userList;
@@ -337,6 +321,25 @@ function cliMsgProcTerminal(jObj) {
 			if (!userExists) $(Terminal).append(msgDiv);
 		}
 
+	}
+	else if (jObj.command == 'addTerm') {
+		var addTerm = jObj.addTerm;
+		var node = addTerm.node;
+		console.log("Attempting to create_node with new terminal");
+		console.log(node);
+		console.log($("#jsTreeTerminal").jstree('create_node', 'terminalroot', node, 'last'));
+	}
+
+	else if (jObj.command == "setTermTreeJSON") {
+		console.log("Entered command processor for setTermTreeJSON");
+		var myData = jObj.setTermTreeJSON;
+		console.log(myData.termTree);
+		//initTermTree($.parseJSON(myData.termTree));
+		console.log("Mydata.termTree:");
+		console.log(myData.termTree);
+		// console.log("Mydata.termTree after JSON Decode:");
+		// console.log($.parseJSON(myData.termTree));
+		initTermTree((myData.termTree));
 	}
 
 }

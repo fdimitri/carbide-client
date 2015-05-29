@@ -694,6 +694,12 @@ $(document).ready(function() {
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
 
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getTermListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
 	// var statusJSON = {
 	// 	"commandSet": "base",
 	// 	"command": "getChatTreeJSON",

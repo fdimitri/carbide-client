@@ -5,14 +5,14 @@ $(document).ready(function() {
     
     
 /* commented out because there is no need for character-by-character filename verification
-$('#jsTree1').keydown(function(e) {
+$('#jsTreeFile').keydown(function(e) {
 		if (currentlyRenaming == 1) { //a rename is active so we check the validity of the key press
 			if (e.keyCode == 27) { 
   				currentlyRenaming = 0; //cancel the renaming logic
   			}
   			else { //escape wasn't pushed so validate
   				console.log(e.which);
-  				var ref = $('#jsTree1').jstree(true),
+  				var ref = $('#jsTreeFile').jstree(true),
 				sel = ref.get_selected();
 				if(sel.length) { 
 					sel = sel[0];
@@ -52,7 +52,7 @@ $('#jsTree1').keydown(function(e) {
   
 	});   */
     
- $('#jsTree1').on('rename_node.jstree', function (node,obj) {
+ $('#jsTreeFile').on('rename_node.jstree', function (node,obj) {
 
 
         var newName = obj.node.text;
@@ -235,12 +235,12 @@ $('#jsTree1').keydown(function(e) {
 		
 });
 $(function() {
-	$("#jsTree1-ContextMenu").menu({
+	$("#jsTreeFile-ContextMenu").menu({
 		select: function(event, ui) {
 		    if ($(ui.item).attr("id") == "cm-NewFile") {
 		        console.log("new file requested")
 		    }
-			$("#jsTree1-ContextMenu").hide();
+			$("#jsTreeFile-ContextMenu").hide();
 			
 			
 			
@@ -250,12 +250,12 @@ $(function() {
 	$("#tabs-1").on("contextmenu", function(event) {
 		
 		if ($(event.target).hasClass("jstree-anchor") || $(event.target).hasClass("jstree-icon")) {
-			$("#jsTree1-ContextMenu").hide();
+			$("#jsTreeFile-ContextMenu").hide();
 			return false;
 		}
 		else {
-			$("#jsTree1-ContextMenu").show();
-			$("#jsTree1-ContextMenu").position({
+			$("#jsTreeFile-ContextMenu").show();
+			$("#jsTreeFile-ContextMenu").position({
 				collision: "none",
 				my: "left top",
 				of: event
@@ -270,10 +270,10 @@ $(function() {
 	});
 
 	$(document).click(function(event) {
-		$("#jsTree1-ContextMenu").hide();
+		$("#jsTreeFile-ContextMenu").hide();
 	});
 
-	$("#jsTree1-ContextMenu").on("contextmenu", function(event) {
+	$("#jsTreeFile-ContextMenu").on("contextmenu", function(event) {
 	    
 		return false;
 	});
@@ -293,11 +293,11 @@ function initFileTree(data) {
 		}, ]
 	}
 	console.log("Calling jstree() on");
-	console.log($('#jsTree1'));
-	$('#jsTree1').jstree({
+	console.log($('#jsTreeFile'));
+	$('#jsTreeFile').jstree({
 		"core": {
 			// so that create works
-			check_callback: true,
+			'check_callback': true,
 			'data': data,
 		},
 		"dnd": {
@@ -331,7 +331,7 @@ function initFileTree(data) {
 
 
 	});
-	// $('#jsTree2').jstree({
+	// $('#jsTreeFile').jstree({
 
 	// 	"core": {
 	// 		// so that create works
@@ -456,7 +456,7 @@ function initFileTree(data) {
 function renameFile (newName) {
 
 		currentlyRenaming = 1;
-		var ref = $('#jsTree1').jstree(true),
+		var ref = $('#jsTreeFile').jstree(true),
 			sel = ref.get_selected();
 		if(!sel.length) { return false; }
 		sel = sel[0];
@@ -491,7 +491,7 @@ function createFile(fileDirectory) {
 		}
 }
 function deleteFile(fileName) {
-	var ref = $('#jsTree1').jstree(true),
+	var ref = $('#jsTreeFile').jstree(true),
 	sel = ref.get_selected();
 	if(!sel.length) { return false; }
 	sel = sel[0];
@@ -534,12 +534,15 @@ function deleteFile(fileName) {
 		    });
 		}
 }
+function deleteChat(fileName) {
+	return(1);
+}
 
 function initChatTree(data) {
 	if (!data) {
 		console.log("Asked to init with no data, using built-ins")
 		data = [{
-			"id": "ftroot0",
+			"id": "chatroot",
 			"parent": "#",
 			"text": "Chat Rooms",
 			"type": "root",
@@ -549,8 +552,8 @@ function initChatTree(data) {
 		}, ]
 	}
 	console.log("Calling jstree() on");
-	console.log($('#jsTree1'));
-	$('#jsTree2').jstree({
+	console.log($('#jsTreeChat'));
+	$('#jsTreeChat').jstree({
 		"core": {
 			// so that create works
 			'check_callback': true,
@@ -589,5 +592,54 @@ function initChatTree(data) {
 }
 
 function initTermTree(data) {
+	if (!data) {
+		console.log("Asked to init with no data, using built-ins")
+		data = [{
+			"id": "terminalroot",
+			"parent": "#",
+			"text": "Terminals",
+			"type": "root",
+			"li_attr": {
+				"class": "jsTreeRoot"
+			}
+		}, ]
+	}
+	console.log("Calling jstree() on");
+	console.log($('#jsTreeTerminal'));
+	$('#jsTreeTerminal').jstree({
+		"core": {
+			// so that create works
+			'check_callback': true,
+			'data': data,
+		},
+		"dnd": {
+			is_draggable: function(node) {
+
+				return true;
+			}
+		},
+
+		"types": {
+
+			"chat": {
+				"icon": "jstree-chat",
+				"valid_children": []
+			},
+			"root": {
+				"icon": "jstree-folder",
+				"valid_children": ["terminal"]
+			},
+			"terminal": {
+				"icon": "jstree-file",
+				"valid_children": []
+			}
+		},
+		"plugins": ["contextmenu", "dnd", "crrm", "types"],
+		 contextmenu: {
+		 	items: fileTreeMenu,
+		 },
+
+
+	});	
 
 }

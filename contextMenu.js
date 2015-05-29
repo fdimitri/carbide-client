@@ -49,7 +49,7 @@ function fileTreeMenu(node) {
 					var thisDialog = "dialog-info";
 					changeDialogTitle(thisDialog,"Delete File?");
 					addDialogIcon (thisDialog, "ui-icon-alert");
-					var ref = $('#jsTree1').jstree(true);
+					var ref = $('#jsTreeFile').jstree(true);
 					var selectedNodes = ref.get_selected();
 					var fileAndPath = ref.get_path(selectedNodes,"/");
 					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
@@ -83,8 +83,38 @@ function fileTreeMenu(node) {
 				action: false,
 				submenu: menuPanes,
 	
+			},
+			deleteItem: { // The "delete" menu item for chat
+				label: "Delete",
+				action: function() {
+					var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete Chatroom?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTreeChat').jstree(true);
+					var selectedNodes = ref.get_selected();
+					//var fileAndPath = ref.get_path(selectedNodes,"/");
+					//var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+					var fileName = ref.get_selected(true)[0].text;
+
+					addDialogInfo (thisDialog, "You are about to delete Chat Room " + fileName + ". All saved chat data will be lost. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						modal: true,
+						buttons: {
+							"Delete Chat": function() {
+								$(this).dialog("close");
+								//deleteChat();
+							},
+							Cancel: function() {
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+					
+				}
 			}
-			
 	
 		};
 	}
@@ -154,14 +184,36 @@ $(document).ready(function() {
     });
     $("#newTerminalSubmit").click(function(e) {
         e.preventDefault();
-        var terminalName = $("#newTerminalName").val();
-       
-        if (terminalName === '') {
+        var termName = $("#newTerminalName").val();
+        var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + termName); 
+        if (termName === '') {
             alert("Please enter a name for the terminal.");
              e.preventDefault();
         } else {
+			var statusJSON = {
+				"commandSet": "base",
+				"command": "createTerm",
+				"createTerm": {
+					"termName": termName,
+					"key": randomKey,
+				},
+			};
+			var rval = wsSendMsg(JSON.stringify(statusJSON));
+			while (!getMsg(randomKey)) {
+				setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+        	}	
+			var result = getMsg(randomKey);
+			if (result['status'] == true) {
+				// Room create successful
+			
+			}
+			else {
+				// Room create failed
+				// Put msg in modal dialog
+			}
+
             //actions to take before form is submitted.
-            console.log("form submitted with terminal name " + terminalName);
+            console.log("form submitted with terminal name " + termName);
 
             if($('#newTerminalOpen').is(":checked"))   {
                 console.log("They have requested to open the terminal in window pane:");
@@ -199,9 +251,7 @@ $(document).ready(function() {
 			var result = getMsg(randomKey);
 			if (result['status'] == true) {
 				// Room create successful
-				// var nValue = { id:123,text:"Hello world"};
-				// var CurrentNode = jQuery("#jstree2").jstree("get_selected");
-				// var id = $("#jstree2").jstree('create_node', CurrentNode, nValue, 'last');
+			
 			}
 			else {
 				// Room create failed
