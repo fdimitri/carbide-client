@@ -181,9 +181,11 @@ $(function() {
 			containerHeight = ui.size.height;
 			containerWidth = ui.size.width;
 			// This should resize Ace Editor, we need to trigger it to resize when the pre size changes
-			$(this).find('pre').each(function() {
-        	var editor = getAceEditorByName($(this).attr('srcpath'));
-        		editor.resize(true);
+		    $(this).find('.preAceEdit').each(function() {
+        		var editor = getAceEditorByName($(this).attr('srcpath'));
+        		console.log("getAceEditorByName returned for " + $(this).attr('srcpath'));
+        		console.log(editor);
+        		editor[0].resize(true);
     		});
 			if( $(ui.element).find(".cContainer").length) {
 	
@@ -194,29 +196,29 @@ $(function() {
 
 			}
 			//else { console.log("there is no chat window."); }
-			
 			var thisActiveTab = $(this).find(".activeTab");
-			console.log("thisActiveTab:");
-			console.log(thisActiveTab);
-			console.log(thisActiveTab.prop('tagName')); 
-			console.log();
-			var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
-			var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
-			width -= 48;
-			height -= 48;
-			width *= 0.8;
-			var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
-			var activeTerminal = getTerminalByName(activeTerminalName);
-			console.log("Got active terminal by name:");
-			console.log(activeTerminal);
-			resizeTerminalByName(activeTerminalName);
-			var rows = activeTerminal.terminal.getRows();
-			var cols = activeTerminal.terminal.getCols();
-			console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
-			$("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
-				resizeTerminalByNameWithSize($(this).attr("terminalId"), cols, rows);
-			});
-
+			if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
+				console.log("thisActiveTab:");
+				console.log(thisActiveTab);
+				console.log(thisActiveTab.prop('tagName')); 
+				console.log();
+				var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
+				var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
+				width -= 48;
+				height -= 48;
+				width *= 0.8;
+				var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
+				var activeTerminal = getTerminalByName(activeTerminalName);
+				console.log("Got active terminal by name:");
+				console.log(activeTerminal);
+				resizeTerminalByName(activeTerminalName);
+				var rows = activeTerminal.terminal.getRows();
+				var cols = activeTerminal.terminal.getCols();
+				console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
+				$("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
+					resizeTerminalByNameWithSize($(this).attr("terminalId"), cols, rows);
+				});
+			}
 			
 		},
 		start: function(event, ui) {

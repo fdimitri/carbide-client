@@ -424,6 +424,14 @@ Terminal.prototype.getRows = function() {
   return(this.rows);
 }
 
+Terminal.prototype.getNormalizedWidth = function() {
+  return(this.element.clientWidth / (this.cols + 0));
+}
+
+Terminal.prototype.getNormalizedHeight = function() {
+  return(this.element.clientHeight / (this.rows + 0));
+}
+
 
 Terminal.prototype.focus = function() {
   if (Terminal.focus === this) return;
@@ -1056,6 +1064,7 @@ Terminal.prototype.bindMouse = function() {
   }
 
   // mouse coordinates measured in cols/rows
+  
   function getCoords(ev) {
     var x, y, w, h, el;
 

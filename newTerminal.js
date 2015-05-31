@@ -51,6 +51,18 @@ function addTerminal (terminalName,divName,columns,rows){
 
 }    
 
+function removeTerminal (term) {
+    terminalName = term.name;
+    for (var i = 0; i < terminalArray.length; i++) {
+        if (terminalArray[i].name == term.name) {
+            console.log("DELETING TERMINAL " + term.name + " index " + i);
+            terminalArray.splice(i,1);
+            return true;
+        }
+    }
+    return false;
+}
+
 function getTerminalByDiv(divName) {
     for (var i = 0; i < terminalArray.length; i++) {
     	if (terminalArray[i].div == divName) {
@@ -104,14 +116,19 @@ function resizeTerminalByObj(terminalObj) {
      console.log("getTerminalByDiv returned:");
      console.log(term);
 
-     term.terminal.resize(1,1);
-	 console.log("Entered resizeTerminalByObj");
-	 console.log(terminalObj);
-	 console.log(terminalObj.children('.terminal').first().width());
-	 console.log(terminalObj.children('.terminal').first().height());
+//      term.terminal.resize(1,1);
+//      console.log("Entered resizeTerminalByObj");
+// 	 console.log(terminalObj);
+// 	 console.log(terminalObj.children('.terminal').first().width());
+// 	 console.log(terminalObj.children('.terminal').first().height());
 	 
-     var height = terminalObj.children('.terminal').first().height();
-     var width = terminalObj.children('.terminal').first().width();
+//      var height = terminalObj.children('.terminal').first().height();
+//      var width = terminalObj.children('.terminal').first().width();
+     
+     var width = term.terminal.getNormalizedWidth();
+     var height = term.terminal.getNormalizedHeight();
+	      
+     
      
      console.log(terminalObj.height());
      console.log(terminalObj.width());
@@ -147,5 +164,20 @@ function resizeTerminalByNameWithSize(terminalName, newCols, newRows) {
 	 console.log(terminalObj);
 	 console.log("Resizing terminal to " + newRows + " rows and " + newCols + " cols.");
 	 term.terminal.resize(newCols,newRows);
+}
+
+function registerTerminalClose(term) {
+    
+        termName = term.name;
+        var eMsg = {
+			"commandSet": "term",
+			"command": "leaveTerminal",
+			"terminalTarget": termName,
+			"leaveTerminal": {
+								"status": true,
+			},
+			
+		};
+        wsSendMsg(JSON.stringify(eMsg));
 }
 

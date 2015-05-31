@@ -179,16 +179,17 @@ $(
 
 /////////////////////////////////////////////////////		
 function closeTab(tab) {
+					var thisLi = tab.parents("li");
 
 					var numberOfTabs = tab.closest(".menuList").find("li").length;
 					var controllerPane = tab.closest(".windowPane").attr("id");
-					var panelId = tab.closest("li").remove().attr("aria-controls");
-					var $paneId = $("#" + panelId);
+					
 					//var tabs = tab.find(".tabBar").tabs();
-					$paneId.remove();
+					
+					
 
-					if (tab.attr('type') == 'chat') {
-						var chatName = tab.attr('filename');
+					if (thisLi.attr('type') == 'chat') {
+						var chatName = thisLi.attr('filename');
 						var statusJSON = {
 							"commandSet": "chat",
 							"chatCommand": "leaveChannel",
@@ -200,9 +201,13 @@ function closeTab(tab) {
 						console.log(statusJSON);
 						wsSendMsg(JSON.stringify(statusJSON));
 					}
-					if (tab.attr('type') == 'terminal') {
-						var termName = tab.attr('terminalId');
-						var statusJSON = {
+					
+					if (thisLi.attr('type') == 'terminal') {
+						var ariaTabName = thisLi.attr("aria-controls");
+						
+						var termName = $('#' + ariaTabName).find('.terminalWindow').attr('terminalId');
+						registerTerminalClose(getTerminalByName(termName));
+					/*	var statusJSON = {
 							"commandSet": "terminal",
 							"command": "leaveTerminal",
 							"terminalTarget": termName,
@@ -211,9 +216,16 @@ function closeTab(tab) {
 							},
 						};
 						console.log(statusJSON);
-						wsSendMsg(JSON.stringify(statusJSON));
+						wsSendMsg(JSON.stringify(statusJSON));*/
+						removeTerminal(getTerminalByName(termName));
+						console.log("REMOVED TERMINAL " + termName);
 					}
 
+					var panelId = tab.closest("li").remove().attr("aria-controls");
+					
+					var $paneId = $("#" + panelId);
+					$paneId.remove();
+					console.log(terminalArray);
 					console.log("NUMTABS = " + numberOfTabs);
 					if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
 					console.log("calling AppendTab with controllerid " + controllerPane);
@@ -376,6 +388,28 @@ function closePaneConfirm(paneId) {
 function closePane(paneId) {
 	deletedPanes = deletedPanes + 1; //we keep track of the number of panes that have been deleted for purposes of adjusting names when new panes are created
 
+	//Cycle through each terminal in the pane and inform the server that it's closed
+	$('#' + paneId).find(".terminalWindow").each(function() {
+		
+		registerTerminalClose(getTerminalByName($(this).attr("terminalId")));
+		removeTerminal(getTerminalByName($(this).attr("terminalId")));
+		//console.log($(this).attr("terminalId"));
+		
+	});
+	//Cycle through each Chat in the pane and inform the server that it's closed
+	$('#' + paneId).find(".cContainer").each(function() {		
+			var chatName = $(this).attr('chatroom');
+			var eMsg = {
+				"commandSet": "chat",
+				"chatCommand": "leaveChannel",
+				"chatTarget": chatName,
+				"leaveChannel": {
+					"status": true,
+				},
+			};
+			 wsSendMsg(JSON.stringify(eMsg));
+	});
+
 	var paneTitleRemove = $("div #" + paneId).find(".paneTitle").text();
 	$("div #" + paneId).remove();
 
@@ -417,6 +451,7 @@ function closePane(paneId) {
 
 		}
 	});
+	
 
 	closeWindowPaneTab(paneId); //close the window pane tab of the closed pane
 
@@ -425,7 +460,6 @@ function closePane(paneId) {
 function closeWindowPaneTab(paneAttr) {
 
 	$("div .windowPaneTab[pane=" + paneAttr + "]").remove();
-
 
 }
 

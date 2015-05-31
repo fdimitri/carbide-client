@@ -53,10 +53,11 @@ function fileTreeMenu(node) {
 					var selectedNodes = ref.get_selected();
 					var fileAndPath = ref.get_path(selectedNodes,"/");
 					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
-					addDialogInfo (thisDialog, "You are about to delete file " + fileName + ". You won't be able to recover it. Are you sure?");
+					addDialogInfo (thisDialog, "You are about to delete file <strong>" + fileName + "</strong>. You won't be able to recover it. Are you sure?");
 					$("#" + thisDialog).dialog({
 						resizable: false,
 						height: 270,
+						width: 375,
 						modal: true,
 						buttons: {
 							"Delete File": function() {
@@ -96,15 +97,16 @@ function fileTreeMenu(node) {
 					//var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
 					var fileName = ref.get_selected(true)[0].text;
 
-					addDialogInfo (thisDialog, "You are about to delete Chat Room " + fileName + ". All saved chat data will be lost. Are you sure?");
+					addDialogInfo (thisDialog, "You are about to delete Chat Room <strong>" + fileName + "</strong>. All saved chat data will be lost. Are you sure?");
 					$("#" + thisDialog).dialog({
 						resizable: false,
 						height: 270,
+						width: 375,
 						modal: true,
 						buttons: {
 							"Delete Chat": function() {
 								$(this).dialog("close");
-								//deleteChat();
+								deleteChat();
 							},
 							Cancel: function() {
 								$(this).dialog("close");
@@ -126,6 +128,36 @@ function fileTreeMenu(node) {
 				action: false,
 				submenu: menuPanes,
 	
+			},
+			deleteItem: { // The "delete" menu item for terminals
+				label: "Delete",
+				action: function() {
+					var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete Terminal?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTreeTerminal').jstree(true);
+					var selectedNodes = ref.get_selected();
+					var fileName = ref.get_selected(true)[0].text;
+
+					addDialogInfo (thisDialog, "You are about to delete Terminal <strong>" + fileName + "</strong>. All stored terminal data will be lost. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						width:375,
+						modal: true,
+						buttons: {
+							"Delete Terminal": function() {
+								$(this).dialog("close");
+								deleteTerminal();
+							},
+							Cancel: function() {
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+					
+				}
 			}
 			
 	
@@ -134,7 +166,18 @@ function fileTreeMenu(node) {
 	else if ($(node).attr("type") == "folder") {
 	    
 		var items = {
-		};
+    		    newFile: { // create a new file
+    				label: "Create New File",
+    				action: function() {
+    				    console.log("create new file here.");
+    				    $('#newFileOpen').attr('checked', false);
+    				    $("#newFileTarget").remove();
+    				    
+    				    
+    				    $("#dialog-newfile").dialog("open");
+    				}
+			    }
+    	};
 	}
 	else if ($(node).attr("type") == "root") {
 	    if ($(node).attr("id") == "chatroot") {
@@ -273,8 +316,82 @@ $(document).ready(function() {
             $("#dialog-newchat").dialog("close");
         }
     });
-    
+	$("#dialog-newfile").dialog({
+        autoOpen: false
+    });
+    $("#newFileSubmit").click(function(e) {
+        e.preventDefault();
+        var fileName = $("#newFileName").val();
+        var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileName); 
+        if (fileName === '') {
+            alert("Please enter a filename.");
+             e.preventDefault();
+        } else {
+            //actions to take before form is submitted.
+            var ref = $('#jsTreeFile').jstree(true);
+			var selectedNodes = ref.get_selected();
+			var filePath = ref.get_path(selectedNodes,"/");
+
+			var statusJSON = {
+				"commandSet": "base",
+				"command": "createFile",
+				"createFile": {
+					"fileName": fileName,
+					"key": randomKey,
+				},
+			};
+			var rval = wsSendMsg(JSON.stringify(statusJSON));
+			while (!getMsg(randomKey)) {
+				setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+        	}	
+			var result = getMsg(randomKey);
+			if (result['status'] == true) {
+				// file create successful
+			
+			}
+			else {
+				// File create failed
+				// Put msg in modal dialog
+			}
+
+
+
+           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+           //I NEED TO FIND OUT THE FORMAT FOR SOME OF THESE INPUTS. I THINK SRCPATH CAN BE DERIVED FROM VARIABLES filePath + fileName
+           //BUT IM NOT SURE WHAT TO DO WITH ORIGINID OR TABBARID. IS TABBARID THE TAB THE FILE OPENS IN? WHY IS IT UNKNOWN?
+           
+            if($('#newFileOpen').is(":checked"))   {
+                console.log("They have requested to open the file in window pane:");
+                console.log($("#newFileTarget").val());
+                var fileName = $("#newFileTarget").val();
+                var tabBarId = 'unknown';
+                var originId = 'unknown';
+                var srcPath = 'unknown';
+				newTab(fileName, tabBarId, originId, 'file', srcPath)
+                
+            }
+            $("#dialog-newfile").dialog("close");
+        }
+    });    
 });
+function fileCheckBoxChanged() {
+    
+    if($('#newFileOpen').is(":checked"))   {
+        var selectOutput = '<select name="fileselect" id="newFileTarget">';
+        $(".windowPane").each(function() {
+    		var paneNumber = $(this).attr('id').match(/\d+/);
+    		var paneName = $(this).attr('id');
+    
+    		selectOutput = selectOutput + '<option value="' + paneName + '">Pane ' + paneNumber + '</option>';
+    	});
+    	selectOutput = selectOutput + '</select>';
+    	$("#newFileDropDownBox").append(selectOutput);
+    }
+    else {
+       $("#newFileTarget").remove();
+    }
+        
+}
 function chatCheckBoxChanged() {
     
     if($('#newChatOpen').is(":checked"))   {

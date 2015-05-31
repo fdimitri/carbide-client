@@ -1,7 +1,17 @@
 currentlyRenaming = 0; //shows whether someone is renaming a file, for use with keydown handlers
 typedRename = "";
 
-$(document).ready(function() {
+$(document).ready(function() { 
+    $("#jsTreeChat").click(function(e) { //deselect terminal nodes if chat node is clicked
+    	var ref = $('#jsTreeTerminal').jstree(true);
+    	ref.deselect_all(true);
+    	
+    });
+    $("#jsTreeTerminal").click(function(e) { //deselect chat nodes if terminal node is clicked
+    	var ref = $('#jsTreeChat').jstree(true);
+    	ref.deselect_all(true);
+    	
+    });
     
     
 /* commented out because there is no need for character-by-character filename verification
@@ -27,7 +37,7 @@ $('#jsTreeFile').keydown(function(e) {
 	  				
 	  				randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + e.which); 
 	  				var statusJSON = {
-					"commandSet": "FileTree",
+					"commandSet": "base",
 					"command": "checkFileName",
 					"key" : randomKey,
 					"filename" : e.keyCode,
@@ -89,7 +99,7 @@ $('#jsTreeFile').keydown(function(e) {
         */
         
     	var statusJSON = {
-			"commandSet": "FileTree",
+			"commandSet": "base",
 			"command": "renameFile",
 			"key" : randomKey,
 			"renameFile" : {
@@ -150,18 +160,32 @@ $('#jsTreeFile').keydown(function(e) {
 				if (t.closest('.menuList').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
 					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {
-						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
 					}
 					else {
-						data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
+						data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
 					}
 				}
 				else {
+					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
+				}
+			}
+			else { //give them a check box if they're above the file tree
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal")) {
+					//This is a chat or terminal. don't give them the checkbox because they can't move it to another folder.
 					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
 				}
+				else {
+					data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+				}
+				
+				
 			}
 		})
 		.on('dnd_stop.vakata', function(e, data) {
+			
+			
+			
 			console.log("VAKATA " + e + " " + data);
 			var t = $(data.event.target);
 			if (!t.closest('.jstree').length) {
@@ -231,6 +255,37 @@ $('#jsTreeFile').keydown(function(e) {
 					}
 				}
 			}
+			else {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal")) {
+					
+					//We do nothing if they try to move a Chat or Terminal
+				}
+				else {
+					var theFileTree = $("#jsTreeFile").jstree(true);
+					console.log(data.data.obj[0].id);
+					console.log(data.data);
+					console.log(t.closest('.jstree-node'));
+					var thisRef = t.closest('.jstree-node').get(0);
+				
+					var movedFileDestination = theFileTree.get_path(thisRef,"/");
+	
+					if ($(thisRef).hasClass("jsTreeRoot") || $(thisRef).hasClass("jsTreeFolder") ) { //if they are dragged it to a folder or the root, add a trailing /
+						//movedFileDestination = movedFileDestination.substr(0, movedFileDestination.lastIndexOf("/")) + '/';
+						movedFileDestination = movedFileDestination + '/';
+					}
+					else { //if they are dragging it to a file, remove the filename because we want the directory
+						movedFileDestination = movedFileDestination.substring(0, movedFileDestination.lastIndexOf('/'));
+						movedFileDestination = movedFileDestination + '/';
+					}
+								
+								
+					var movedFileName = data.data.obj[0].textContent;
+				
+	                var movedFilePath = theFileTree.get_path(data.data.nodes[0],"/");
+					movedFilePath = movedFilePath.substr(0, movedFilePath.lastIndexOf("/")) + '/';
+					console.log("moved: " + movedFileName + " in " + movedFilePath + " to " + movedFileDestination);
+				}
+			}
 		});
 		
 });
@@ -297,7 +352,31 @@ function initFileTree(data) {
 	$('#jsTreeFile').jstree({
 		"core": {
 			// so that create works
-			'check_callback': true,
+			'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation == 'move_node') {
+                        	
+       // this following functionality was moved so it only calls once on the final drop
+       						/*
+                        	var movedFileName = node.text;
+                            var movedFilePath = this.get_path(node,"/");
+							movedFilePath = movedFilePath.substr(0, movedFilePath.lastIndexOf("/")) + '/';
+							var movedFileDestination = this.get_path(more.ref,"/");
+							if (more.ref.type == "root" || more.ref.type == "folder" ) { //if they are dragged it to a folder or the root, add a trailing /
+								//movedFileDestination = movedFileDestination.substr(0, movedFileDestination.lastIndexOf("/")) + '/';
+								movedFileDestination = movedFileDestination + '/';
+							}
+							else { //if they are dragging it to a file, remove the filename because we want the directory
+								movedFileDestination = movedFileDestination.substring(0, movedFileDestination.lastIndexOf('/'));
+								movedFileDestination = movedFileDestination + '/';
+							}
+							
+                            console.log("Moving " + movedFileName + " in dir " + movedFilePath + " to " + movedFileDestination);
+                            console.log("!!!" + operation);
+                           */
+       
+                            return false; //prevent the default action of moving the node
+                        }
+			},
 			'data': data,
 		},
 		"dnd": {
@@ -471,7 +550,7 @@ function renameFile (newName) {
 function createFile(fileDirectory) {
 	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
 	var statusJSON = {
-			"commandSet": "FileTree",
+			"commandSet": "base",
 			"command": "createFile",
 			"key" : randomKey,
 			"directory" : fileDirectory,
@@ -500,9 +579,9 @@ function deleteFile(fileName) {
 	console.log("request to delete " + fileAndPath);
 	
 	
-	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
+	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + selectedNodes); 
 	var statusJSON = {
-			"commandSet": "FileTree",
+			"commandSet": "base",
 			"command": "deleteFile",
 			"key" : randomKey,
 			"filename" : fileAndPath,
@@ -516,7 +595,7 @@ function deleteFile(fileName) {
 		if (result['status'] == true) {
 			// Successful file delete
 			// Remove the node from the File Tree
-			ref.delete_node(sel);
+			//ref.delete_node(sel);
 		}
 		else {
 			//file deletion denied. Display dialog with error message.
@@ -526,6 +605,8 @@ function deleteFile(fileName) {
 			addDialogInfo (thisDialog, "The file was unable to be deleted.");
 			$("#" + thisDialog).dialog({
 		      modal: true,
+		      width: 375,
+		      height: 210,
 		      buttons: {
 		        Ok: function() {
 		          $( this ).dialog( "close" );
@@ -535,9 +616,93 @@ function deleteFile(fileName) {
 		}
 }
 function deleteChat(fileName) {
-	return(1);
-}
+		var ref = $('#jsTreeChat').jstree(true),
+		sel = ref.get_selected();
+		if(!sel.length) { return false; }
+		sel = sel[0];
+		var selectedNodes = ref.get_selected();
+		var fileName = ref.get_selected(true)[0].text;
+		
+		
+		var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + selectedNodes); 
+		var statusJSON = {
+			"commandSet": "base",
+			"command": "deleteChat",
+			"key" : randomKey,
+			"chatname" : fileName,
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+	
+		while (!getMsg(randomKey)) {
+			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+	    }	
+		var result = getMsg(randomKey);
+		if (result['status'] == true) {
+			// Successful chat delete
 
+		}
+		else {
+			//chat deletion denied. Display dialog with error message.
+			var thisDialog = "dialog-info";
+			changeDialogTitle(thisDialog,"Error Deleting Chat Room");
+			addDialogIcon (thisDialog, "ui-icon-alert");
+			addDialogInfo (thisDialog, "The Chat Room was unable to be deleted.");
+			$("#" + thisDialog).dialog({
+		      modal: true,
+		      width: 375,
+		      height: 240,
+		      buttons: {
+		        Ok: function() {
+		          $( this ).dialog( "close" );
+		        }
+		      }
+		    });
+		}
+}
+function deleteTerminal(fileName) {
+		var ref = $('#jsTreeTerminal').jstree(true),
+		sel = ref.get_selected();
+		if(!sel.length) { return false; }
+		sel = sel[0];
+		var selectedNodes = ref.get_selected();
+		var fileName = ref.get_selected(true)[0].text;
+		
+		
+		var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + selectedNodes); 
+		var statusJSON = {
+			"commandSet": "base",
+			"command": "deleteTerm",
+			"key" : randomKey,
+			"termname" : fileName,
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+	
+		while (!getMsg(randomKey)) {
+			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
+	    }	
+		var result = getMsg(randomKey);
+		if (result['status'] == true) {
+			// Successful terminal delete
+
+		}
+		else {
+			//terminal deletion denied. Display dialog with error message.
+			var thisDialog = "dialog-info";
+			changeDialogTitle(thisDialog,"Error Deleting Terminal");
+			addDialogIcon (thisDialog, "ui-icon-alert");
+			addDialogInfo (thisDialog, "The terminal was unable to be deleted.");
+			$("#" + thisDialog).dialog({
+		      modal: true,
+		      width: 375,
+		      height: 240,
+		      buttons: {
+		        Ok: function() {
+		          $( this ).dialog( "close" );
+		        }
+		      }
+		    });
+		}
+}
 function initChatTree(data) {
 	if (!data) {
 		console.log("Asked to init with no data, using built-ins")
@@ -556,7 +721,11 @@ function initChatTree(data) {
 	$('#jsTreeChat').jstree({
 		"core": {
 			// so that create works
-			'check_callback': true,
+			'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation == 'move_node') {
+                        	return(false); //no moving chats
+                        }
+			},
 			'data': data,
 		},
 		"dnd": {
@@ -609,7 +778,11 @@ function initTermTree(data) {
 	$('#jsTreeTerminal').jstree({
 		"core": {
 			// so that create works
-			'check_callback': true,
+			'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation == 'move_node') {
+                        	return(false); //no moving terminals
+                        }
+			},
 			'data': data,
 		},
 		"dnd": {

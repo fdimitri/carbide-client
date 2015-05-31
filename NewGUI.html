@@ -159,6 +159,16 @@
 	<div id="dialog-info" class="dialog-window" title="Information Dialog" style="display:none;">
 		<div class="dialog-info-space"></div>
 	</div>
+	<div id="dialog-newfile" title="Create New File" style="display:none;">
+		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your file.</p>
+		<form action="" method="post">
+		<label>New File Name:</label>
+		<input id="newFileName" name="name" type="text"/>
+		<p>Open this file <input type="checkbox" id="newFileOpen" name="openinpane" onchange="fileCheckBoxChanged()"/></p>
+		<div id="newFileDropDownBox"></div>
+		<input id="newFileSubmit" type="submit" value="Submit">
+		</form>
+	</div>
 	<div id="dialog-newterminal" title="Create New Terminal" style="display:none;">
 		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your terminal.</p>
 		<form action="" method="post">

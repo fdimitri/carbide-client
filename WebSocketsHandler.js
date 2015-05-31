@@ -181,6 +181,9 @@ function cliMsgProcFileTree(jObj) {
 		console.log(myData.fileTree);
 		initFileTree($.parseJSON(myData.fileTree));
 	}
+	else if (jObj.command == "deleteFile") {
+		//the server says to delete a file
+	}
 }
 
 function cliMsgProcChat(jObj) {
@@ -266,6 +269,10 @@ function cliMsgProcTerminal(jObj) {
 	console.log("Entered cliMsgProcTerminal");
 	console.log(jObj);
 	var term = getTerminalByName(jObj.terminal).terminal;
+	if (term == false) {
+		console.log("getTerminalByName(" + jObj.terminal + ") returned false");
+		return false;
+	}
 	if (jObj.command == 'putChar') {
 		jObj = jObj.putChar;
 		console.log("We found a terminal");
@@ -277,6 +284,7 @@ function cliMsgProcTerminal(jObj) {
 	}
 
 	if (jObj.command == "userJoin") {
+		console.log("Recieved userJoin command for terminal");
 		jObj = jObj.userJoin;
 		var User = jObj.user;
 		var Terminal = '#' + jObj.term + '_UserBox';
@@ -287,6 +295,7 @@ function cliMsgProcTerminal(jObj) {
 		});
 		$(Terminal).append(msgDiv);
 	}
+	
 	else if (jObj.command == "userLeave") {
 		console.log("Received userLeave command");
 		jObj = jObj.userLeave;

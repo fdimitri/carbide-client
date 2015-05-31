@@ -456,6 +456,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	position: absolute;
 	display: none;
 }
+
 #dialog label,
 #dialog input {
 	display: block;
