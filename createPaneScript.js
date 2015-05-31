@@ -197,6 +197,7 @@ $(function() {
 			}
 			//else { console.log("there is no chat window."); }
 			var thisActiveTab = $(this).find(".activeTab");
+
 			if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
 				console.log("thisActiveTab:");
 				console.log(thisActiveTab);
@@ -219,6 +220,7 @@ $(function() {
 					resizeTerminalByNameWithSize($(this).attr("terminalId"), cols, rows);
 				});
 			}
+		
 			
 		},
 		start: function(event, ui) {

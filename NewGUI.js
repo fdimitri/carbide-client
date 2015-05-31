@@ -221,17 +221,27 @@ function closeTab(tab) {
 						console.log("REMOVED TERMINAL " + termName);
 					}
 
+					
+					console.log("NUMTABS = " + numberOfTabs);
+					if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
+						console.log("calling AppendTab with controllerid " + controllerPane);
+						appendAddTabButton(controllerPane);
+						tab.closest(".menuList").find("li").eq(0).addClass("activeTab");
+					}
+					else {
+						
+						tab.closest(".menuList").find("li").eq(numberOfTabs - 2).addClass("activeTab");
+					
+					}
+					//tabs.tabs("refresh");
+					
 					var panelId = tab.closest("li").remove().attr("aria-controls");
 					
 					var $paneId = $("#" + panelId);
 					$paneId.remove();
 					console.log(terminalArray);
-					console.log("NUMTABS = " + numberOfTabs);
-					if (numberOfTabs == 1) { //if this was the last tab, recreate the addNewTabButton
-					console.log("calling AppendTab with controllerid " + controllerPane);
-						appendAddTabButton(controllerPane);
-					}
-					//tabs.tabs("refresh");
+					
+					
 					$("#" + controllerPane).find(".tabBar").tabs().tabs("refresh");
 }
 
