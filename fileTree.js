@@ -309,6 +309,7 @@ $(function() {
 			return false;
 		}
 		else {
+			console.log("SHOWING CONTEXT MENU")
 			$("#jsTreeFile-ContextMenu").show();
 			$("#jsTreeFile-ContextMenu").position({
 				collision: "none",

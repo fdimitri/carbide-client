@@ -261,6 +261,12 @@ $(document).ready(function() {
             if($('#newTerminalOpen').is(":checked"))   {
                 console.log("They have requested to open the terminal in window pane:");
                 console.log($("#newTerminalTarget").val());
+                var tabBarId =  $('#' + $("#newTerminalTarget").val()).find(".tabBar").attr("id");
+                var fileName = termName;
+                var tabBarId = tabBarId;
+                var originId = 'unknown';
+                var srcPath = '';
+				newTab(fileName, tabBarId, originId, 'terminal', srcPath);
                 
             }
             $("#dialog-newterminal").dialog("close");
@@ -306,11 +312,13 @@ $(document).ready(function() {
             if($('#newChatOpen').is(":checked"))   {
                 console.log("They have requested to open the chat in window pane:");
                 console.log($("#newChatTarget").val());
-                var fileName = $("#newChatTarget").val();
-                var tabBarId = 'unknown';
+                var tabBarId =  $('#' + $("#newChatTarget").val()).find(".tabBar").attr("id");
+                
+                var fileName = chatName;
+                var tabBarId = tabBarId;
                 var originId = 'unknown';
-                var srcPath = 'unknown';
-				newTab(fileName, tabBarId, originId, 'chat', srcPath)
+                var srcPath = '';
+				newTab(fileName, tabBarId, originId, 'chat', srcPath);
                 
             }
             $("#dialog-newchat").dialog("close");
@@ -355,7 +363,6 @@ $(document).ready(function() {
 			}
 
 
-
            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
            //I NEED TO FIND OUT THE FORMAT FOR SOME OF THESE INPUTS. I THINK SRCPATH CAN BE DERIVED FROM VARIABLES filePath + fileName
            //BUT IM NOT SURE WHAT TO DO WITH ORIGINID OR TABBARID. IS TABBARID THE TAB THE FILE OPENS IN? WHY IS IT UNKNOWN?
@@ -363,10 +370,12 @@ $(document).ready(function() {
             if($('#newFileOpen').is(":checked"))   {
                 console.log("They have requested to open the file in window pane:");
                 console.log($("#newFileTarget").val());
-                var fileName = $("#newFileTarget").val();
-                var tabBarId = 'unknown';
+               
+                
+                var tabBarId =  $('#' + $("#newFileTarget").val()).find(".tabBar").attr("id");
                 var originId = 'unknown';
-                var srcPath = 'unknown';
+                var srcPath = filePath.substring(filePath.indexOf("/"), filePath.length) + '/' + fileName;
+
 				newTab(fileName, tabBarId, originId, 'file', srcPath)
                 
             }

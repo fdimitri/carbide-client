@@ -210,7 +210,7 @@ function closeTab(tab) {
 					/*	var statusJSON = {
 							"commandSet": "terminal",
 							"command": "leaveTerminal",
-							"terminalTarget": termName,
+							"termTarget": termName,
 							"leaveTerminal": {
 								"status": true,
 							},
@@ -499,12 +499,12 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
 
 
 function newTab(filename, tabBarId, originId, tabType, srcPath) {
-	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId" + originId + " srcPath:" + srcPath);
+	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId " + originId + " srcPath:" + srcPath);
 	
-	if (filename == "Default Terminal") {
-		var numTerminals = $('li[type="terminal"]').length; //count the terminals
-		filename = "Terminal_" + (numTerminals + 1);
-	}
+	// if (filename == "Default Terminal") {
+	// 	var numTerminals = $('li[type="terminal"]').length; //count the terminals
+	// 	filename = "Terminal_" + (numTerminals + 1);
+	// }
 	var paneId = $("#" + tabBarId).closest(".windowPane").attr("id");
 	var num_Tabs = $("#" + tabBarId + ' .menuList li').length;
 	var tabName = "tab-" + tabBarId + "-" + filename;
@@ -576,6 +576,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		},
 		datatype: 'json',
 		success: function(data) {
+		//ADD SERVER CALL HERE
 			console.log(data);
 			var result = JSON.parse(data);
 			if (result.success === false) {

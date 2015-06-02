@@ -164,6 +164,18 @@ function resizeTerminalByNameWithSize(terminalName, newCols, newRows) {
 	 console.log(terminalObj);
 	 console.log("Resizing terminal to " + newRows + " rows and " + newCols + " cols.");
 	 term.terminal.resize(newCols,newRows);
+     var eMsg = {
+		"commandSet": "term",
+		"command": "resizeTerminal",
+		"termTarget": terminalName,
+		"resizeTerminal": {
+			"termSize": {
+			    'cols' : newCols,
+			    'rows' : newRows,
+			}
+		},
+	 }
+     wsSendMsg(JSON.stringify(eMsg));
 }
 
 function registerTerminalClose(term) {
@@ -172,7 +184,7 @@ function registerTerminalClose(term) {
         var eMsg = {
 			"commandSet": "term",
 			"command": "leaveTerminal",
-			"terminalTarget": termName,
+			"termTarget": termName,
 			"leaveTerminal": {
 								"status": true,
 			},

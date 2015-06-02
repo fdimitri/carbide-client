@@ -285,9 +285,9 @@ function cliMsgProcTerminal(jObj) {
 
 	if (jObj.command == "userJoin") {
 		console.log("Recieved userJoin command for terminal");
-		jObj = jObj.userJoin;
-		var User = jObj.user;
-		var Terminal = '#' + jObj.term + '_UserBox';
+		jObjUserJoin = jObj.userJoin;
+		var User = jObjUserJoin.user;
+		var Terminal = '#' + jObj.terminal + '_UserBox';
 		console.log($(Terminal));
 		var msgDiv = "<div class='cUser' termUser='" + User + "'>" + User + "</div>";
 		$(Terminal + " .cUser").each(function() {
@@ -313,6 +313,7 @@ function cliMsgProcTerminal(jObj) {
 	}
 
 	else if (jObj.command == "userList") {
+		console.log("Recieved userList command for terminal");
 		jObj = jObj.userList;
 		var userList = jObj.list;
 		var Terminal = '#' + jObj.term + '_UserBox';

@@ -217,7 +217,7 @@ $(function() {
 				var cols = activeTerminal.terminal.getCols();
 				console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
 				$("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
-					resizeTerminalByNameWithSize($(this).attr("terminalId"), cols, rows);
+					resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
 				});
 			}
 		

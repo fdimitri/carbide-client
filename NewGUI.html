@@ -4,8 +4,9 @@
 	<!--jquery.filetree.tar_1.gz-->
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" href="NewGUI.css">
-	<link rel="stylesheet" href="jstree/themes/default/style.min.css" />
+	<link rel="stylesheet" href="jstree/themes/default/style.css" />
 	<link rel="stylesheet" href="quartzmenu/styles.css" />
+	<link rel="stylesheet" href="carbide-context.css" />
 	
 	
 
@@ -105,13 +106,21 @@
 		</div>
 
 		<div id="editorContainer">
-						<ul id="jsTreeFile-ContextMenu" class="jsTreeContextMenu">	
+						<!--<ul id="jsTreeFile-ContextMenu" class="jsTreeContextMenu">	
 					    	<li><a href="#" class="contextMenuParent"><i></i><span class="contextMenuSep">&nbsp;</span>New</a>
 					    		<ul class="contextSubMenu">
 					    			<li id="cm-NewFile"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>File</a></li>
 					    		</ul>
 					    	</li>
 							<li id="cm-Opions"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>Options</a></li>
+						</ul>-->
+						<ul id="jsTreeFile-ContextMenu" class="carbide-context jsTreeContextMenu">	
+					    	<li><a href="#" class="carbide-context-parent"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>New</a>
+					    		<ul class="contextSubMenu">
+					    			<li id="cm-NewFile"><a href="#"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>File</a></li>
+					    		</ul>
+					    	</li>
+							<li id="cm-Options"><a href="#"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>Options</a></li>
 						</ul>
 				<div id="toolBarSide">
 				    <ul>
