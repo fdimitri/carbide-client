@@ -1,0 +1,458 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="jsplumbdemo.css">
+            <script src="jsplumb/dist/js/dom.jsPlumb-1.7.5-min.js "></script>
+
+        	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.js"></script>       
+        <script>
+        
+     //globals     
+    var activeContainerId = '';     
+    var numTables = 0;
+    var numDbElements = 0;
+    
+    
+    //globals     
+    var activeContainerId = '';     
+    var numTables = 0;
+    
+    
+    function createNewTable(boxId, x,y) {
+         numTables = numTables + 1;
+         
+        var newDiv = '<div class="dbChartContainer" id="dbContainer' + numTables + '"> </div>';
+       
+        $('#' + boxId).append(newDiv);
+    	var cssObj = {
+				top: y,
+				left: x
+		};
+        $('#dbContainer' + numTables).css(cssObj);
+        console.log("new table created." + boxId + " " + x + " " + y);
+    }
+    function createNewTableEntry(boxId) {
+        console.log("New Table Entry created in Box " + boxId);
+    }
+  $(function() {
+    $("#boundbox").mousedown(function(e){ 
+        if( e.button == 2 ) { 
+          console.log('Right mouse button!'); 
+          activeContainerId = this.id;
+          $(".dbContextMenu").hide();
+          $(".dbTableMenu").hide();
+          return true; 
+        }
+    });
+	$(".dbContextMenu").menu({
+		select: function(event, ui) {
+		    if ($(ui.item).attr("id") == "db-Options") {
+		        console.log("Create New Table requested")
+		        var parentOffset = $(this).parent().offset(); 
+		        var xLocation = (event.pageX - parentOffset.left);
+		        var yLocation = (event.pageY - parentOffset.top);
+		        console.log($(event.target).attr("id"));
+		        console.log(activeContainerId);
+		       createNewTable(activeContainerId,xLocation,yLocation);
+		 
+		     
+
+		    }
+			$(".dbContextMenu").hide();
+			
+			
+			
+		}
+	});
+
+	$("#boundbox").on("contextmenu", function(event) {
+		
+		
+		$(".dbContextMenu").show();
+		$(".dbContextMenu").position({
+			collision: "none",
+			my: "left top",
+			of: event
+		});
+		
+	
+		console.log($(event.target).attr("class"));
+		
+		
+
+		return false;
+	});
+
+	$(document).click(function(event) {
+		$(".dbContextMenu").hide();
+	});
+
+	$(".dbContextMenu").on("contextmenu", function(event) {
+	    
+		return false;
+	});
+         
+$(".dbTableMenu").menu({
+		select: function(event, ui) {
+		    if ($(ui.item).attr("id") == "db-Entry") {
+		        console.log("Create New Table Entry requested")
+		        
+		       createNewTableEntry(activeContainerId);
+		 
+		     
+
+		    }
+			$(".dbTableMenu").hide();
+			
+			
+			
+		}
+	});
+
+	$(".dbChartContainer").on("contextmenu", function(event) {
+		
+		
+		$(".dbTableMenu").show();
+		$(".dbTableMenu").position({
+			collision: "none",
+			my: "left top",
+			of: event
+		});
+		
+	
+		console.log($(event.target).attr("class"));
+		
+		
+
+		return false;
+	});
+
+	$(document).click(function(event) {
+		$(".dbTableMenu").hide();
+	});
+
+	$(".dbTableMenu").on("contextmenu", function(event) {
+	    
+		return false;
+	});
+});                      
+            
+            
+            
+            
+            
+            
+            
+            jsPlumb.ready(function () {
+
+    var instance = jsPlumb.getInstance({
+        // default drag options
+        DragOptions: { cursor: 'pointer', zIndex: 2000 },
+        // the overlays to decorate each connection with.  note that the label overlay uses a function to generate the label text; in this
+        // case it returns the 'labelText' member that we set on each connection in the 'init' method below.
+        ConnectionOverlays: [
+            [ "Arrow", { location: 1 } ],
+            [ "Label", {
+                location: 0.1,
+                id: "label",
+                cssClass: "aLabel"
+            }]
+        ],
+        Container: "flowchart-demo"
+    });
+
+    var basicType = {
+        connector: "StateMachine",
+        paintStyle: { strokeStyle: "red", lineWidth: 4 },
+        hoverPaintStyle: { strokeStyle: "blue" },
+        overlays: [
+            "Arrow"
+        ]
+    };
+    instance.registerConnectionType("basic", basicType);
+
+    // this is the paint style for the connecting lines..
+    var connectorPaintStyle = {
+            lineWidth: 4,
+            strokeStyle: "#61B7CF",
+            joinstyle: "round",
+            outlineColor: "white",
+            outlineWidth: 2
+        },
+    // .. and this is the hover style.
+        connectorHoverStyle = {
+            lineWidth: 4,
+            strokeStyle: "#216477",
+            outlineWidth: 2,
+            outlineColor: "white"
+        },
+        endpointHoverStyle = {
+            fillStyle: "#216477",
+            strokeStyle: "#216477"
+        },
+    // the definition of source endpoints (the small blue ones)
+        sourceEndpoint = {
+            endpoint: "Dot",
+            paintStyle: {
+                strokeStyle: "#7AB02C",
+                fillStyle: "transparent",
+                radius: 7,
+                lineWidth: 3
+            },
+            isSource: true,
+            connector: [ "Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true } ],
+            connectorStyle: connectorPaintStyle,
+            hoverPaintStyle: endpointHoverStyle,
+            connectorHoverStyle: connectorHoverStyle,
+            dragOptions: {},
+            overlays: [
+                [ "Label", {
+                    location: [0.5, 1.5],
+                    label: "Drag",
+                    cssClass: "endpointSourceLabel"
+                } ]
+            ]
+        },
+    // the definition of target endpoints (will appear when the user drags a connection)
+        targetEndpoint = {
+            endpoint: "Rectangle",
+            paintStyle: { fillStyle: "#7AB02C", radius: 11 },
+            hoverPaintStyle: endpointHoverStyle,
+            maxConnections: -1,
+            dropOptions: { hoverClass: "hover", activeClass: "active" },
+            isTarget: true,
+            overlays: [
+                [ "Label", { location: [0.5, -0.5], label: "Drop", cssClass: "endpointTargetLabel" } ]
+            ]
+        },
+        init = function (connection) {
+            connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15));
+        };
+
+    var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
+        for (var i = 0; i < sourceAnchors.length; i++) {
+            var sourceUUID = toId + sourceAnchors[i];
+            instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
+                anchor: sourceAnchors[i], uuid: sourceUUID
+            });
+        }
+        for (var j = 0; j < targetAnchors.length; j++) {
+            var targetUUID = toId + targetAnchors[j];
+            instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
+        }
+    };
+
+    // suspend drawing and initialise.
+    instance.batch(function () {
+
+
+        _addEndpoints("Test1", ["RightMiddle"], ["LeftMiddle"]);
+        _addEndpoints("Test2", ["RightMiddle"], ["LeftMiddle"]);
+        _addEndpoints("Test3", ["RightMiddle"], ["LeftMiddle"]);
+
+        // listen for new connections; initialise them the same way we initialise the connections at startup.
+        instance.bind("connection", function (connInfo, originalEvent) {
+            init(connInfo.connection);
+        });
+
+        // make all the window divs draggable
+        
+        
+         instance.draggable(jsPlumb.getSelector(".flowchart-demo .dbChartContainer"), { 
+            grid: [20, 20],
+            containment:"parent",
+            drag: function( event, ui ) {
+                console.log("x " + event.pos[0] + " y " + event.pos[1]);
+                
+            },
+           start: function( event, ui ) {
+                console.log("Placing lock on file");
+                
+            },
+            stop: function( event, ui ) {
+                console.log("removing file lock");
+                
+            }
+            
+        });        
+        
+
+       /* instance.draggable($(".flowchart-demo .window"), {
+            grid: [20, 20],
+          containment:"parent"
+        });*/
+
+        // THIS DEMO ONLY USES getSelector FOR CONVENIENCE. Use your library's appropriate selector
+        // method, or document.querySelectorAll:
+        //jsPlumb.draggable(document.querySelectorAll(".window"), { grid: [20, 20] });
+
+
+        //
+        // listen for clicks on connections, and offer to delete connections on click.
+        //
+        instance.bind("click", function (conn, originalEvent) {
+           // if (confirm("Delete connection from " + conn.sourceId + " to " + conn.targetId + "?"))
+             //   instance.detach(conn);
+            conn.toggleType("basic");
+        });
+
+        instance.bind("connectionDrag", function (connection) {
+            console.log("connection " + connection.id + " is being dragged. suspendedElement is ", connection.suspendedElement, " of type ", connection.suspendedElementType);
+            console.log(connection.sourceId)
+        });
+
+        instance.bind("connectionDragStop", function (connection) {
+            console.log("connection " + connection.id + " was dragged");
+        });
+
+        instance.bind("connectionMoved", function (params) {
+            console.log("connection " + params.connection.id + " was moved");
+            console.log(params.newSourceId);
+            console.log(params.originalSourceId);
+            console.log(params.newTargetId);
+            console.log(params.originalTargetId);
+            console.log(params.originalTargetEndpoint);
+            
+        });
+    });
+
+    jsPlumb.fire("jsPlumbDemoLoaded", instance);
+
+
+    $(document).ready(function() {
+        $('#flowchart-demo').dblclick(function(e) {
+            /*jsPlumb.repaintEverything();
+            console.log("DBL");
+            $("#flowchartWindow1").parent().css({position: 'relative'});
+            $("#flowchartWindow1").css({top: 200, left: 200, position:'absolute'});
+            instance.repaintEverything();*/
+            var newState = $('<div>').attr('id', 'state').addClass('item');
+		
+    		var title = $('<div>').addClass('title').text('State ');
+    		var connect = $('<div>').addClass('connect');
+    		
+    		newState.css({
+    		  'top': e.pageY,
+    		  'left': e.pageX
+    		});
+    		
+    		newState.append(title);
+    		newState.append(connect);
+    		
+    		$('#container').append(newState);
+    		
+    		jsPlumb.makeTarget(newState, {
+    		  anchor: 'Continuous'
+    		});
+    		
+    		jsPlumb.makeSource(connect, {
+    		  parent: newState,
+    		  anchor: 'Continuous'
+    		});		
+    		
+    		jsPlumb.draggable(newState, {
+    		  containment: 'parent'
+    		});
+    		newState.dblclick(function(e) {
+    		  jsPlumb.detachAllConnections($(this));
+    		  $(this).remove();
+    		  e.stopPropagation();
+    		});		
+        });
+    
+    
+    
+    });
+});
+
+
+        </script>
+	
+    </head>
+    <body>
+        
+    <div id="boundbox">
+        <div id="main">
+			<!-- demo -->
+            <div class="demo flowchart-demo" id="flowchart-demo">
+                <div class="dbChartContainer" id="dbContainer">
+                    <div class="dbChartTable" id="flowchartTesta"><strong>test1</strong></div>
+                    <div class="dbChartTable" id="flowchartTestb"><strong>test2</strong></div>
+                    <div class="dbChartTable" id="flowchartTestc"><strong>test3</strong></div>
+                </div>
+                
+                
+            </div>
+            <!-- /demo -->
+        </div>
+        <!-- explanation -->
+        <div class="explanation">
+            <h4>FLOWCHART</h4>
+            <p>Nodes are connected with the Flowchart connector.</p>
+            <p>Hover over connections to highlight them, click to delete. </p>
+            <p>Drag new connections from hollow dots to solid dots. You can also drag connections from their source/target to other sources/targets, or back onto themselves.</p>
+            <p>By default, Flowchart connectors have square corners, but by setting the 'cornerRadius' parameter, as we have here, you can get rounded corners.</p>
+        </div>
+        <!-- /explanation -->
+
+        <!-- JS -->
+        <!-- support lib for bezier stuff -->
+        <script src="jsplumb/lib/jsBezier-0.7.js"></script>
+        <!-- event adapter -->
+		<script src="jsplumb/lib/mottle-0.6.js"></script>
+		<!-- geometry functions -->
+        <script src="jsplumb/lib/biltong-0.2.js"></script>
+		<!-- drag -->
+        <script src="jsplumb/lib/katavorio-0.6.js"></script>
+        <!-- jsplumb util -->
+        <script src="jsplumb/src/util.js"></script>
+        <script src="jsplumb/src/browser-util.js"></script>
+        <!-- main jsplumb engine -->
+        <script src="jsplumb/src/jsPlumb.js"></script>
+        <!-- base DOM adapter -->
+        <script src="jsplumb/src/dom-adapter.js"></script>
+        <script src="jsplumb/src/overlay-component.js"></script>
+        <!-- endpoint -->
+        <script src="jsplumb/src/endpoint.js"></script>
+        <!-- connection -->
+        <script src="jsplumb/src/connection.js"></script>
+        <!-- anchors -->
+        <script src="jsplumb/src/anchors.js"></script>
+        <!-- connectors, endpoint and overlays  -->
+        <script src="jsplumb/src/defaults.js"></script>
+        <!-- bezier connectors -->
+        <script src="jsplumb/src/connectors-bezier.js"></script>
+        <!-- state machine connectors -->
+        <script src="jsplumb/src/connectors-statemachine.js"></script>
+        <!-- flowchart connectors -->
+        <script src="jsplumb/src/connectors-flowchart.js"></script>
+        <!-- SVG renderer -->
+        <script src="jsplumb/src/renderers-svg.js"></script>
+
+
+        <!-- vml renderer -->
+        <script src="jsplumb/src/renderers-vml.js"></script>
+
+        <!-- no library jsPlumb adapter -->
+        <script src="jsplumb/src/base-library-adapter.js"></script>
+        <script src="jsplumb/src/dom.jsPlumb.js"></script>
+        <!-- /JS -->
+
+
+        <!-- demo list -->
+        <script src="jsplumb/demo/demo-list.js"></script>
+    </div>
+
+        
+    <ul id="databaseContextMenu" class="dbContextMenu">	
+					    	
+							<li id="db-Options"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>New Table</a></li>
+	</ul>    
+	<ul id="tableContextMenu" class="dbTableMenu">	
+					    	
+							<li id="db-NewEntry"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>New Entry</a></li>
+	</ul>    
+        
+    </body>
+</html>
