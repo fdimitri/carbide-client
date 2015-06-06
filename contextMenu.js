@@ -442,14 +442,14 @@ function addDialogIcon (dialogId, dialogIcon) {
 	
 	//choices for dialogIcon: ui-icon-alert ui-icon-question ui-icon-info ui-icon-folder-collapsed
 	
-	dialogInfo = '<span class="dialogIcon ui-icon ' + dialogIcon + '" style="float:left; margin:0 7px 20px 0;"></span>';
+	var dialogInfo = '<span class="dialogIcon ui-icon ' + dialogIcon + '" style="float:left; margin:0 7px 20px 0;"></span>';
 	$("#" + dialogId).find(".dialog-info-space").prepend(dialogInfo);
 }
 function removeDialogIcon (dialogId) {
 	$("#" + dialogId).find(".dialogIcon").remove();	
 }
 function addDialogInfo (dialogId, dialogMsg) {
-	dialogInfo = '<p class="dialogInfo">' + dialogMsg + '</p><div class="dialogClear" style="clear:both;"></div>';
+	var dialogInfo = '<p class="dialogInfo">' + dialogMsg + '</p><div class="dialogClear" style="clear:both;"></div>';
 	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
 }
 function removeDialogInfo (dialogId) {
@@ -459,7 +459,14 @@ function removeDialogInfo (dialogId) {
 function changeDialogTitle (dialogId, dialogTitle) {
 	$("#" + dialogId).prop('title', dialogTitle);
 }
-
+function addDialogQuestion (dialogId, textLabel, textId, textName) { //add a text box to get info from the user
+	var dialogInfo = '<div class="dialogQuestion"><label>' + textLabel + ' </label><input id="' + textId + '" name="' + textName + '" type="text"/></div>';
+	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
+	
+}
+function removeDialogQuestion (dialogId) {
+	$("#" + dialogId).find(".dialogQuestion").remove();	
+}
 $(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
 	$('.dialog-window').bind('dialogclose', function(event) {
 		 dialogId = $(this).attr('id');

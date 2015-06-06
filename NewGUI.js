@@ -313,6 +313,22 @@ function maximizePane(paneId) {
 	thisPane.css("display", "block");
 	thisPane.height(thisPane.parent().height() - 10);
 	thisPane.width(thisPane.parent().width() - 10);
+	
+	var thisActiveTab = thisPane.find(".activeTab");
+
+	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
+		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
+		var activeTerminal = getTerminalByName(activeTerminalName);
+		console.log("Got active terminal by name:");
+		console.log(activeTerminal);
+		resizeTerminalByName(activeTerminalName);
+		var rows = activeTerminal.terminal.getRows();
+		var cols = activeTerminal.terminal.getCols();
+		console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
+		thisPane.find(".terminalWindow").each(function() {
+			resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
+		});
+	}
 
 
 
@@ -355,6 +371,23 @@ function restorePane(paneId) {
 		});
 	}
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "hidden");
+	
+		var thisActiveTab = thisPane.find(".activeTab");
+
+	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
+		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
+		var activeTerminal = getTerminalByName(activeTerminalName);
+		console.log("Got active terminal by name:");
+		console.log(activeTerminal);
+		resizeTerminalByName(activeTerminalName);
+		var rows = activeTerminal.terminal.getRows();
+		var cols = activeTerminal.terminal.getCols();
+		console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
+		thisPane.find(".terminalWindow").each(function() {
+			resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
+		});
+	}
+	
 }
 
 function minimizePane(paneId) {
@@ -657,6 +690,7 @@ var paneCounter = 0;
 createNewPane();
 
 
+
 function createNewPane() {
 	paneCounter++;
 	var MyObject = [{
@@ -700,6 +734,9 @@ function createNewPane() {
 						left: newX,
 						position: 'absolute'
 					});
+				}
+				else {
+					maximizePane("pane01");
 				}
 			}
 			$(result.paneId).addClass("activePane");

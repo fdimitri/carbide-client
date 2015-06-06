@@ -2,6 +2,7 @@
 
 <head>
 	<!--jquery.filetree.tar_1.gz-->
+	
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" href="NewGUI.css">
 	<link rel="stylesheet" href="jstree/themes/default/style.css" />
@@ -117,7 +118,7 @@
 						<ul id="jsTreeFile-ContextMenu" class="carbide-context jsTreeContextMenu">	
 					    	<li><a href="#" class="carbide-context-parent"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>New</a>
 					    		<ul class="contextSubMenu">
-					    			<li id="cm-NewFile"><a href="#"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>File</a></li>
+					    			<li id="cm-NewFile" class="carbide-contextmenu-sub"><a href="#"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>File</a></li>
 					    		</ul>
 					    	</li>
 							<li id="cm-Options"><a href="#"><i></i><span class="carbide-contextmenu-sep">&nbsp;</span>Options</a></li>
@@ -168,7 +169,7 @@
 	<div id="dialog-info" class="dialog-window" title="Information Dialog" style="display:none;">
 		<div class="dialog-info-space"></div>
 	</div>
-	<div id="dialog-newfile" title="Create New File" style="display:none;">
+	<div id="dialog-newfile" class="dialog-window" title="Create New File" style="display:none;">
 		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your file.</p>
 		<form action="" method="post">
 		<label>New File Name:</label>
@@ -178,7 +179,7 @@
 		<input id="newFileSubmit" type="submit" value="Submit">
 		</form>
 	</div>
-	<div id="dialog-newterminal" title="Create New Terminal" style="display:none;">
+	<div id="dialog-newterminal" class="dialog-window" title="Create New Terminal" style="display:none;">
 		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your terminal.</p>
 		<form action="" method="post">
 		<label>New Terminal Name:</label>
@@ -188,7 +189,7 @@
 		<input id="newTerminalSubmit" type="submit" value="Submit">
 		</form>
 	</div>
-	<div id="dialog-newchat" title="Create New Chat Room" style="display:none;">
+	<div id="dialog-newchat" class="dialog-window" title="Create New Chat Room" style="display:none;">
 		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your Chat Room.</p>
 		<form action="" method="post">
 		<label>New Chat Room Name:</label>

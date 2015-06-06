@@ -310,7 +310,14 @@ $(function() {
 		}
 		else {
 			console.log("SHOWING CONTEXT MENU")
+			
 			$("#jsTreeFile-ContextMenu").show();
+			// $("#jsTreeFile-ContextMenu").removeClass("ui-menu");
+			// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-menu-item");
+			// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-state-active");
+			 $("#jsTreeFile-ContextMenu").find(".ui-menu-icon").remove();
+		
+
 			$("#jsTreeFile-ContextMenu").position({
 				collision: "none",
 				my: "left top",
