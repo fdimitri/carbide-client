@@ -325,6 +325,17 @@ function focusPane(paneId) {
 
 
 	}
+	
+	//send a message to the server to inform it that we have changed the focus of the pane
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneFocus",
+			"paneFocus" : {
+				"paneId" :  paneId,
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
 
 }
 
@@ -366,7 +377,15 @@ function maximizePane(paneId) {
 	
 	thisPane.resizable("disable");
 
-
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneMaximize",
+			"paneMaximize" : {
+				"paneId" :  paneId,
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
 
 
 }
@@ -414,6 +433,23 @@ function restorePane(paneId) {
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "hidden");
 	
 	checkTerminalSizes(paneId);
+	var panePosition = thisPane.position();
+	
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneRestore",
+			"paneMinimize" : {
+				"paneId" :  paneId,
+				"paneLeft" : panePosition.left,
+				"paneTop" : panePosition.top,
+				"paneWidth" : thisPane.width(),
+				"paneHeight" : thisPane.height(),
+				
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	
 	
 }
 
@@ -436,6 +472,18 @@ function minimizePane(paneId) {
 	//now find the pane in the windowPaneTabs and show the restore button
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "visible");
 	console.log($(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").length);
+	
+	//let the server know the pane was minimized in case someone is mirroring this layout
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneMinimize",
+			"paneMinimize" : {
+				"paneId" :  paneId,
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	
 }
 
 function closePaneConfirm(paneId) {
@@ -486,6 +534,18 @@ function closePane(paneId) {
 			};
 			 wsSendMsg(JSON.stringify(eMsg));
 	});
+	
+	//Tell the server that we closed this pane.
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneClose",
+			"paneClose" : {
+				"paneId" :  paneId,
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	
 
 	var paneTitleRemove = $("div #" + paneId).find(".paneTitle").text();
 	$("div #" + paneId).remove();
@@ -514,8 +574,19 @@ function closePane(paneId) {
 
 			if ($(this).find(".paneTitle").html().match(/Pane \d+/g)) //if the pane was titled Pane XX we should rename it to avoid confusion
 			{
-
-				$(this).find(".paneTitle").html("Pane " + s1);
+				var newName = "Pane " + s1;
+				$(this).find(".paneTitle").html(newName);
+				
+				var statusJSON = {
+						"commandSet": "client",
+						"command": "paneRename",
+						"paneRename" : {
+							"paneId" :  $(this).attr("id"),
+							"paneName" : newName,
+						},
+						
+				};
+				wsSendMsg(JSON.stringify(statusJSON));
 			}
 
 
@@ -755,13 +826,22 @@ function createNewPane() {
 				$("#windows").append(html_result);
 			}
 			if (result.script) {
-				console.log("Script receieved! Evaluating! Smelloscope!");
 				eval(result.script);
 			}
 			if (result.paneId) {
 
 				focusPane(result.paneId);
-
+				
+				//send a message to the server to let it know that we've created a new pane
+				var statusJSON = {
+						"commandSet": "client",
+						"command": "paneOpen",
+						"paneOpen" : {
+							"paneId" :  paneId,
+						},
+						
+				};
+				wsSendMsg(JSON.stringify(statusJSON));
 
 
 				if (result.paneId != "#pane01") {

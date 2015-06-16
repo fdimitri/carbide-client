@@ -140,7 +140,7 @@ $('#jsTreeFile').keydown(function(e) {
 	
 	$('.drag').on('mousedown', function(e) {
 		
-			var jsTreeDiv = '<div id="jstree-dnd" class="jstree-default"><i class="jstree-icon jstree-er"></i>' + $(this).text() + '</div>';
+			var jsTreeDiv = '<div id="jstree-dnd" class="jstree-default"><span class="jstree-icon jstree-er"></span>' + $(this).text() + '</div>';
 			var nodes = [{
 				id: true,
 				text: $(this).text()
@@ -156,39 +156,40 @@ $('#jsTreeFile').keydown(function(e) {
 		
 		$(document)
 		.on('dnd_move.vakata', function(e, data) {
+			
 			var t = $(data.event.target);
 			if (!t.closest('.jstree').length) {
-				if (t.closest('.menuList').length) {
+				//if (t.closest('.menuList').length) {
+				if (t.closest('.windowPane').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
 					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {	
 					
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
 						// data.helper.find('.jstree-icon').css("width", "500px");
 						// data.helper.find('.jstree-icon').css("background-color", "#FF0000");
-						// data.helper.find('.jstree-icon').css("background-position", "-4px -68px");
-						console.log(data.helper.find('.jstree-icon').attr("class"));
-						console.log(data.helper.find('.jstree-icon').parent().attr("class"));
+//						data.helper.find('.jstree-icon').css("background-position", "-4px -68px");
 
-						
 						
 					}
 					else {
 						data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
-						console.log(data.helper.find('.jstree-icon').attr("class"));
+//						data.helper.find('.jstree-icon').css("background-position", "-36px -68px");
 					}
 				}
 				else {
-					//data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
-					console.log(data.helper.find('.jstree-icon').attr("class"));
+					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
+//					data.helper.find('.jstree-icon').css("background-position", "-36px -68px");
 				}
 			}
 			else { //give them a check box if they're above the file tree
 				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal")) {
 					//This is a chat or terminal. don't give them the checkbox because they can't move it to another folder.
 					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
+//					data.helper.find('.jstree-icon').css("background-position", "-36px -68px");
 				}
 				else {
 					data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+//					data.helper.find('.jstree-icon').css("background-position", "-4px -68px");
 				}
 				
 				
@@ -201,7 +202,8 @@ $('#jsTreeFile').keydown(function(e) {
 			console.log("VAKATA " + e + " " + data);
 			var t = $(data.event.target);
 			if (!t.closest('.jstree').length) {
-				if (t.closest('.menuList').length) {
+				//if (t.closest('.menuList').length) {
+				if (t.closest('.windowPane').length) {
 
 
 					console.log("Data");
@@ -215,7 +217,8 @@ $('#jsTreeFile').keydown(function(e) {
 						console.log("TARGET");
 						console.log(data.event.target);
 						console.log("ID");
-						var thisParent = $(data.event.target).closest('div').attr('id');
+						//var thisParent = $(data.event.target).closest('div').attr('id');
+						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
 						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
 							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
 							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
@@ -225,14 +228,16 @@ $('#jsTreeFile').keydown(function(e) {
 							console.log($("#" + data.data.obj[0].id));
 							//console.log($("#" + data.data.obj[0].id).closest('li').attr('srcPath'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'file', $("#" + data.data.obj[0].id).attr('srcpath'));
+							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
+							console.log("TABBARID " + tabBarId);
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'file', $("#" + data.data.obj[0].id).attr('srcpath'));
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
 					else if (draggedItem.hasClass("jsTreeChat")) {
 						console.log("Has class jsTreeChat");
-						var thisParent = $(data.event.target).closest('div').attr('id');
+						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
 						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
 							console.log("Tab already exists, not adding -- but setting active");
 							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
@@ -243,13 +248,14 @@ $('#jsTreeFile').keydown(function(e) {
 							console.log($("#" + data.data.obj[0].id));
 							console.log($("#" + data.data.obj[0].id).closest('li'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'chat', '');
+							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'chat', '');
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
 					else if (draggedItem.hasClass("jsTreeTerminal")) {
-						var thisParent = $(data.event.target).closest('div').attr('id');
+						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
 						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
 							console.log("Tab already exists, not adding -- but setting active");
 							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
@@ -260,7 +266,8 @@ $('#jsTreeFile').keydown(function(e) {
 							console.log($("#" + data.data.obj[0].id));
 							console.log($("#" + data.data.obj[0].id).closest('li'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
-							var tabCounter = newTab(data.element.text, t.closest('div').attr('id'), data.data.obj[0].id, 'terminal', '');
+							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'terminal', '');
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
 						}
@@ -411,21 +418,33 @@ function initFileTree(data) {
                             console.log("Moving " + movedFileName + " in dir " + movedFilePath + " to " + movedFileDestination);
                             console.log("!!!" + operation);
                            */
-       
                             return false; //prevent the default action of moving the node
                         }
 			},
 			'data': data,
 		},
+		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
 		"dnd": {
-			is_draggable: function(node) {
-
-				return true;
-			}
+			is_draggable : function () { return true; },
+			drop_check : function (data) { return true; },
+			drag_check : function (data) { return true; },
+            check_while_dragging: false,
 		},
-
+		"crrm" : {
+			check_while_dragging: false,	
+		},
+	    'sort': function (a, b) {
+	    	console.log("Sorting node");
+    	    var tc1 = this.get_text(a).localeCompare(this.get_text(b));
+    	    var tc2 = this.get_type(a).localeCompare(this.get_type(b));
+    	    if (tc2 > 0) return -1;
+    	    if (tc2 < 0) return 1;
+    	    if (tc1 > 0) return 1;
+    	    if (tc1 < 0) return -1;
+    	    console.log("Return 0");
+    	    return 0;
+    	},
 		"types": {
-
 			"file": {
 				"icon": "jstree-file",
 				"valid_children": []
@@ -440,8 +459,18 @@ function initFileTree(data) {
 			}
 
 
-		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types"],
+		}, 
+	// 	"dnd" : {
+ //   drop_target     : ".someWrapperClassInSource",
+ //   drop_check      : function (data) { return true; },
+ //   drop_finish     : function (data) {
+ //                           $.jstree._reference(this.get_container()).remove($(data.o));
+ //                     },
+ //   drag_target     : ".someClassInSource",
+ //   drag_finish     : function (data) {;},
+ //   drag_check      : function (data) { return { after : false, before : false, inside : true }; }
+ //},
+		
 		contextmenu: {
 			items: fileTreeMenu
 		}
@@ -899,4 +928,17 @@ function initTermTree(data) {
 			}
 		}
 	});
+	
+var getCss = function(el) {
+    var style = window.getComputedStyle(el);
+    return Object.keys(style).reduce(function(acc, k) {
+        var name = style[k],
+            value = style.getPropertyValue(name);
+        if (value !== null) {
+            acc[name] = value;
+        }
+        return acc;
+    }, {});
+};
+
 }

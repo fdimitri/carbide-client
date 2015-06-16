@@ -195,7 +195,7 @@ function cliMsgProcChat(jObj) {
 		var msgDiv = "<div class='cMsg'><span class='cMsgUser'>" + User + "</span><span class='cMsgMsg'>" + Text + "</span></div>";
 		var msgDiv = "<table class='cMsgT'><tr><td>" + User + "</td><td><p>" + Text + "</p></td></table>";
 		$(Channel).append(msgDiv);
-		if ($(Channel)[0].scrollHeight) {
+		if ($(Channel).prop('scrollHeight')) {
 			$(Channel).animate({
 				scrollTop: $(Channel)[0].scrollHeight
 			}, 333);
