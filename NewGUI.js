@@ -652,7 +652,8 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
 	//if ($("#" + tabName).length) {
 	if (tabType == "file") {
-		if ($("#" + tabBarId).find("#" + tabName).length) { //check for duplicate files
+		if ($("#" + tabBarId).find('[srcpath="' + srcPath + '"]').length) { //check for duplicate files
+		
 			console.log("We already have this tab open!");
 			$("#" + paneId).find(".tabBar").tabs().tabs("refresh");
 			var listItemIndex = $("#" + paneId).find('[srcpath="' + srcPath + '"]').index();
@@ -1112,6 +1113,20 @@ function moveTab(receiver, sender, tab) {
 	// Remove the panel
 
 	$("#" + panelId).appendTo(receiver);
+	
+	
+	//Tell the server that we moved a tab from one pane to the other
+	var statusJSON = {
+		"commandSet": "client",
+		"command": "tabMove",
+		"tabMove" : {
+			"tabId" :  tabId,
+			"senderPane" : sentPaneId,
+			"receiverPane" : paneId,
+		},
+						
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
 
 	//This is where we have to change the attributes to match the new tab bar. Change: li aria-controls attribute, a href attribute, div (class AriaTab) ID attr,
 	//pre (class preAceEdit) ID attr
@@ -1151,39 +1166,5 @@ function moveTab(receiver, sender, tab) {
 	$("#" + sentPaneId).find(".tabBar").tabs("option", "active", -1);
 	$(".tabBar").tabs("refresh");
 
-
-	//console.log(tabs2);
-
-	/*console.log(tabs);
-				console.log(receiver);
-				console.log(sender);
-				console.log(tab);
-
-				var tab$ = $(tab);
-                var theUL$ = tab$.closest("ul");
-	            var panelId = tab$.attr( "aria-controls" );
-			
-				var newIndex = receiver.find("li").length;
-                newIndex = newIndex - 1; //it's a 0 based index
-                if (newIndex < 0) { 
-                	newIndex = 0;
-                }
-                //console.log(panelId);
-                //console.log(newIndex);
-                //console.log(theUL$);
-                
-                tab$ = $(tab$.removeAttr($.makeArray(tab.attributes).
-                              map(function(item){ return item.name;}).
-                              join(' ')).remove());
-                tab$.find('a').removeAttr('id tabindex role class');
-
-                theUL$.append(tab$);
-
-                $($( "#" + panelId ).remove()).appendTo(receiver);
-                //var newIndex = $(this).data("ui-sortable").currentItem.index();
-               	//var newIndex = ui.item.index();
-               	tabs.tabs("refresh");
-                tabs.tabs({ active:newIndex});
-          */
 
 }
