@@ -160,7 +160,8 @@ $('#jsTreeFile').keydown(function(e) {
 			if (!t.closest('.jstree').length) {
 				if (t.closest('.menuList').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {						
+					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {	
+					
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
 						// data.helper.find('.jstree-icon').css("width", "500px");
 						// data.helper.find('.jstree-icon').css("background-color", "#FF0000");

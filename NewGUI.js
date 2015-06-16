@@ -576,7 +576,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	var num_Tabs = $("#" + tabBarId + ' .menuList li').length;
 	var tabName = "tab-" + tabBarId + "-" + filename;
 	var tabSaved = $(".tabBar").tabs();
-	tabName = tabName.replace('.', '_');
+	tabName = tabName.replace(/\./g, '_');
 	var tabNameNice = filename;
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
 	//if ($("#" + tabName).length) {
