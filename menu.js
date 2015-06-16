@@ -106,6 +106,7 @@ function arrangePanes(paneFormat) {
 		$(mainPane).height($(mainPane).parent("div").height()-10);
 		$(mainPane).width($(mainPane).parent("div").width()-10);
 		*/
+
 		maximizePane($(".windowPane").eq(0).attr("id"));
 		
 	}
@@ -117,10 +118,14 @@ function arrangePanes(paneFormat) {
 			currentWindow.css({top: 5, left: 5, position:'absolute'});
 		    currentWindow.height(theWindowPane.parent("div").height() - 10);
 			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
 			currentWindow = theWindowPane.eq(1);
 		    currentWindow.css({top: 5, left: theWindowPane.parent("div").width()/2 + 10, position:'absolute'});
 			currentWindow.height(theWindowPane.parent("div").height() - 10);
 			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
 		//}, 100);
 	}
 	else if (paneFormat == "2b") { //2 Panes top and bottom
@@ -130,9 +135,13 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width() - 10);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 
 	//	}, 100);
 
@@ -144,12 +153,18 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 10);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 		//}, 100);
 
 	}
@@ -160,12 +175,18 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 10);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height() - 12);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 		//}, 100);
 
 	}	
@@ -176,12 +197,18 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width() - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 	//	}, 100);
 	}
 	else if (paneFormat == "3d") { //3 Panes big pane on the top
@@ -191,12 +218,18 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 	//	}, 100);
 
 	}	
@@ -207,15 +240,23 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(3).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
 	//	}, 100);
 
 	}	
@@ -226,18 +267,28 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
 			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(3).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
 			$(".windowPane").eq(4).css({top: 5, left: $(".windowPane").parent("div").width()*.8 + 10, position:'absolute'});
 			$(".windowPane").eq(4).height($(".windowPane").parent("div").height() - 15);
 			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.2 - 20);
+			$(".windowPane").eq(4).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
 
 	//	}, 100);
 
@@ -249,45 +300,78 @@ function arrangePanes(paneFormat) {
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.2 - 20);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
 			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(3).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
 			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
 			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()/2 - 15);
 			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.4 - 20);
+			$(".windowPane").eq(4).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
 
 	//	}, 100);
 
 	}	
-	else if (paneFormat == "5c") { //4 Panes equal size
+	else if (paneFormat == "5c") { //5 panes wide on bottom
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
 			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()*.4 - 20);
 			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(0).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
 			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()*.4 - 20);
 			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(1).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
 			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()*.4 - 20);
 			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(2).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
 			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
 			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()*.4 - 20);
 			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
+			$(".windowPane").eq(3).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
 			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()*.8 + 10, left: 5, position:'absolute'});
 			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()*.2 - 10);
 			$(".windowPane").eq(4).width($(".windowPane").parent("div").width() - 12);
+			$(".windowPane").eq(4).resizable("enable");
+			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
 
 	//	}, 100);
 
 	}	
+	
+	
+	if (paneFormat != "1" && paneFormat != "0") { //if there is more than 1 pane none of them should be maximized
+		$(".windowPane").removeClass("maximizedPane");
+	}
+	
+	//now set the attributes for restoration of panes
+	$(".windowPane").each(function() {
+			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
+			$(this).attr("oldy", $(this).position().top);
+			$(this).attr("oldheight", $(this).height());
+			$(this).attr("oldwidth", $(this).width());
+	});
 }
     
     

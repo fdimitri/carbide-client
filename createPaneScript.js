@@ -172,8 +172,14 @@ $(function() {
 	var containerWidth = 0;
 	var newHeight = 0;
 	$("%pane%").resizable({
+		create: function (event, ui) { //stop the container from resizing when a pane is resized (why would it even do that?!)
+            $(this).parent().on('resize', function (e) {
+                e.stopPropagation();
+            });
+        },
 		containment: "parent",
 		cancel: ".maximizedPane",
+		handles: "all",
 		resize: function( event, ui ) {
 
 			
@@ -196,30 +202,9 @@ $(function() {
 
 			}
 			//else { console.log("there is no chat window."); }
-			var thisActiveTab = $(this).find(".activeTab");
-
-			if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
-				console.log("thisActiveTab:");
-				console.log(thisActiveTab);
-				console.log(thisActiveTab.prop('tagName')); 
-				console.log();
-				var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
-				var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
-				width -= 48;
-				height -= 48;
-				width *= 0.8;
-				var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
-				var activeTerminal = getTerminalByName(activeTerminalName);
-				console.log("Got active terminal by name:");
-				console.log(activeTerminal);
-				resizeTerminalByName(activeTerminalName);
-				var rows = activeTerminal.terminal.getRows();
-				var cols = activeTerminal.terminal.getCols();
-				console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
-				$("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
-					resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
-				});
-			}
+			
+			
+			checkTerminalSizes($(this).attr("id"));
 		
 			
 		},
@@ -243,25 +228,10 @@ $(function() {
 		},
 		stop: function(event, ui) {
 			
-			// var thisActiveTab = $(this).find(".activeTab");
-			// console.log("thisActiveTab:");
-			// console.log(thisActiveTab);
-			// console.log(thisActiveTab.prop('tagName')); 
-			// console.log();
-			// var width = $("#" + (thisActiveTab).attr("aria-controls")).width();
-			// var height = $("#" + (thisActiveTab).attr("aria-controls")).height();
-			// width -= 48;
-			// height -= 48;
-			// width *= 0.8;
-			
-			// console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
-			// $("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
-			// 	resizeTerminalByNameWithSize($(this).attr("terminalId"), width, height);
-			// });
-
-			// $("#" + ui.element.attr("id")).find(".terminalWindow").each(function() {
-			// 	getTerminalSize(this);
-			// });
+			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
+			$(this).attr("oldy", $(this).position().top);
+			$(this).attr("oldheight", $(this).height());
+			$(this).attr("oldwidth", $(this).width());
 
 		}
 
@@ -271,6 +241,11 @@ $(function() {
 		handle: ".paneHeader",
 		cancel: ".maximizedPane",
 		start: function(event, ui) {
+			if (clickedElement == "paneButton") { //don't let them drag a pane button
+				return(false);
+			}
+			else { console.log("allowing drag bc of " + clickedElement); }
+			
 			$(".windowPane").removeClass("activePane");
 			$(".windowPane").each(function() {
 				var cssObj = {
@@ -286,6 +261,12 @@ $(function() {
 			//$( this ).addClass("activeWindow");
 
 			focusPane($(this).attr("id"));
+		},
+		stop: function(event, ui) {
+			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
+			$(this).attr("oldy", $(this).position().top);
+			$(this).attr("oldheight", $(this).height());
+			$(this).attr("oldwidth", $(this).width());
 		}
 
 	});

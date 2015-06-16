@@ -209,6 +209,22 @@ function fileTreeMenu(node) {
 			    }
     		};
 	    }
+	    else if ($(node).attr("id") == "fileroot") {
+	    	console.log("HELLO")
+	    	var items = {
+    		    newFile: { // create a new file
+    				label: "Create New File",
+    				action: function() {
+    				    console.log("create new file here.");
+    				    $('#newFileOpen').attr('checked', false);
+    				    $("#newFileTarget").remove();
+    				    
+    				    
+    				    $("#dialog-newfile").dialog("open");
+    				}
+			    }
+    		};
+	    }
 
 	}
 
@@ -466,6 +482,13 @@ function addDialogQuestion (dialogId, textLabel, textId, textName) { //add a tex
 }
 function removeDialogQuestion (dialogId) {
 	$("#" + dialogId).find(".dialogQuestion").remove();	
+}
+function addDialogColorPicker (dialogId, textLabel, colorId, colorName, defaultColor) {
+	var dialogInfo = '<div class="dialogColorPicker"><label>' + textLabel + ' </label><input type="color" name="' + colorName + '" id="' + colorId + '" value="' + defaultColor + '"></input></div>';
+	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
+}
+function removeDialogColorPicker (dialogId) {
+	$("#" + dialogId).find(".dialogColorPicker").remove();	
 }
 $(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
 	$('.dialog-window').bind('dialogclose', function(event) {

@@ -1,5 +1,5 @@
-currentlyRenaming = 0; //shows whether someone is renaming a file, for use with keydown handlers
-typedRename = "";
+var currentlyRenaming = 0; //shows whether someone is renaming a file, for use with keydown handlers
+var typedRename = "";
 
 $(document).ready(function() { 
     $("#jsTreeChat").click(function(e) { //deselect terminal nodes if chat node is clicked
@@ -63,8 +63,9 @@ $('#jsTreeFile').keydown(function(e) {
 	});   */
     
  $('#jsTreeFile').on('rename_node.jstree', function (node,obj) {
-
-
+ 		currentlyRenaming = 1;
+		
+		
         var newName = obj.node.text;
         var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + newName); 
        
@@ -130,7 +131,7 @@ $('#jsTreeFile').keydown(function(e) {
 		    });
 		    renameFile(obj.node.original.text); //rename the file back to the original name
 		}
-        
+        currentlyRenaming = 0;
     
  });
 
@@ -159,15 +160,25 @@ $('#jsTreeFile').keydown(function(e) {
 			if (!t.closest('.jstree').length) {
 				if (t.closest('.menuList').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {
+					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {						
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
+						// data.helper.find('.jstree-icon').css("width", "500px");
+						// data.helper.find('.jstree-icon').css("background-color", "#FF0000");
+						// data.helper.find('.jstree-icon').css("background-position", "-4px -68px");
+						console.log(data.helper.find('.jstree-icon').attr("class"));
+						console.log(data.helper.find('.jstree-icon').parent().attr("class"));
+
+						
+						
 					}
 					else {
 						data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
+						console.log(data.helper.find('.jstree-icon').attr("class"));
 					}
 				}
 				else {
-					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
+					//data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er'); //give them an X if they're not in a valid file-drop element
+					console.log(data.helper.find('.jstree-icon').attr("class"));
 				}
 			}
 			else { //give them a check box if they're above the file tree
@@ -253,19 +264,22 @@ $('#jsTreeFile').keydown(function(e) {
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
+					
 				}
 			}
 			else {
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal")) {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot")) {
 					
-					//We do nothing if they try to move a Chat or Terminal
+					//We do nothing if they try to move a Chat or Terminal or Root
 				}
 				else {
+				
 					var theFileTree = $("#jsTreeFile").jstree(true);
-					console.log(data.data.obj[0].id);
+					console.log($(data.data.obj[0]).attr("class"));
 					console.log(data.data);
 					console.log(t.closest('.jstree-node'));
 					var thisRef = t.closest('.jstree-node').get(0);
+					var moveType = "";
 				
 					var movedFileDestination = theFileTree.get_path(thisRef,"/");
 	
@@ -278,12 +292,27 @@ $('#jsTreeFile').keydown(function(e) {
 						movedFileDestination = movedFileDestination + '/';
 					}
 								
-								
-					var movedFileName = data.data.obj[0].textContent;
-				
-	                var movedFilePath = theFileTree.get_path(data.data.nodes[0],"/");
-					movedFilePath = movedFilePath.substr(0, movedFilePath.lastIndexOf("/")) + '/';
-					console.log("moved: " + movedFileName + " in " + movedFilePath + " to " + movedFileDestination);
+					if ($(data.data.obj[0]).hasClass("jsTreeFolder")) { //they are moving a folder of files
+						
+						var movedFileName =  $(data.data.obj[0]).find("a:first").text();
+						console.log(movedFileName);
+						var movedFilePath = theFileTree.get_path(data.data.nodes[0],"/");
+						movedFilePath = movedFilePath.substr(0, movedFilePath.lastIndexOf("/")) + '/';
+						moveType = "Dir";
+						
+					}
+					else { //they are moving a single file
+						var movedFileName = data.data.obj[0].textContent;
+					
+		                var movedFilePath = theFileTree.get_path(data.data.nodes[0],"/");
+						movedFilePath = movedFilePath.substr(0, movedFilePath.lastIndexOf("/")) + '/';
+						moveType = "File";
+						
+						
+					}
+					//info for server: movedFileName, moveType, movedFilePath, movedFileDestination
+					console.log("moved: " + movedFileName + " (" + moveType + ")  in " + movedFilePath + " to " + movedFileDestination);
+					
 				}
 			}
 		});
@@ -346,7 +375,7 @@ function initFileTree(data) {
 	if (!data) {
 		console.log("Asked to init with no data, using built-ins")
 		data = [{
-			"id": "ftroot0",
+			"id": "fileroot",
 			"parent": "#",
 			"text": "Mockup",
 			"type": "root",
@@ -520,7 +549,7 @@ function initFileTree(data) {
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);
 
-		if (node.type == "file" || node.type == "chat" || node.type == "terminal") {
+		if (node.type == "file") {
 
 
 			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
@@ -541,18 +570,24 @@ function initFileTree(data) {
 }
 
 function renameFile (newName) {
+		
 
-		currentlyRenaming = 1;
-		var ref = $('#jsTreeFile').jstree(true),
-			sel = ref.get_selected();
-		if(!sel.length) { return false; }
-		sel = sel[0];
-		
-		
-		
-		
-		ref.edit(sel, newName);
-						
+			if (currentlyRenaming == 0) { //there is no other rename going on, proceed
+				var ref = $('#jsTreeFile').jstree(true),
+					sel = ref.get_selected();
+				if(!sel.length) { return false; }
+				sel = sel[0];
+				
+				
+				
+				
+				ref.edit(sel, newName);
+			}
+			else { //another rename is currently in progress. return false
+				return(false);
+			}
+
+				
 }
 
 function createFile(fileDirectory) {
@@ -765,7 +800,27 @@ function initChatTree(data) {
 
 
 	});	
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for chat
+		var instance = $.jstree.reference(this),
+			node = instance.get_node(this);
 
+		if (node.type == "chat") {
+
+
+			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
+			if ($(".windowPane").length == 0) {
+				createNewPane();
+				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
+				
+
+			}
+			else {
+				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
+				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				//	   	console.log(node);
+			}
+		}
+	});
 }
 
 function initTermTree(data) {
@@ -822,5 +877,25 @@ function initTermTree(data) {
 
 
 	});	
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for terminal
+		var instance = $.jstree.reference(this),
+			node = instance.get_node(this);
 
+		if (node.type == "terminal") {
+
+
+			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
+			if ($(".windowPane").length == 0) {
+				createNewPane();
+				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
+				
+
+			}
+			else {
+				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
+				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				//	   	console.log(node);
+			}
+		}
+	});
 }

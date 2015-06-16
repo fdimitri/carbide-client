@@ -147,6 +147,18 @@ function resizeTerminalByObj(terminalObj) {
     // We must also inform the shell, not sure if term.js does that
     console.log("Resizing terminal to " + newRows + " rows and " + newCols + " cols.");
     term.terminal.resize(newCols,newRows);
+    var eMsg = {
+		"commandSet": "term",
+		"command": "resizeTerminal",
+		"termTarget": term.name,
+		"resizeTerminal": {
+			"termSize": {
+			    'cols' : newCols,
+			    'rows' : newRows,
+			}
+		},
+	 }
+     wsSendMsg(JSON.stringify(eMsg));
 
 }
 
@@ -193,3 +205,18 @@ function registerTerminalClose(term) {
         wsSendMsg(JSON.stringify(eMsg));
 }
 
+function checkTerminalSizes (paneId) {
+    
+    var thisPane = $('#' + paneId);
+    var thisActiveTab = thisPane.find(".activeTab");
+	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
+		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
+		var activeTerminal = getTerminalByName(activeTerminalName);
+		resizeTerminalByName(activeTerminalName);
+		var rows = activeTerminal.terminal.getRows();
+		var cols = activeTerminal.terminal.getCols();
+		thisPane.find(".terminalWindow").each(function() {
+		    resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
+		});
+	}
+}

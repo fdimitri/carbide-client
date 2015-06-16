@@ -2,7 +2,7 @@ var activeTabs = [];
 var activePanes = [];
 var lastPaneFormat = 0;
 var deletedPanes = 0;
-
+var clickedElement = "";
 
 
 
@@ -14,6 +14,15 @@ var deletedPanes = 0;
 		console.log("keydown acknowledged")
 	}
 });*/
+
+
+
+function triggerPaneResizes() {
+    $(".maximizedPane").each(function() {
+			console.log("found a maximized pane to resize");
+			maximizePane($(this).attr("id"));
+	});
+}
 
 $(function() {
 	$("#toolBarSide").resizable({
@@ -31,6 +40,7 @@ $(function() {
 	});
 
 	$(document).on('resize', function() {
+		
 		console.log($(document).height());
 	});
 	$(window).trigger('resize');
@@ -55,7 +65,7 @@ function resetSizes() {
 	console.log("Windows position:");
 	console.log(pos);
 	$("#editorContainer").height(
-		$("body").height() -
+		$(window).height() -
 		$("#topBar").height());
 	$("#editorContainer").width($(window).width());
 
@@ -74,6 +84,7 @@ function resetSizes() {
 
 	wd.css("width", rw.width());
 	wd.css("height", rw.height());
+
 	arrangePanes(lastPaneFormat);
 	$("body").css({
 		maxHeight: $(window).height()
@@ -82,10 +93,30 @@ function resetSizes() {
 
 	$(".maximizedPane").height($(".maximizedPane").parent().height() - 10);
 	$(".maximizedPane").width($(".maximizedPane").parent().width() - 10);
+	triggerPaneResizes();
+	$(".windowPane").each(function() { //check each window pane to see if has become too big for the window.
+		if (!$(this).hasClass("maximizedPane")) { //don't adjust maximized panes
+			var maxWidth = $(this).parent("#windows").width();
+			var maxHeight = $(this).parent("#windows").height();
+			//if this pane has become bigger than the maximum width/height due to window resizing, shrink it
+			console.log("MAX " + maxWidth + " " + maxHeight)
+			if ($(this).width() > maxWidth) {
 
+				$(this).width(maxWidth - 10);
+				$(this).css({left: 0, position:'absolute'});
+			}
+			if ($(this).height() > maxHeight) {
+
+				$(this).height(maxHeight - 10);
+				$(this).css({top: 0, position:'absolute'});
+			}
+		}
+	});
 
 
 }
+
+
 
 $(document).ready(function() {
 	resetSizes();
@@ -100,6 +131,17 @@ $(window).resize(function() {
 $(
 	function() {
 
+		$('body').mousedown(function(event) { //keep track of when the mouse goes down on buttons so dragging can be disabled
+			if ($(event.target).is('.paneMaximize') || $(event.target).is('.paneRestore') || $(event.target).is('.paneMinimize') || $(event.target).is('.paneClose')) {
+				clickedElement = "paneButton";
+			}
+			else if ($(event.target).is('.windowPaneTabClose')) {
+				clickedElement = "paneTabButton";
+			}
+			else {
+				clickedElement = "";
+			}
+		});
 		$('body').click(function(event) {
 
 
@@ -108,6 +150,7 @@ $(
 			}
 			else if ($(event.target).is('.paneRestore')) {
 				restorePane($(event.target).closest(".windowPane").attr("id"));
+			
 			}
 			else if ($(event.target).is('.paneMinimize')) {
 				minimizePane($(event.target).closest(".windowPane").attr("id"));
@@ -123,22 +166,25 @@ $(
 				}
 			}
 			else if ($(event.target).is('.windowPaneTabClose')) {
-
 				closePane($(event.target).closest(".windowPaneTab").attr("pane"));
 			}
 			else if ($(event.target).is('.windowPaneTab') || $(event.target).is('.windowPaneTabText') || $(event.target).is('.windowPaneTabFocus')) { //if a window pane tab is clicked...
-
 				var paneId = $(event.target).closest(".windowPaneTab").attr("pane");
 				if ($("#" + paneId).hasClass("maximizedPane")) { //this is what we do if the pane is maximized.
 					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //for now we'll just focus the page
 				}
 				else {
-					restorePane($(event.target).closest(".windowPaneTab").attr("pane")); //if the pane wasn't maximized we'll restore it
+					if ($('#' + $(event.target).closest(".windowPaneTab").attr("pane")).hasClass("wasMaximized")) {
+						maximizePane($(event.target).closest(".windowPaneTab").attr("pane"));
+						$('#' + $(event.target).closest(".windowPaneTab").attr("pane")).removeClass("wasMaximized");
+					}
+					else {
+						restorePane($(event.target).closest(".windowPaneTab").attr("pane")); //if the pane wasn't maximized we'll restore it}
+					}
 					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focs it.
 				}
 			}
 			else if ($(event.target).is('.tabBar a')) {
-
 				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
 				$(event.target).closest("li").addClass("activeTab");
 
@@ -152,6 +198,7 @@ $(
 				activeTabs.push(activeTabId);
 				console.log(activeTabs);
 			}
+			
 
 
 			if ($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, make it the active pane
@@ -282,6 +329,7 @@ function focusPane(paneId) {
 }
 
 function maximizePane(paneId) {
+
 	// This is the html for a Maximize button: <span class="paneMaximize ui-icon ui-icon-extlink">
 
 	var thisPane = $("div #" + paneId);
@@ -300,10 +348,10 @@ function maximizePane(paneId) {
 	spanMinMax.removeClass("ui-icon-extlink"); //remove the icon for maximize
 	spanMinMax.addClass("ui-icon-newwin"); //add icon for restore
 
-	thisPane.attr("oldx", thisPane.position().left);
-	thisPane.attr("oldy", thisPane.position().top);
-	thisPane.attr("oldwidth", thisPane.width());
-	thisPane.attr("oldheight", thisPane.height());
+	// thisPane.attr("oldx", thisPane.position().left);
+	// thisPane.attr("oldy", thisPane.position().top);
+	// thisPane.attr("oldwidth", thisPane.width());
+	// thisPane.attr("oldheight", thisPane.height());
 	thisPane.addClass("maximizedPane");
 	thisPane.css({
 		top: 5,
@@ -311,33 +359,24 @@ function maximizePane(paneId) {
 		position: 'absolute'
 	});
 	thisPane.css("display", "block");
-	thisPane.height(thisPane.parent().height() - 10);
+	thisPane.height(thisPane.parent().height() - 25);
 	thisPane.width(thisPane.parent().width() - 10);
 	
-	var thisActiveTab = thisPane.find(".activeTab");
-
-	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
-		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
-		var activeTerminal = getTerminalByName(activeTerminalName);
-		console.log("Got active terminal by name:");
-		console.log(activeTerminal);
-		resizeTerminalByName(activeTerminalName);
-		var rows = activeTerminal.terminal.getRows();
-		var cols = activeTerminal.terminal.getCols();
-		console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
-		thisPane.find(".terminalWindow").each(function() {
-			resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
-		});
-	}
+	checkTerminalSizes(paneId);
+	
+	thisPane.resizable("disable");
 
 
 
 
 }
 
+
+
 function restorePane(paneId) {
 	var thisPane = $("div #" + paneId);
 	var spanMinMax = thisPane.find(".paneMinMax");
+	thisPane.resizable("enable");
 	spanMinMax.removeClass("paneRestore");
 	spanMinMax.addClass("paneMaximize");
 	thisPane.height(thisPane.attr("oldheight"));
@@ -356,6 +395,7 @@ function restorePane(paneId) {
 			position: 'absolute'
 		});
 		if (thisPane.height() > (thisPane.parent().height() - 10)) {
+
 			thisPane.height(thisPane.parent().height() - 10);
 		}
 		if (thisPane.width() > (thisPane.parent().width() - 10)) {
@@ -364,6 +404,7 @@ function restorePane(paneId) {
 
 	}
 	else {
+
 		thisPane.css({
 			top: thisPane.attr("oldy"),
 			left: thisPane.attr("oldx"),
@@ -372,31 +413,24 @@ function restorePane(paneId) {
 	}
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "hidden");
 	
-		var thisActiveTab = thisPane.find(".activeTab");
-
-	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
-		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
-		var activeTerminal = getTerminalByName(activeTerminalName);
-		console.log("Got active terminal by name:");
-		console.log(activeTerminal);
-		resizeTerminalByName(activeTerminalName);
-		var rows = activeTerminal.terminal.getRows();
-		var cols = activeTerminal.terminal.getCols();
-		console.log("WIDTH: (AND HEIGHT): " + width + "x" + height);
-		thisPane.find(".terminalWindow").each(function() {
-			resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
-		});
-	}
+	checkTerminalSizes(paneId);
 	
 }
 
 function minimizePane(paneId) {
 	var thisPane = $("div #" + paneId);
 	var spanMinMax = thisPane.find(".paneMinMax");
-	thisPane.attr("oldx", thisPane.position().left);
-	thisPane.attr("oldy", thisPane.position().top);
-	thisPane.attr("oldwidth", thisPane.width());
-	thisPane.attr("oldheight", thisPane.height());
+	
+	if (thisPane.hasClass("maximizedPane")) {
+		thisPane.addClass("wasMaximized");
+	}
+	else {
+		thisPane.attr("oldx", thisPane.position().left);
+		thisPane.attr("oldy", thisPane.position().top);
+		thisPane.attr("oldwidth", thisPane.width());
+		thisPane.attr("oldheight", thisPane.height());
+
+	}
 	thisPane.removeClass("maximizedPane");
 	thisPane.css("display", "none");
 	//now find the pane in the windowPaneTabs and show the restore button
@@ -570,6 +604,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	}
 	else if (tabType == "terminal") {
 		
+		
 		/*WE ACTUALLY WANT TO ALLOW MULTIPLE TERMINALS PER PANE!!!!!!!!!!!!!!!
 		
 		if ($("#" + tabBarId).find("#" + tabName).length) { //only allow 1 terminal per window Pane
@@ -660,6 +695,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				var rval = wsSendMsg(JSON.stringify(statusJSON));
 
 			}
+			
 
 		},
 		error: function(data, error, xqhr) {
@@ -681,6 +717,8 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		activeTabs.splice(thisTabLocation, 1);
 	}
 	activeTabs.push(activeTabId);
+
+
 
 	return (num_Tabs + 1);
 
@@ -736,11 +774,17 @@ function createNewPane() {
 					});
 				}
 				else {
+				
+					
 					maximizePane("pane01");
+					$('#pane01').attr('oldheight', ($('#pane01').height() / 2 ));
+					$('#pane01').attr('oldwidth', ($('#pane01').width() / 2 ));
+
 				}
 			}
 			$(result.paneId).addClass("activePane");
 			console.log("Successfully loaded data for new pane");
+		
 
 
 		},
@@ -765,6 +809,8 @@ $(document).ready(function() {
 	// 	'left': left + 224,
 	// 	'top': '64'
 	// });
+
+	
 	var statusJSON = {
 		"commandSet": "FileTree",
 		"command": "getFileTreeJSON",
@@ -789,14 +835,9 @@ $(document).ready(function() {
 	// wsSendMsg(JSON.stringify(statusJSON));
 
 	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
-		var fileExt = myFileName.match(/\.\w+/);
-		var myLang;
-		if (fileExt == ".rb") {
-			myLang = "ruby";
-		}
-		else {
-			myLang = "html";
-		}
+		var fileExt = myFileName.match(/\.\w+$/);
+		var modelist = require("ace/ext/modelist")
+		var mode = modelist.getModeForPath(myFileName).mode;
 		console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
 		console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
 		console.log($(mySelector));
@@ -809,8 +850,8 @@ $(document).ready(function() {
 				// create a simple selection status indicator
 				//var statusBar = new StatusBar(editor, $(statusBar));
 				$(editor).attr('ignore', 'FALSE')
-				editor.setTheme("ace/theme/dawn");
-				editor.session.setMode("ace/mode/" + myLang);
+				editor.setTheme("ace/theme/twilight");
+				editor.session.setMode(mode);
 				console.log(editor);
 				var statusJSON = {
 					"commandSet": "document",

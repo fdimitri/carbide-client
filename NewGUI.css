@@ -539,8 +539,22 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	min-height:600px;
 	z-index:3;
 	border-right-width: 2px;
+	
+
 
 }
+#tabs-1, #tabs-2, #tabs-3 {
+	margin-top:-26px;
+}
+
+#tabs-1, #tabs-2, #tabs-3 {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: calc(100% - 98px) !important;
+	/*min-height: calc(100% - 78px);*/
+	
+}
+
 
 #toolBarSide > ul {
     -webkit-transform: rotate(-90deg) translate(calc(-100% + 32px),-32px);
@@ -627,4 +641,7 @@ margin-left: 20px;
 }
 .addTabText {
 	display:inline-block;
+}
+.ui-contextmenu {
+	z-index:999;
 }
