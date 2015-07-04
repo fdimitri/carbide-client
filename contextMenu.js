@@ -1,3 +1,310 @@
+
+$(function() {
+
+
+	$("#toolBarSide").contextmenu({
+            delegate: ".ui-tabs-panel",
+            menu: [
+                  
+                ],
+            
+            select: function(event, ui) {
+            	
+                if (ui.cmd == "openInPane") {
+                	if (ui.item.data().type == "file") {
+						var node = $('#jsTreeFile').jstree(true).get_selected(true);
+                	}
+                	else if (ui.item.data().type == "chat") {
+                		var node = $('#jsTreeChat').jstree(true).get_selected(true);
+                	}
+                	else if (ui.item.data().type == "terminal") {
+                		var node = $('#jsTreeTerminal').jstree(true).get_selected(true);
+                	}
+					var nodeLength = node.length;
+					for (var i = 0; i < nodeLength; i++) {
+					    newTab(node[i].text, ui.item.data().tabbarid, node[i].id, node[i].type, node[i].li_attr.srcPath);
+					    //Do something
+					}
+					
+					
+                    //newTab(ui.item.data().filename, ui.item.data().tabbarid, ui.item.data().originid, ui.item.data().type, ui.item.data().srcpath);
+                }
+                else if (ui.cmd == "deleteFile") {
+                	var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete File?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTreeFile').jstree(true);
+					var selectedNodes = ref.get_selected();
+					var fileAndPath = ref.get_path(selectedNodes,"/");
+					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+					addDialogInfo (thisDialog, "You are about to delete file <strong>" + fileName + "</strong>. You won't be able to recover it. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Delete File": function() {
+								$(this).dialog("close");
+								deleteFile();
+							},
+							Cancel: function() {
+								removeDialogInfo(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+					
+                }
+                else if (ui.cmd == "renameFile") {
+                	renameFile();
+                }
+                else if (ui.cmd == "duplicateFile") {
+                	duplicateFile();
+                }
+                else if (ui.cmd == "createChat") {
+                	$('#newChatOpen').attr('checked', false);
+				    $("#newChatTarget").remove();
+				    $("#dialog-newchat").dialog("open");
+                }
+                else if (ui.cmd == "createTerminal") {
+                	
+				    $('#newTerminalOpen').attr('checked', false);
+				    $("#newTerminalTarget").remove();
+				    $("#dialog-newterminal").dialog("open");
+                	
+                }
+                else if (ui.cmd == "deleteChat") {
+                	var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete Chatroom?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTreeChat').jstree(true);
+					var selectedNodes = ref.get_selected();
+					//var fileAndPath = ref.get_path(selectedNodes,"/");
+					//var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+					var fileName = ref.get_selected(true)[0].text;
+
+					addDialogInfo (thisDialog, "You are about to delete Chat Room <strong>" + fileName + "</strong>. All saved chat data will be lost. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Delete Chat": function() {
+								$(this).dialog("close");
+								deleteChat();
+							},
+							Cancel: function() {
+								removeDialogInfo(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+                }
+                else if (ui.cmd == "deleteTerminal") {
+                	var thisDialog = "dialog-info";
+					changeDialogTitle(thisDialog,"Delete Terminal?");
+					addDialogIcon (thisDialog, "ui-icon-alert");
+					var ref = $('#jsTreeTerminal').jstree(true);
+					var selectedNodes = ref.get_selected();
+					var fileName = ref.get_selected(true)[0].text;
+
+					addDialogInfo (thisDialog, "You are about to delete Terminal <strong>" + fileName + "</strong>. All stored terminal data will be lost. Are you sure?");
+					$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 270,
+						width:375,
+						modal: true,
+						buttons: {
+							"Delete Terminal": function() {
+								$(this).dialog("close");
+								deleteTerminal();
+							},
+							Cancel: function() {
+								removeDialogInfo(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+                }
+                
+                  
+            },
+            beforeOpen: function(event, ui) {
+				if (clickedElement == "jsTreeAnchor") {  //don't show the context menu if they are on a jstree node
+					return false;
+				}
+				else if (clickedElement == "jsTreeFileRoot") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
+                		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeFolder") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "	ui-icon-document", cmd: "createFile"},
+                		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeFile") {
+
+					var menuPanes = [];
+					var node = $('#jsTreeFile').jstree(true).get_selected(true);
+					node = node[0];
+					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
+						$(".windowPane").each(function() {
+							var paneNumber = $(this).find(".paneTitle").text().match(/\d+/);
+	
+					
+							var windowPane = this;
+								 
+								 //var nodeData = {filename: node.text, tabbarid: $(windowPane).find(".tabBar").attr('id'), originid: node.id, type: node.type, srcpath: node.li_attr.srcPath};
+								var nodeData = {tabbarid: $(windowPane).find(".tabBar").attr('id'), type: node.type}; //this is the window pane they selected to open it in and the type
+					
+							var tempPane = {title: '<span class="contextMenuItem">Open in Pane ' + paneNumber + '</span>', cmd:'openInPane',data: nodeData	}
+							menuPanes.push(tempPane);
+						});
+					}
+					else { //no window pane is open, give them the choice to open the file in a new window pane
+						menuPanes[0] = {title: '<span class="contextMenuItem">Open in New Window Pane</span>', cmd:'openInPane', uiIcon: "ui-icon-plus", data: {tabbarid: "new"}	}
+					}
+
+					$("#toolBarSide").contextmenu("replaceMenu", [
+							{title: '<span class="contextMenuItem">Open in...</span>', uiIcon: "ui-icon-arrowthick-1-e", children: 
+								menuPanes
+							},
+                		{title: '<span class="contextMenuItem">Rename</span>', uiIcon: "ui-icon-script", cmd: "renameFile"},
+                		{title: '<span class="contextMenuItem">Duplicate</span>', uiIcon: "ui-icon-carat-2-e-w", cmd: "duplicateFile"},
+						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteFile"},
+						{title: '---'},
+						{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
+                		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeChatRoot") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New Chat Room</span>', uiIcon: "ui-icon-comment", cmd: "createChat"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeTerminalRoot") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New Terminal</span>', uiIcon: "ui-icon-calculator", cmd: "createTerminal"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeChat") {
+					var node = $('#jsTreeChat').jstree(true).get_selected(true);
+					node = node[0];
+					var menuPanes = [];
+					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
+						$(".windowPane").each(function() {
+							var paneNumber = $(this).find(".paneTitle").text().match(/\d+/);
+	
+					
+							var windowPane = this;
+								 
+								 //var nodeData = {filename: node.text, tabbarid: $(windowPane).find(".tabBar").attr('id'), originid: node.id, type: node.type, srcpath: node.li_attr.srcPath};
+								var nodeData = {tabbarid: $(windowPane).find(".tabBar").attr('id'), type: node.type}; //this is the window pane they selected to open it in and the type
+					
+							var tempPane = {title: '<span class="contextMenuItem">Open in Pane ' + paneNumber + '</span>', cmd:'openInPane',data: nodeData	}
+							menuPanes.push(tempPane);
+						});
+					}
+					else { //no window pane is open, give them the choice to open the file in a new window pane
+						menuPanes[0] = {title: '<span class="contextMenuItem">Open in New Window Pane</span>', cmd:'openInPane', uiIcon: "ui-icon-plus", data: {tabbarid: "new"}	}
+					}
+
+					$("#toolBarSide").contextmenu("replaceMenu", [
+							{title: '<span class="contextMenuItem">Open in...</span>', uiIcon: "ui-icon-arrowthick-1-e", children: 
+								menuPanes
+							},
+						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteChat"},
+						{title: '---'},
+						{title: '<span class="contextMenuItem">Create New Chat Room</span>', uiIcon: "ui-icon-comment", cmd: "createChat"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeTerminal") {
+					var node = $('#jsTreeTerminal').jstree(true).get_selected(true);
+					node = node[0];
+					var menuPanes = [];
+					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
+						$(".windowPane").each(function() {
+							var paneNumber = $(this).find(".paneTitle").text().match(/\d+/);
+	
+					
+							var windowPane = this;
+								 
+								 //var nodeData = {filename: node.text, tabbarid: $(windowPane).find(".tabBar").attr('id'), originid: node.id, type: node.type, srcpath: node.li_attr.srcPath};
+								var nodeData = {tabbarid: $(windowPane).find(".tabBar").attr('id'), type: node.type}; //this is the window pane they selected to open it in and the type
+					
+							var tempPane = {title: '<span class="contextMenuItem">Open in Pane ' + paneNumber + '</span>', cmd:'openInPane',data: nodeData	}
+							menuPanes.push(tempPane);
+						});
+					}
+					else { //no window pane is open, give them the choice to open the file in a new window pane
+						menuPanes[0] = {title: '<span class="contextMenuItem">Open in New Window Pane</span>', cmd:'openInPane', uiIcon: "ui-icon-plus", data: {tabbarid: "new"}	}
+					}
+
+					$("#toolBarSide").contextmenu("replaceMenu", [
+							{title: '<span class="contextMenuItem">Open in...</span>', uiIcon: "ui-icon-arrowthick-1-e", children: 
+								menuPanes
+							},
+						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteTerminal"},
+						{title: '---'},
+						{title: '<span class="contextMenuItem">Create New Terminal</span>', uiIcon: "ui-icon-calculator", cmd: "createTerminal"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "tree1") {
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                        {title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
+                		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "tree2") {
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                        {title: '<span class="contextMenuItem">Create New Chat Room</span>', uiIcon: "ui-icon-comment", cmd: "createChat"},
+                		{title: '<span class="contextMenuItem">Create New Terminal</span>', uiIcon: "ui-icon-calculator", cmd: "createTerminal"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "tree3") {
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                        {title: "Menu Item 5", cmd: "editText"},
+                		{title: "Menu Item 6", cmd: "changeColor"},
+                    
+                    ]);
+				}
+				else { //don't show a context menu if there is no appropriate menu
+					return(false);
+				}
+		
+		
+                
+            }
+        
+    });
+
+	
+});
+
+
+
+
 function fileTreeMenu(node) {
 	var cloneCount = $('div[id^=pane]').length;
 	// The default set of all items
@@ -28,188 +335,12 @@ function fileTreeMenu(node) {
 	console.log('menuPanes follows');
 	console.log(menuPanes);
 
-	if ($(node).attr("type") == "file") {
-		var items = {
-	
-			openItem: { //open with...
-				label: "Open in...",
-				action: false,
-				submenu: menuPanes,
-	
-			},
-			renameItem: { // The "rename" menu item
-				label: "Rename",
-				action: function() {
-					renameFile();
-				}
-			},
-			deleteItem: { // The "delete" menu item
-				label: "Delete",
-				action: function() {
-					var thisDialog = "dialog-info";
-					changeDialogTitle(thisDialog,"Delete File?");
-					addDialogIcon (thisDialog, "ui-icon-alert");
-					var ref = $('#jsTreeFile').jstree(true);
-					var selectedNodes = ref.get_selected();
-					var fileAndPath = ref.get_path(selectedNodes,"/");
-					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
-					addDialogInfo (thisDialog, "You are about to delete file <strong>" + fileName + "</strong>. You won't be able to recover it. Are you sure?");
-					$("#" + thisDialog).dialog({
-						resizable: false,
-						height: 270,
-						width: 375,
-						modal: true,
-						buttons: {
-							"Delete File": function() {
-								$(this).dialog("close");
-								deleteFile();
-							},
-							Cancel: function() {
-								$(this).dialog("close");
-				
-							}
-						}
-					});
-					
-				}
-			}
-	
-		};
-	}
-	else if ($(node).attr("type") == "chat") {
-		var items = {
-	
-			openItem: { //open with...
-				label: "Open in...",
-				action: false,
-				submenu: menuPanes,
-	
-			},
-			deleteItem: { // The "delete" menu item for chat
-				label: "Delete",
-				action: function() {
-					var thisDialog = "dialog-info";
-					changeDialogTitle(thisDialog,"Delete Chatroom?");
-					addDialogIcon (thisDialog, "ui-icon-alert");
-					var ref = $('#jsTreeChat').jstree(true);
-					var selectedNodes = ref.get_selected();
-					//var fileAndPath = ref.get_path(selectedNodes,"/");
-					//var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
-					var fileName = ref.get_selected(true)[0].text;
 
-					addDialogInfo (thisDialog, "You are about to delete Chat Room <strong>" + fileName + "</strong>. All saved chat data will be lost. Are you sure?");
-					$("#" + thisDialog).dialog({
-						resizable: false,
-						height: 270,
-						width: 375,
-						modal: true,
-						buttons: {
-							"Delete Chat": function() {
-								$(this).dialog("close");
-								deleteChat();
-							},
-							Cancel: function() {
-								$(this).dialog("close");
-				
-							}
-						}
-					});
-					
-				}
-			}
-	
-		};
-	}
-	else if ($(node).attr("type") == "terminal") {
-		var items = {
-	
-			openItem: { //open with...
-				label: "Open in...",
-				action: false,
-				submenu: menuPanes,
-	
-			},
-			deleteItem: { // The "delete" menu item for terminals
-				label: "Delete",
-				action: function() {
-					var thisDialog = "dialog-info";
-					changeDialogTitle(thisDialog,"Delete Terminal?");
-					addDialogIcon (thisDialog, "ui-icon-alert");
-					var ref = $('#jsTreeTerminal').jstree(true);
-					var selectedNodes = ref.get_selected();
-					var fileName = ref.get_selected(true)[0].text;
 
-					addDialogInfo (thisDialog, "You are about to delete Terminal <strong>" + fileName + "</strong>. All stored terminal data will be lost. Are you sure?");
-					$("#" + thisDialog).dialog({
-						resizable: false,
-						height: 270,
-						width:375,
-						modal: true,
-						buttons: {
-							"Delete Terminal": function() {
-								$(this).dialog("close");
-								deleteTerminal();
-							},
-							Cancel: function() {
-								$(this).dialog("close");
-				
-							}
-						}
-					});
-					
-				}
-			}
-			
-	
-		};
-	}
-	else if ($(node).attr("type") == "folder") {
+   if ($(node).attr("type") == "root") {
 	    
-		var items = {
-    		    newFile: { // create a new file
-    				label: "Create New File",
-    				action: function() {
-    				    console.log("create new file here.");
-    				    $('#newFileOpen').attr('checked', false);
-    				    $("#newFileTarget").remove();
-    				    
-    				    
-    				    $("#dialog-newfile").dialog("open");
-    				}
-			    }
-    	};
-	}
-	else if ($(node).attr("type") == "root") {
-	    if ($(node).attr("id") == "chatroot") {
-	       	var items = {
-    		    newChat: { // create a new chat room
-    				label: "Create New Chat",
-    				action: function() {
-    				    console.log("create new chatroom here.");
-    				    $('#newChatOpen').attr('checked', false);
-    				    $("#newChatTarget").remove();
-    				    
-    				    
-    				    $("#dialog-newchat").dialog("open");
-    				}
-			    }
-    		};
-	    
-	    }
-	    else if ($(node).attr("id") == "terminalroot") {
-    		var items = {
-    		    newTerminal: { // create a new terminal
-    				label: "Create New Terminal",
-    				action: function() {
-    				    console.log("create new terminal here.");
-    				    $('#newTerminalOpen').attr('checked', false);
-    				    $("#newTerminalTarget").remove();
-    				    $("#dialog-newterminal").dialog("open");
-    				}
-			    }
-    		};
-	    }
-	    else if ($(node).attr("id") == "fileroot") {
+
+	    if ($(node).attr("id") == "fileroot") {
 	    	console.log("HELLO")
 	    	var items = {
     		    newFile: { // create a new file
@@ -283,9 +414,37 @@ $(document).ready(function() {
                 var originId = 'unknown';
                 var srcPath = '';
 				newTab(fileName, tabBarId, originId, 'terminal', srcPath);
-                
+
             }
             $("#dialog-newterminal").dialog("close");
+           
+            //open the terminal branch of the jstree
+				var nodeRef = $('#jsTreeTerminal').jstree(true);
+				 
+				var thisNode = nodeRef.get_node('terminalroot');
+				nodeRef.deselect_all(true); //deselect nodes
+
+				nodeRef.open_node(thisNode);
+			
+			//select the new node
+				var interval_id = setInterval(function(){
+				     // $("li#"+id).length will be zero until the node is loaded
+				     if($("li#"+termName).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         var thisNode = nodeRef.get_node(termName);
+				        
+						nodeRef.select_node(thisNode);
+						var thisElement = document.getElementById(termName);
+						$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
+				      }
+				}, 10);
+			   
+				
+					
+			
+				
+				
         }
     });
     
@@ -338,6 +497,26 @@ $(document).ready(function() {
                 
             }
             $("#dialog-newchat").dialog("close");
+            
+             //open the chat branch of the jstree
+				var nodeRef = $('#jsTreeChat').jstree(true);
+				nodeRef.deselect_all(true); //deselect nodes
+				var thisNode = nodeRef.get_node('chatroot');
+
+				nodeRef.open_node(thisNode);
+			//select the new node
+				var interval_id = setInterval(function(){
+				     // $("li#"+id).length will be zero until the node is loaded
+				     if($("li#"+chatName).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         var thisNode = nodeRef.get_node(chatName);
+						nodeRef.select_node(thisNode);
+						var thisElement = document.getElementById(chatName);
+						$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
+				      }
+				}, 10);
+				
         }
     });
 	$("#dialog-newfile").dialog({

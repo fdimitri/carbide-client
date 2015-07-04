@@ -1,37 +1,54 @@
 
 
-.carbide-context {
+.contextMenuItem {
+  left:25px;
+  position:absolute;
+  padding:0;
+  margin:0;
+}
+.contextMenuShortcut {
+  float:right;
+  font-size:0.8pt;
+  font-style:italic;
+  margin-right:20px;
+}
+.ui-contextmenu .ui-icon {
+  top:-4px !important;
+}
+
+.ui-contextmenu {
   display: none;
   z-index:999999;
 }
-.carbide-context,
-.carbide-context ul {
+.ui-contextmenu,
+.ui-contextmenu ul {
   margin: 0;
   padding: 2px;
   position: absolute;
   background: #f5f5f5;
+  width:260px;
   border: 1px solid #979797;
   box-shadow: 2px 2px 2px #999999;
 }
-.carbide-context ul {
+.ui-contextmenu ul {
   list-style: none;
   left: 100%;
   margin-top: -2.7em;
   margin-left: -4px;
 }
-.carbide-context .carbide-context-right ul {
+.ui-contextmenu .ui-contextmenu-right ul {
   left: auto;
   right: 100%;
   margin-left: auto;
   margin-right: -4px;
 }
-.carbide-context li {
+.ui-contextmenu li {
   list-style: none;
-  display: inline;
   padding: 0 !important;
   position: relative !important;
+  height:25px;
 }
-.carbide-context li, .carbide-context span {
+.ui-contextmenu li, .ui-contextmenu span {
   /*font-size: 0.8em !important;*/
   font-size:11pt;
   line-height: 1.5em !important;
@@ -52,11 +69,11 @@
 
 
 }
-/*.carbide-contextmenu-sub a, .carbide-contextmenu-sub span, .carbide-contextmenu-sub i {*/
+/*.ui-contextmenumenu-sub a, .ui-contextmenumenu-sub span, .ui-contextmenumenu-sub i {*/
 /*  position: relative !important;*/
 /*  left: 0px !important;*/
 /*}*/
-.carbide-context li > a {
+.ui-contextmenu li > a {
   height: 1.5em;
   display: block;
   /*padding: 0 2em 0 2em;*/
@@ -71,26 +88,26 @@
   text-shadow: 1px 1px 0 white;
   border-radius: 1px;
 }
-.carbide-context li > a:hover {
+.ui-contextmenu li > a:hover {
   position: relative;
   background-color: #e8eff7;
   box-shadow: 0 0 2px #0a6aa1;
 }
-.carbide-context li > a.carbide-context-parent {
+.ui-contextmenu li > a.ui-contextmenu-parent {
   background-image: url("data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==");
   background-position: right center;
   background-repeat: no-repeat;
 }
-.carbide-context li > a:focus {
+.ui-contextmenu li > a:focus {
   outline: 0;
 }
-.carbide-context .carbide-context-hover > a {
+.ui-contextmenu .ui-contextmenu-hover > a {
   position: relative;
   background-color: #e8eff7;
   box-shadow: 0 0 2px #0a6aa1;
 }
-.carbide-context .carbide-context-separator > a,
-.carbide-context .carbide-context-separator > a:hover {
+.ui-contextmenu .ui-contextmenu-separator > a,
+.ui-contextmenu .ui-contextmenu-separator > a:hover {
   background: white;
   border: 0;
   border-top: 1px solid #e2e3e3;
@@ -104,17 +121,17 @@
   box-shadow: 0 0 0 transparent;
   border-radius: 0;
 }
-.carbide-context .carbide-contextmenu-disabled a,
-.carbide-context .carbide-contextmenu-disabled a:hover {
+.ui-contextmenu .ui-contextmenumenu-disabled a,
+.ui-contextmenu .ui-contextmenumenu-disabled a:hover {
   color: silver;
   background-color: transparent;
   border: 0;
   box-shadow: 0 0 0;
 }
-.carbide-context li > a > i {
+.ui-contextmenu li > a > i {
   text-decoration: none;
   display: inline-block;
-  width: 2.4em;
+  /*width: 2.4em;*/
   height: 2.4em;
   background: transparent;
   margin: 0 0 0 -2em;
@@ -122,11 +139,11 @@
   text-align: center;
   line-height: 2.4em;
 }
-.carbide-context li > a > i:empty {
-  width: 2.4em;
+.ui-contextmenu li > a > i:empty {
+  /*width: 2.4em;*/
   line-height: 2.4em;
 }
-.carbide-context li > a .carbide-contextmenu-sep {
+.ui-contextmenu li > a .ui-contextmenumenu-sep {
   display: inline-block;
   width: 1px;
   height: 1.3em;
@@ -134,38 +151,38 @@
   margin: 0 0.5em 0 0;
   border-left: 1px solid #e2e3e3;
 }
-.carbide-context .carbide-contextmenu-shortcut {
+.ui-contextmenu .ui-contextmenumenu-shortcut {
   font-size: 0.8em;
   color: silver;
   opacity: 0.5;
   display: none;
 }
-.carbide-context-rtl ul {
+.ui-contextmenu-rtl ul {
   left: auto;
   right: 100%;
   margin-left: auto;
   margin-right: -4px;
 }
-.carbide-context-rtl li > a.carbide-context-parent {
+.ui-contextmenu-rtl li > a.ui-contextmenu-parent {
   background-image: url("data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7");
   background-position: left center;
   background-repeat: no-repeat;
 }
-.carbide-context-rtl .carbide-context-separator > a {
+.ui-contextmenu-rtl .ui-contextmenu-separator > a {
   margin: 0 2.4em 0 0;
   border-left: 0;
   border-right: 1px solid #e2e3e3;
 }
-.carbide-context-rtl .carbide-context-left ul {
+.ui-contextmenu-rtl .ui-contextmenu-left ul {
   right: auto;
   left: 100%;
   margin-left: -4px;
   margin-right: auto;
 }
-.carbide-context-rtl li > a > i {
+.ui-contextmenu-rtl li > a > i {
   margin: 0 -2em 0 0;
 }
-.carbide-context-rtl li > a .carbide-contextmenu-sep {
+.ui-contextmenu-rtl li > a .ui-contextmenumenu-sep {
   margin: 0 0 0 0.5em;
   border-left-color: white;
   background: #e2e3e3;

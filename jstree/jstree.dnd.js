@@ -134,8 +134,6 @@
 			.on('dnd_move.vakata.jstree', function (e, data) {
 				if(opento) { clearTimeout(opento); }
 				if(!data || !data.data || !data.data.jstree) { return; }
-				data.helper.find('.jstree-icon').first().removeClass('jstree-er').addClass('jstree-ok');
-				return;
 				// if we are hovering the marker image do nothing (can happen on "inside" drags)
 				if(data.event.target.id && data.event.target.id === 'jstree-marker') {
 					return;

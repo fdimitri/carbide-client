@@ -156,8 +156,9 @@ $('#jsTreeFile').keydown(function(e) {
 		
 		$(document)
 		.on('dnd_move.vakata', function(e, data) {
-			
+
 			var t = $(data.event.target);
+
 			if (!t.closest('.jstree').length) {
 				//if (t.closest('.menuList').length) {
 				if (t.closest('.windowPane').length) {
@@ -195,8 +196,19 @@ $('#jsTreeFile').keydown(function(e) {
 				
 			}
 		})
-		.on('dnd_stop.vakata', function(e, data) {
+		.on('dnd_start.vakata', function(e, data) {
+			var dragItem = $("#" + data.data.obj[0].id);
+		
+			dragItem.closest(".ui-tabs-panel").find(".jstree").css("width", "100%");
+			dragItem.closest(".ui-tabs-panel").find(".jstree").css("overflow", "hidden");
 			
+		})
+			
+		.on('dnd_stop.vakata', function(e, data) {
+			var dragItem = $("#" + data.data.obj[0].id);
+		
+			dragItem.closest(".ui-tabs-panel").scrollLeft(0);
+			dragItem.closest(".ui-tabs-panel").find(".jstree").scrollLeft(0);
 			
 			
 			console.log("VAKATA " + e + " " + data);
@@ -270,7 +282,21 @@ $('#jsTreeFile').keydown(function(e) {
 							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'terminal', '');
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
-						}
+							
+							var thisPane = $('#' + $('#' + tabBarId).closest('.windowPane').attr("id"));
+						    var thisActiveTab = thisPane.find(".activeTab");
+						    
+					    	var interval_id = setInterval(function(){ //wait for terminal creation then check the sizes
+						    
+							     if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length != 0){
+							         // "exit" the interval loop with clearInterval command
+							         clearInterval(interval_id);
+							         checkTerminalSizes($('#' + tabBarId).closest('.windowPane').attr("id"));
+							      }
+							}, 10);
+						    
+						}   
+							
 					}
 					
 				}
@@ -339,35 +365,35 @@ $(function() {
 		}
 	});
 
-	$("#tabs-1").on("contextmenu", function(event) {
+	// $("#tabs-1").on("contextmenu", function(event) {
 		
-		if ($(event.target).hasClass("jstree-anchor") || $(event.target).hasClass("jstree-icon")) {
-			$("#jsTreeFile-ContextMenu").hide();
-			return false;
-		}
-		else {
-			console.log("SHOWING CONTEXT MENU")
+	// 	if ($(event.target).hasClass("jstree-anchor") || $(event.target).hasClass("jstree-icon")) {
+	// 		$("#jsTreeFile-ContextMenu").hide();
+	// 		return false;
+	// 	}
+	// 	else {
+	// 		console.log("SHOWING CONTEXT MENU")
 			
-			$("#jsTreeFile-ContextMenu").show();
-			// $("#jsTreeFile-ContextMenu").removeClass("ui-menu");
-			// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-menu-item");
-			// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-state-active");
-			 $("#jsTreeFile-ContextMenu").find(".ui-menu-icon").remove();
+	// 		$("#jsTreeFile-ContextMenu").show();
+	// 		// $("#jsTreeFile-ContextMenu").removeClass("ui-menu");
+	// 		// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-menu-item");
+	// 		// $("#jsTreeFile-ContextMenu").find("li").removeClass("ui-state-active");
+	// 		 $("#jsTreeFile-ContextMenu").find(".ui-menu-icon").remove();
 		
 
-			$("#jsTreeFile-ContextMenu").position({
-				collision: "none",
-				my: "left top",
-				of: event
-			});
-		}
+	// 		$("#jsTreeFile-ContextMenu").position({
+	// 			collision: "none",
+	// 			my: "left top",
+	// 			of: event
+	// 		});
+	// 	}
 	
-		console.log($(event.target).attr("class"));
+	// 	console.log($(event.target).attr("class"));
 		
 		
 
-		return false;
-	});
+	// 	return false;
+	// });
 
 	$(document).click(function(event) {
 		$("#jsTreeFile-ContextMenu").hide();
@@ -435,10 +461,10 @@ function initFileTree(data) {
 		},
 	    'sort': function (a, b) {
 	    	console.log("Sorting node");
-    	    var tc1 = this.get_text(a).localeCompare(this.get_text(b));
     	    var tc2 = this.get_type(a).localeCompare(this.get_type(b));
     	    if (tc2 > 0) return -1;
     	    if (tc2 < 0) return 1;
+    	    var tc1 = this.get_text(a).localeCompare(this.get_text(b));
     	    if (tc1 > 0) return 1;
     	    if (tc1 < 0) return -1;
     	    console.log("Return 0");
@@ -823,7 +849,7 @@ function initChatTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types"],
+		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
 		 contextmenu: {
 		 	items: fileTreeMenu,
 		 },
@@ -900,7 +926,7 @@ function initTermTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types"],
+		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
 		 contextmenu: {
 		 	items: fileTreeMenu,
 		 },
@@ -929,16 +955,25 @@ function initTermTree(data) {
 		}
 	});
 	
-var getCss = function(el) {
-    var style = window.getComputedStyle(el);
-    return Object.keys(style).reduce(function(acc, k) {
-        var name = style[k],
-            value = style.getPropertyValue(name);
-        if (value !== null) {
-            acc[name] = value;
-        }
-        return acc;
-    }, {});
-};
+	var getCss = function(el) {
+	    var style = window.getComputedStyle(el);
+	    return Object.keys(style).reduce(function(acc, k) {
+	        var name = style[k],
+	            value = style.getPropertyValue(name);
+	        if (value !== null) {
+	            acc[name] = value;
+	        }
+	        return acc;
+	    }, {});
+	};
 
+}
+
+function duplicateFile() {
+	
+	var node = $('#jsTreeFile').jstree(true).get_selected(true); //currently selected node in the file tree
+	node = node[0]; //only duplicate one file
+	var fileName = node.text;
+	var srcPath = node.li_attr.srcPath;
+	console.log("duplicating " + fileName + " in " + srcPath);
 }

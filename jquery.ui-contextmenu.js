@@ -137,6 +137,7 @@ $.widget("moogle.contextmenu", {
 				.menu("destroy")
 				.removeClass(this.options.addClass)
 				.hide();
+				
 		}
 		this.$menu = null;
 		this.menuIsTemp = false;
@@ -294,10 +295,10 @@ $.widget("moogle.contextmenu", {
 					self.previousFocus.focus();
 					self.previousFocus = null;
 				}
-				self._trigger("close");
+				//self._trigger("close");
 			});
 		} else {
-			self._trigger("close");
+			//self._trigger("close");
 		}
 	},
 	/** Handle $().contextmenu("option", key, value) calls. */

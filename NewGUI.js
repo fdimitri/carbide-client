@@ -3,17 +3,18 @@ var activePanes = [];
 var lastPaneFormat = 0;
 var deletedPanes = 0;
 var clickedElement = "";
+var lastFocusedPane = "";
+var currentTheme = "ace/theme/vibrant_ink";
 
 
 
+$(document).on('keydown', function(e) {
 
-/*$(document).on('keydown', function(e) {
 
-
-	if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
-		console.log("keydown acknowledged")
-	}
-});*/
+	// if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
+	// 	console.log("keydown acknowledged")
+	// }
+});
 
 
 
@@ -138,8 +139,60 @@ $(
 			else if ($(event.target).is('.windowPaneTabClose')) {
 				clickedElement = "paneTabButton";
 			}
+			// else if ($(event.target).is(".jstree-anchor") || $(event.target).is(".jstree-icon")) { //these are nodes from the jstree menu
+			// 	clickedElement = "jsTreeAnchor";
+			// }
+			else if ($(event.target).is("#ftroot0_anchor")) {
+				clickedElement = "jsTreeFileRoot";
+			}
+			else if ($(event.target).is("#chatroot_anchor")) {
+				clickedElement = "jsTreeChatRoot";
+			}
+			else if ($(event.target).is("#terminalroot_anchor")) {
+				clickedElement = "jsTreeTerminalRoot";
+			}
+			
+			
+			else if ($(event.target).is(".jstree-anchor")) {
+				if ($(event.target).closest(".jsTreeTerminal").length) {
+					clickedElement = "jsTreeTerminal";
+				}
+				else if ($(event.target).closest(".jsTreeChat").length) {
+					clickedElement = "jsTreeChat";
+				}
+				else if ($(event.target).closest(".jsTreeFile").length) {
+					clickedElement = "jsTreeFile";
+				}
+				else if ($(event.target).closest(".jsTreeFolder").length) {
+					clickedElement = "jsTreeFolder";
+				}
+			}
+			else if ($(event.target).is("#tabs-1")) {
+
+				clickedElement = "tree1";
+			}
+			else if ($(event.target).is("#tabs-2")) {
+				clickedElement = "tree2";
+			}
+			else if ($(event.target).is("#tabs-3")) {
+				clickedElement = "tree3";
+			}
 			else {
-				clickedElement = "";
+				if ($(event.target).closest("#tabs-1").length) { //see if we're somewhere inside tree 1 (files)
+
+					clickedElement = "tree1";
+				}
+				else if ($(event.target).closest("#tabs-2").length) { //see if we're somewhere inside tree 2 (collab)
+
+					clickedElement = "tree2";
+				}
+				else if ($(event.target).closest("#tabs-3").length) { //see if we're somewhere inside tree 3 (options)
+
+					clickedElement = "tree3";
+				}
+				else { //not inside any trees
+					clickedElement = "";
+				}
 			}
 		});
 		$('body').click(function(event) {
@@ -181,7 +234,7 @@ $(
 					else {
 						restorePane($(event.target).closest(".windowPaneTab").attr("pane")); //if the pane wasn't maximized we'll restore it}
 					}
-					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focs it.
+					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focus it.
 				}
 			}
 			else if ($(event.target).is('.tabBar a')) {
@@ -194,9 +247,23 @@ $(
 				if (thisTabLocation > -1) {
 					activeTabs.splice(thisTabLocation, 1);
 				}
-
+				
+			
+				
+				//inform the server that we've focused this tab in case someone is tracking our movements
 				activeTabs.push(activeTabId);
 				console.log(activeTabs);
+				var statusJSON = {
+						"commandSet": "client",
+						"command": "tabFocus",
+						"tabFocus" : {
+							"tabId" :  activeTabId,
+							"paneId" : $(event.target).closest(".windowPane").attr("id"),
+							
+						},
+										
+					};
+				wsSendMsg(JSON.stringify(statusJSON));
 			}
 			
 
@@ -234,7 +301,20 @@ function closeTab(tab) {
 					//var tabs = tab.find(".tabBar").tabs();
 					
 					
-
+					//inform the server that we've closed a tab in case someone is tracking the layout
+					var statusJSON = {
+						"commandSet": "client",
+						"command": "tabClose",
+						"tabClose" : {
+							"tabId" :  thisLi.attr("aria-controls"),
+							"paneId" : controllerPane,
+							
+						},
+										
+					};
+					wsSendMsg(JSON.stringify(statusJSON));
+					
+					
 					if (thisLi.attr('type') == 'chat') {
 						var chatName = thisLi.attr('filename');
 						var statusJSON = {
@@ -265,7 +345,7 @@ function closeTab(tab) {
 						console.log(statusJSON);
 						wsSendMsg(JSON.stringify(statusJSON));*/
 						removeTerminal(getTerminalByName(termName));
-						console.log("REMOVED TERMINAL " + termName);
+						
 					}
 
 					
@@ -286,7 +366,8 @@ function closeTab(tab) {
 					
 					var $paneId = $("#" + panelId);
 					$paneId.remove();
-					console.log(terminalArray);
+
+					
 					
 					
 					$("#" + controllerPane).find(".tabBar").tabs().tabs("refresh");
@@ -326,16 +407,36 @@ function focusPane(paneId) {
 
 	}
 	
-	//send a message to the server to inform it that we have changed the focus of the pane
-	var statusJSON = {
-			"commandSet": "client",
-			"command": "paneFocus",
-			"paneFocus" : {
-				"paneId" :  paneId,
-			},
-			
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
+	
+	if (lastFocusedPane != paneId) {
+		//send a message to the server to inform it that we have changed the focus of the pane
+		var statusJSON = {
+				"commandSet": "client",
+				"command": "paneFocus",
+				"paneFocus" : {
+					"paneId" :  paneId,
+				},
+				
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+
+		//now tell the server that there's a new focused tab
+		var focusedTab = $('#' + paneId).find('.ui-tabs-active').attr('aria-controls');
+		var statusJSON = {
+							"commandSet": "client",
+							"command": "tabFocus",
+							"tabFocus" : {
+								"tabId" :  focusedTab,
+								"paneId" : paneId,
+								
+							},
+											
+		};
+		wsSendMsg(JSON.stringify(statusJSON));
+		
+		//set last focused pane to this one
+		lastFocusedPane = paneId;
+	}
 
 }
 
@@ -386,6 +487,12 @@ function maximizePane(paneId) {
 			
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
+	thisPane.find('.preAceEdit').each(function() {
+        		var editor = getAceEditorByName($(this).attr('srcpath'));
+        		console.log("getAceEditorByName returned for " + $(this).attr('srcpath'));
+        		console.log(editor);
+        		editor[0].resize(true);
+    });
 
 
 }
@@ -438,7 +545,7 @@ function restorePane(paneId) {
 	var statusJSON = {
 			"commandSet": "client",
 			"command": "paneRestore",
-			"paneMinimize" : {
+			"paneRestore" : {
 				"paneId" :  paneId,
 				"paneLeft" : panePosition.left,
 				"paneTop" : panePosition.top,
@@ -449,7 +556,12 @@ function restorePane(paneId) {
 			
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
-	
+	thisPane.find('.preAceEdit').each(function() {
+        		var editor = getAceEditorByName($(this).attr('srcpath'));
+        		console.log("getAceEditorByName returned for " + $(this).attr('srcpath'));
+        		console.log(editor);
+        		editor[0].resize(true);
+    });
 	
 }
 
@@ -696,7 +808,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	//tabs.find(".ui-tabs-nav").append(li);
 	//tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
 	$("#" + tabBarId).tabs().find(".ui-tabs-nav").append(
-		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><!--<span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span>--><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
+		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='closeButton ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
 	$("#" + tabBarId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = [{
@@ -767,6 +879,19 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				var rval = wsSendMsg(JSON.stringify(statusJSON));
 
 			}
+			var statusJSON = {
+				"commandSet": "client",
+				"command": "tabOpen",
+				"tabOpen" : {
+					"tabId" :  tabName,
+					"tabType" : tabType,
+					"srcPath" : srcPath,
+					"paneId" : paneId,
+					
+				},
+								
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
 			
 
 		},
@@ -782,6 +907,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 
 	$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
 	$('a[href="#' + tabName + '"]').parent("li").addClass("activeTab");
+
 
 	var activeTabId = $('a[href="#' + tabName + '"]').closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
 	var thisTabLocation = $.inArray(activeTabId, activeTabs);
@@ -838,7 +964,7 @@ function createNewPane() {
 						"commandSet": "client",
 						"command": "paneOpen",
 						"paneOpen" : {
-							"paneId" :  paneId,
+							"paneId" : result.paneId.replace('#',''),
 						},
 						
 				};
@@ -865,7 +991,10 @@ function createNewPane() {
 			}
 			$(result.paneId).addClass("activePane");
 			console.log("Successfully loaded data for new pane");
-		
+			$(result.paneId).attr("oldx", $(result.paneId).position().left); //these attributes are used if a pane is restored
+			$(result.paneId).attr("oldy", $(result.paneId).position().top);
+			$(result.paneId).attr("oldheight", $(result.paneId).height());
+			$(result.paneId).attr("oldwidth", $(result.paneId).width());
 
 
 		},
@@ -882,6 +1011,8 @@ function createNewPane() {
 
 
 $(document).ready(function() {
+	
+
 	// var left = $("#leftBar").width() + $("#toolBarSide").width();
 	// var screenWidth = $('body').width();
 	// console.log("Setting new width to " + (screenWidth - (left + 24)));
@@ -916,8 +1047,8 @@ $(document).ready(function() {
 	// wsSendMsg(JSON.stringify(statusJSON));
 
 	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
-		var fileExt = myFileName.match(/\.\w+$/);
-		var modelist = require("ace/ext/modelist")
+//		var fileExt = myFileName.match(/\.\w+$/);
+		var modelist = require("ace/ext/modelist");
 		var mode = modelist.getModeForPath(myFileName).mode;
 		console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
 		console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
@@ -927,12 +1058,22 @@ $(document).ready(function() {
 				var editor = ace.edit(mySelector.replace(/\#/, ''));
 				$(mySelector).ace = editor;
 				$(editor).attr('srcPath', $(mySelector).attr('srcPath'));
-				var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+				require("ace/ext/statusbar").StatusBar;
+				editor.session.setMode(mode);
+				var lt = require("ace/ext/language_tools");
+				console.log("Language tools:");
+				console.log(lt);
+				
 				// create a simple selection status indicator
 				//var statusBar = new StatusBar(editor, $(statusBar));
-				$(editor).attr('ignore', 'FALSE')
-				editor.setTheme("ace/theme/twilight");
-				editor.session.setMode(mode);
+				$(editor).attr('ignore', 'FALSE');
+				editor.setTheme(currentTheme);
+    // enable autocompletion and snippets
+				editor.setOptions({
+					enableBasicAutocompletion: true,
+					enableSnippets: true,
+					enableLiveAutocompletion: true,
+				});				
 				console.log(editor);
 				var statusJSON = {
 					"commandSet": "document",
@@ -951,12 +1092,12 @@ $(document).ready(function() {
 					//console.log("Change on editor");
 					//console.log(editor);
 					//console.log(e);
-					$.fn.aceChange(editor, e)
+					$.fn.aceChange(editor, e);
 				});
 			}
 		);
-	}
-
+	};
+	
 	$.fn.aceChange = function(editor, e) {
 		console.log(e);
 		if ($(editor).attr('ignore') == 'TRUE') return;
@@ -1113,20 +1254,6 @@ function moveTab(receiver, sender, tab) {
 	// Remove the panel
 
 	$("#" + panelId).appendTo(receiver);
-	
-	
-	//Tell the server that we moved a tab from one pane to the other
-	var statusJSON = {
-		"commandSet": "client",
-		"command": "tabMove",
-		"tabMove" : {
-			"tabId" :  tabId,
-			"senderPane" : sentPaneId,
-			"receiverPane" : paneId,
-		},
-						
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
 
 	//This is where we have to change the attributes to match the new tab bar. Change: li aria-controls attribute, a href attribute, div (class AriaTab) ID attr,
 	//pre (class preAceEdit) ID attr
@@ -1159,12 +1286,28 @@ function moveTab(receiver, sender, tab) {
 	if (sender.find("li").length == 0) {
 		appendAddTabButton(sentPaneId);
 	}
-
+	//Tell the server that we moved a tab from one pane to the other
+	var statusJSON = {
+		"commandSet": "client",
+		"command": "tabMove",
+		"tabMove" : {
+			"oldTabId" :  panelId,
+			"newTabId" :  newVal,
+			"senderPane" : sentPaneId,
+			"receiverPane" : paneId,
+		},
+						
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	
 
 	$(".tabBar").tabs("refresh");
 	$("#" + paneId).find(".tabBar").tabs("option", "active", -1);
 	$("#" + sentPaneId).find(".tabBar").tabs("option", "active", -1);
 	$(".tabBar").tabs("refresh");
 
-
 }
+
+
+
+

@@ -66,6 +66,30 @@ function getAceEditorByName(name) {
 	return (rval);
 }
 
+function getAceEditorTheme() {
+	if (currentTheme) {
+		return(currentTheme);
+	}
+	var aceEditors = $('.ace_editor');
+	console.log(aceEditors);
+	var theme;
+	aceEditors.each(function() {
+		var editor = ace.edit(this);
+		theme = editor.getTheme();
+		return(false);
+	});
+	return(theme);
+}
+
+
+function setAceEditorTheme(theme) {
+	var aceEditors = $('.ace_editor');
+	aceEditors.each(function() {
+		var editor = ace.edit(this);
+		editor.setTheme(theme);
+	});
+}
+
 
 function getMsg(key) {
 	return(true);

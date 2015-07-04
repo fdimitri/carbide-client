@@ -1,8 +1,44 @@
+var oldTheme = '';
 
 $(document).ready(function() {
     
     
-    
+    var themelist = require("ace/ext/themelist");
+	var aceThemes = themelist.themesByName; //object hash of theme objects by name
+	var lightMenu = $('#lightSubMenu');
+	var darkMenu = $('#darkSubMenu');
+	for (var key in aceThemes) {
+	  if (aceThemes.hasOwnProperty(key)) {
+	    var thisHtml = '<li class="themeEntry" theme="' + aceThemes[key].theme +'"><a href="#"><span>' + aceThemes[key].caption;
+		thisHtml = thisHtml + '</span></a></li>';
+	    if (aceThemes[key].isDark == false) {
+	    	lightMenu.append(thisHtml);
+	    }
+	    else {
+	    	darkMenu.append(thisHtml);
+	    }
+	    
+	  }
+	}
+	
+	$('.themeEntry').mouseover(function() {
+		//SAVE OLD THEME HERE
+		oldTheme = getAceEditorTheme();
+		var selectedTheme = $(this).attr("theme");
+		setAceEditorTheme(selectedTheme);
+	});
+	$('.themeEntry').mouseout(function() {
+		setAceEditorTheme(oldTheme);
+		console.log("RESTORED TO " + oldTheme);
+	});
+	$('.themeEntry').click(function(event) {	
+		var selectedTheme = $(this).attr("theme");
+		setAceEditorTheme(selectedTheme);
+		currentTheme = selectedTheme;
+		oldTheme = currentTheme;
+		//$('#themesMenu').hide();
+
+	});
     
     
     
@@ -120,28 +156,36 @@ function arrangePanes(paneFormat) {
 			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			currentWindow = theWindowPane.eq(1);
 		    currentWindow.css({top: 5, left: theWindowPane.parent("div").width()/2 + 10, position:'absolute'});
 			currentWindow.height(theWindowPane.parent("div").height() - 10);
 			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 		//}, 100);
 	}
 	else if (paneFormat == "2b") { //2 Panes top and bottom
 
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width() - 10);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
 
 	//	}, 100);
 
@@ -150,21 +194,30 @@ function arrangePanes(paneFormat) {
 
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 10);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 12);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
 		//}, 100);
 
 	}
@@ -172,21 +225,30 @@ function arrangePanes(paneFormat) {
 
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 10);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 10);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height() - 12);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 12);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 		//}, 100);
 
 	}	
@@ -194,42 +256,60 @@ function arrangePanes(paneFormat) {
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width() - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width() - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 	//	}, 100);
 	}
 	else if (paneFormat == "3d") { //3 Panes big pane on the top
 
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width() - 10);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 	//	}, 100);
 
 	}	
@@ -237,26 +317,38 @@ function arrangePanes(paneFormat) {
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
-			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(3).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+			
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(3);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 	//	}, 100);
 
 	}	
@@ -264,31 +356,46 @@ function arrangePanes(paneFormat) {
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
-			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
-			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(3).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
-			$(".windowPane").eq(4).css({top: 5, left: $(".windowPane").parent("div").width()*.8 + 10, position:'absolute'});
-			$(".windowPane").eq(4).height($(".windowPane").parent("div").height() - 15);
-			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.2 - 20);
-			$(".windowPane").eq(4).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(3);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(4);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.8 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.2 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 
 	//	}, 100);
 
@@ -297,31 +404,46 @@ function arrangePanes(paneFormat) {
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height() - 12);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()*.2 - 20);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: 5, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
-			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
-			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(3).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
-			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
-			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()/2 - 15);
-			$(".windowPane").eq(4).width($(".windowPane").parent("div").width()*.4 - 20);
-			$(".windowPane").eq(4).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 12);
+			currentWindow.width($(".windowPane").parent("div").width()*.2 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(3);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(4);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
 
 	//	}, 100);
 
@@ -330,31 +452,45 @@ function arrangePanes(paneFormat) {
 
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
-			$(".windowPane").eq(0).css({top: 5, left: 5, position:'absolute'});
-			$(".windowPane").eq(0).height($(".windowPane").parent("div").height()*.4 - 20);
-			$(".windowPane").eq(0).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(0).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(0).attr("id"));
-			$(".windowPane").eq(1).css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(1).height($(".windowPane").parent("div").height()*.4 - 20);
-			$(".windowPane").eq(1).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(1).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(1).attr("id"));
-			$(".windowPane").eq(2).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(2).height($(".windowPane").parent("div").height()*.4 - 20);
-			$(".windowPane").eq(2).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(2).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(2).attr("id"));
-			$(".windowPane").eq(3).css({top: $(".windowPane").parent("div").height()*.4 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			$(".windowPane").eq(3).height($(".windowPane").parent("div").height()*.4 - 20);
-			$(".windowPane").eq(3).width($(".windowPane").parent("div").width()/2 - 15);
-			$(".windowPane").eq(3).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(3).attr("id"));
-			$(".windowPane").eq(4).css({top: $(".windowPane").parent("div").height()*.8 + 10, left: 5, position:'absolute'});
-			$(".windowPane").eq(4).height($(".windowPane").parent("div").height()*.2 - 10);
-			$(".windowPane").eq(4).width($(".windowPane").parent("div").width() - 12);
-			$(".windowPane").eq(4).resizable("enable");
-			checkTerminalSizes($(".windowPane").eq(4).attr("id"));
+			currentWindow = theWindowPane.eq(0);
+			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(1);
+			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(2);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.4 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(3);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.4 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
+
+			currentWindow = theWindowPane.eq(4);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.8 + 10, left: 5, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.2 - 10);
+			currentWindow.width($(".windowPane").parent("div").width() - 12);
+			currentWindow.resizable("enable");
+			checkTerminalSizes(currentWindow.attr("id"));
+			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 	//	}, 100);
 
@@ -374,4 +510,23 @@ function arrangePanes(paneFormat) {
 	});
 }
     
+
+function reportPanePosition (paneId, left, top, width, height) {
+	
+	var statusJSON = {
+			"commandSet": "client",
+			"command": "paneRestore",
+			"paneRestore" : {
+				"paneId" :  paneId,
+				"paneLeft" : left,
+				"paneTop" : top,
+				"paneWidth" : width,
+				"paneHeight" : height,
+				
+			},
+			
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	
+}
     

@@ -1,9 +1,22 @@
+#cssmenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.5;
+}
 
-
+.ui-menu-item {
+	z-index:9999;
+}
 .ui-dialog {
 	background-color:#FAFAFA;
 }
-
+.jstree-node {
+	width:100%;
+}
+.jstree-anchor {
+	width:100% !important;
+}
 
 .terminal-output {
 	background-color:#000000;
@@ -318,6 +331,9 @@ height:100%;
 #windows .ui-icon .ui-icon-close {
 	position:relative;
 	top:-16px;
+}
+.closeButton, .reloadButton {
+	display:inline-block !important;
 }
 /*#windows .ui-icon .ui-icon-arrowrefresh-1-s {
 	position:relative;
