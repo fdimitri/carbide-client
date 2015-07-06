@@ -4,7 +4,16 @@
   margin: 0;
   line-height: 1.5;
 }
-
+.glowingUser {
+	background-color:#FF0000;
+}
+.cUser {
+	-webkit-transition: background 0.5s linear;
+	-moz-transition: background 0.5s linear;
+	-ms-transition: background 0.5s linear;
+	-o-transition: background 0.5s linear;
+	transition: background 0.5s linear;
+}
 .ui-menu-item {
 	z-index:9999;
 }

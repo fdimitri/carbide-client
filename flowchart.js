@@ -11,7 +11,8 @@
     var activeConnection = '';
     var connectionMap = {};
     var defaultConnection = { direction: 1, location: 1, labels: 0, label1: '', label2: '', foldback: 0.4, paintStyle:{stokeStyle: arrowColor, fillStyle: "white"},};
-    
+    var savedElements = [];
+    var savedConnections = [];
     
     var connectorPaintStyle = {
                 lineWidth: 4,
@@ -259,29 +260,29 @@
         // 	});
     }
     
-    function requestNewElement(shape,boxId,x,y) {
-        
+    function requestNewElement(shape,boxId,x,y, thisId) { //thisId is an optional argument to specify the ID of the new element
+        if (typeof thisId === 'undefined') { thisId = ''; }
         
             if (shape == "circle") {
                 console.log("drawing a circle.");
-                createNewElement("circle",boxId,x,y); //draw a new circle
+                createNewElement("circle",boxId,x,y,thisId); //draw a new circle
                 
             }
             else if (shape == "note") {
                 console.log("drawing a note.");
-                createNewElement("note",boxId,x,y); //draw a new note
+                createNewElement("note",boxId,x,y,thisId); //draw a new note
             }
             else if (shape == "folder") {
                 console.log("drawing a folder.");
-                createNewElement("folder",boxId,x,y); //draw a new note
+                createNewElement("folder",boxId,x,y,thisId); //draw a new note
             }
             else if (shape == "document") {
                 console.log("drawing a document.");
-                createNewElement("document",boxId,x,y); //draw a new document
+                createNewElement("document",boxId,x,y,thisId); //draw a new document
             }
             else if (shape == "decision") {
                 console.log("drawing a decision.");
-                createNewElement("decision",boxId,x,y); //draw a new decision
+                createNewElement("decision",boxId,x,y,thisId); //draw a new decision
             }
             else { //old stuff follows
             	var thisDialog = "dialog-dbEditor";
@@ -314,12 +315,24 @@
             }
     }
     
-    function createNewElement(shape, boxId, x,y) {
+    function createNewElement(shape, boxId, x,y, thisId) { //thisId is an optional argument that specifies the new element ID
+        if (typeof thisId === 'undefined') { thisId = ''; }
+        else {
+             thisId.replace(/\D/g,'');
+             thisId = parseInt(thisId);
+        }
         numElements = numElements + 1;
+        var elementNum = '';
+        if (thisId == '') {
+            elementNum = numElements;
+        }
+        else {
+            elementNum = thisId;
+        }
         if (shape == "circle") { 
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
             
-            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-circle-container">' + 
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-circle">' + 
 			    '<img src="uml/circle.svg" class="form-circle svg" id="shape' + numElements + '"/>' + 
 			    '<div class="form-circle-inner">' + 
 			    '<div class="form-circle-boxholder">' + 
@@ -329,12 +342,13 @@
 			$('#' + boxId).append(newDivs); //append the new circle to the parent box
             $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
             
+            console.log("attempting to add new end points to element " + 'Element' + numElements );
             addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "Top", "Bottom"]);
         }
         else if (shape == "note") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
             
-            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-note-container">' + 
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-note">' + 
 			    '<img src="uml/note.svg" class="form-note svg" id="shape' + numElements + '"/>' + 
 			    '<div class="form-note-innerbox">' + 
 			    '<div class="form-text-area"></div></div></div>';
@@ -348,7 +362,7 @@
         else if (shape == "folder") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
             
-            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-folder-container">' + 
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-folder">' + 
 			    '<img src="uml/folder.svg" class="form-folder svg" id="shape' + numElements + '"/>' + 
 			    '<div class="form-folder-innerbox">' + 
 			    '<div class="form-text-area"></div></div></div>';
@@ -362,7 +376,7 @@
         else if (shape == "document") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
             
-            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-document-container">' + 
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-document">' + 
 			    '<img src="uml/document.svg" class="form-document svg" id="shape' + numElements + '"/>' + 
 			    '<div class="form-document-innerbox">' + 
 			    '<div class="form-text-area"></div></div></div>';
@@ -376,7 +390,7 @@
         else if (shape == "decision") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
             
-            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-decision-container">' + 
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-decision">' + 
 			    '<img src="uml/decision.svg" class="form-decision svg" id="shape' + numElements + '"/>' + 
 			    '<div class="form-decision-boxholder"><div class="form-decision-innerbox">' + 
 			    '<div class="form-text-area"></div></div></div></div>';
@@ -496,19 +510,19 @@
              activeContainerId = e.target.id;
           }
           console.log(activeContainerId);
-          if ($(e.target).closest(".form-circle-container").length) { //check if they activated a circle menu
+          if ($(e.target).closest(".form-container-circle").length) { //check if they activated a circle menu
               activeContainerShape = "circle";
           }
-          else if ($(e.target).closest(".form-note-container").length) { //check if they activated a note menu
+          else if ($(e.target).closest(".form-container-note").length) { //check if they activated a note menu
               activeContainerShape = "note";
           }
-           else if ($(e.target).closest(".form-document-container").length) { //check if they activated a document menu
+           else if ($(e.target).closest(".form-container-document").length) { //check if they activated a document menu
               activeContainerShape = "document";
           }
-          else if ($(e.target).closest(".form-folder-container").length) { //check if they activated a folder menu
+          else if ($(e.target).closest(".form-container-folder").length) { //check if they activated a folder menu
               activeContainerShape = "folder";
           }
-          else if ($(e.target).closest(".form-decision-container").length) { //check if they activated a decision menu
+          else if ($(e.target).closest(".form-container-decision").length) { //check if they activated a decision menu
               activeContainerShape = "decision";
           }
           else if ($(e.target).closest("._jsPlumb_overlay").length) { //this is a label
@@ -704,11 +718,18 @@
     						    theLabel = '<strong>' + theLabel + '</strong>'; //bolden the labels for readability
     						    if (connectionMap[activeConnection.id].labels == 0) { //there are no labels yet
                                     activeConnection.addOverlay([ "Label", {label:theLabel, id:"label1", location:.2}]); 
+                                    var newElement = activeConnection.getOverlay("label1").getElement(); //get the element of the new label
+                                    $(newElement).attr("connector", activeConnection.id); //set some attributes on this element for use in identifying it
+                                    $(newElement).attr("label", "1");
                                     connectionMap[activeConnection.id] = { direction: connectionMap[activeConnection.id].direction, location: connectionMap[activeConnection.id].location, labels:1, label1:theLabel, label2:connectionMap[activeConnection.id].label2, foldback:connectionMap[activeConnection.id].foldback, paintStyle:connectionMap[activeConnection.id].paintStyle, };
             
                                 }
                                 else if (connectionMap[activeConnection.id].labels == 1) { //there is 1 label so this is label 2
+                                console.log("ACTIVE CONNECTION ID: " + activeConnection.id);
                                     activeConnection.addOverlay([ "Label", {label:theLabel, id:"label2", location:.8}]); 
+                                    var newElement = activeConnection.getOverlay("label2").getElement(); //get the element of the new label
+                                    $(newElement).attr("connector", activeConnection.id);//set some attributes on this element for use in identifying it
+                                    $(newElement).attr("label", "2");
                                     connectionMap[activeConnection.id] = { direction: connectionMap[activeConnection.id].direction, location: connectionMap[activeConnection.id].location, labels:2, label1:connectionMap[activeConnection.id].label1, label2:theLabel, foldback:connectionMap[activeConnection.id].foldback, paintStyle:connectionMap[activeConnection.id].paintStyle, };
             
                                 }
@@ -800,6 +821,26 @@
                     
                 }
                 else if (ui.cmd == "changeLabel") {
+                    //first we have to determine if this is label 1 or 2
+                    console.log("active label id: " + activeContainerId);
+                    var thisElement = $('#' + activeContainerId);
+                    var connectorId = thisElement.attr("connector");
+                    var labelNumber = thisElement.attr("label");
+                    
+                    // console.log(thisElement.attr("label"));
+                    // console.log(thisElement.attr("connector"));
+                    
+                    
+
+                    //this is how we get the ID of each connection
+                    // instance.select().each(function(connection) {
+                        
+                    //     console.log(connection.id)
+                               
+                    //  });
+
+                    
+                    
                     var thisDialog = "dialog-dbEditor";
         			changeDialogTitle(thisDialog,"Enter New Label");
         		
@@ -815,7 +856,14 @@
     						"Change Label": function() {
     						    var theLabel = $('#newLabel').val();
     						    theLabel = '<strong>' + theLabel + '</strong>'; //bolden the labels for readability
-
+                                $('#' + activeContainerId).html(theLabel);
+                                //add data to connection map
+                                if (labelNumber == 1) { 
+                                    connectionMap[connectorId] = {direction:connectionMap[connectorId].direction, location:connectionMap[connectorId].location, labels:connectionMap[connectorId].labels, label1:theLabel, label2:connectionMap[connectorId].label2, foldback:connectionMap[connectorId].foldback, paintStyle:connectionMap[connectorId].paintStyle,};
+                                }
+                                else if (labelNumber == 2) {
+                                    connectionMap[connectorId] = {direction:connectionMap[connectorId].direction, location:connectionMap[connectorId].location, labels:connectionMap[connectorId].labels, label1:connectionMap[connectorId].label1, label2:theLabel, foldback:connectionMap[connectorId].foldback, paintStyle:connectionMap[connectorId].paintStyle,};
+                                }
     							$(this).dialog("close");
     							removeDialogInfo(thisDialog);
     			            	removeDialogQuestion(thisDialog);
@@ -834,7 +882,41 @@
                     
                 }
                 else if (ui.cmd == "removeLabel") {
-                    console.log("REMOVE LABEL");
+                    //first we have to determine if this is label 1 or 2
+                    console.log("active label id: " + activeContainerId);
+                    var thisElement = $('#' + activeContainerId);
+                    var connectorId = thisElement.attr("connector");
+                    var labelNumber = thisElement.attr("label");
+                    instance.select().each(function(connection) {
+                      if (connection.id === connectorId) {
+                          activeConnection = connection;
+                      }
+                    });
+
+
+                    
+                    console.log(activeConnection);
+                    console.log(activeConnection.id);
+                    
+                    if (labelNumber == 2) { //if this is label 2 we know there were 2 labels so we just remove it and set the number of labels to 1
+                    activeConnection.removeOverlay("label2");
+                    connectionMap[connectorId] = {direction:connectionMap[connectorId].direction, location:connectionMap[connectorId].location, labels:1, label1:connectionMap[connectorId].label1, label2:'', foldback:connectionMap[connectorId].foldback, paintStyle:connectionMap[connectorId].paintStyle,};
+
+                    }
+                     else if (labelNumber == 1) { //if this was label 1, there could have been a 2nd label and if so we need to move it to the 1st position
+                        if (connectionMap[connectorId].labels == 2) { //there were 2 labels so delete label 1 and move label 2 to label 1
+                            var label2Contents = connectionMap[connectorId].label2;
+                            activeConnection.removeOverlay("label2");
+                            $('#' + activeContainerId).html(label2Contents); //set label 1 to what label 2 used to be
+                            connectionMap[connectorId] = {direction:connectionMap[connectorId].direction, location:connectionMap[connectorId].location, labels:1, label1:label2Contents, label2:'', foldback:connectionMap[connectorId].foldback, paintStyle:connectionMap[connectorId].paintStyle,};
+
+                            
+                        }
+                        else if (connectionMap[connectorId].labels == 1) { //there was 1 label so just delete it
+                            activeConnection.removeOverlay("label1");
+                            connectionMap[connectorId] = {direction:connectionMap[connectorId].direction, location:connectionMap[connectorId].location, labels:0, label1:'', label2:'', foldback:connectionMap[connectorId].foldback, paintStyle:connectionMap[connectorId].paintStyle,};
+                        }
+                     }
                 }
             },
             beforeOpen: function(event, ui) {
@@ -1122,3 +1204,86 @@ function flowchartAddText(activeContainerId,addText) {
     $('#' + activeContainerId).find('.form-text-area').html(addText);
 }
 
+
+//key binding for test purposes
+$(document).on('keydown', function(e) {
+
+
+	if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
+	 	console.log("keydown acknowledged");
+	 	console.log("ELEMENTS:");
+	 	$('.flowchartBox').each(function() {
+	 	    
+	 	    var thisId = $(this).attr("id");
+	 	    var thisType = $.grep(this.className.split(" "), function(v, i){
+               return v.indexOf('form-container') === 0;
+            }).join();
+            var thisX = $(this).position().left;
+            var thisY = $(this).position().top;
+            var thisWidth = $(this).width();
+            var thisHeight = $(this).height();
+            var thisColor = $(this).find(".svg").css("fill");
+            var thisText = $(this).find('.form-text-area').html();
+            
+            console.log(thisId + " " + thisType + " " + thisX + " " +thisY + " " + thisWidth + " " + thisHeight + " " + thisColor + " " + thisText);
+            savedElements.push({id: thisId, type: thisType, x: thisX, y: thisY, width: thisWidth, height: thisHeight, color: thisColor, text: thisText});
+	 	    
+	 	    console.log('---')
+	 	});
+	 	console.log("CONNECTIONS:");
+	 	instance.select().each(function(connection) {
+            var thisId = connection.id;
+            var thisSource = connection.source.id;
+            var thisTarget = connection.target.id;
+            console.log(thisId + " " + thisSource + " " + thisTarget + " ");
+            var thisAnchors = $.map(connection.endpoints, function(endpoint) {
+
+                return ([[endpoint.anchor.x, 
+                endpoint.anchor.y, 
+                endpoint.anchor.orientation[0], 
+                endpoint.anchor.orientation[1],
+                endpoint.anchor.offsets[0],
+                endpoint.anchor.offsets[1]]]);
+        
+            });
+            savedConnections.push({id: thisId, source: thisSource, target: thisTarget, anchors: thisAnchors});
+        });
+	 }
+	 
+	 
+	 if (e.altKey && (String.fromCharCode(e.which) === 'k' || String.fromCharCode(e.which) === 'K')) { //ALT-K keypress
+	    console.log("deleting everything");
+	    $('.flowchartBox').each(function() {
+	 	    
+	 	    var thisId = $(this).attr("id");
+	        instance.remove(thisId);
+    	});
+    	numElements = 0;
+    	connectionMap = '';
+	}
+	
+	
+	if (e.altKey && (String.fromCharCode(e.which) === 'j' || String.fromCharCode(e.which) === 'J')) { //ALT-J keypress
+	    var currentObj = {};
+	    for (var i = 0; i < savedElements.length; i++) {
+	        currentObj = savedElements[i];
+	        var thisShape = currentObj.type.substring(15); //cut off form-container-
+	        console.log("creating new: " + thisShape + " " + currentObj.id + " " + currentObj.x + " " +currentObj.y);
+	        requestNewElement(thisShape,"flowchart-demo",currentObj.x,currentObj.y,currentObj.id);
+	    }
+	    for (i = 0; i < savedConnections.length; i++) {
+	        currentObj = savedConnections[i];
+	        instance.connect({
+	            source:savedConnections[i].source,
+	            target:savedConnections[i].target,
+	            id:savedConnections[i].id,
+	            anchors: savedConnections[i].anchors,
+	            paintStyle: connectorPaintStyle,
+	            connector: [ "Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true } ],
+	            
+	        });
+	    }
+	    
+	}
+	
+});

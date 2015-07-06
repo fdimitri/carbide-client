@@ -288,7 +288,6 @@ function cliMsgProcChat(jObj) {
 
 }
 
-
 function cliMsgProcTerminal(jObj) {
 	console.log("Entered cliMsgProcTerminal");
 	console.log(jObj);
@@ -302,14 +301,40 @@ function cliMsgProcTerminal(jObj) {
 		console.log("We found a terminal");
 		console.log(term);
 		term.write(jObj.data);
-//		term.write(jObj.data);
-//	We need the terminal instance from the div referred to by "term"
+		//		term.write(jObj.data);
+		//	We need the terminal instance from the div referred to by "term"
 
+	}
+
+	if (jObj.command == 'clientInput') {
+		var clientInput = jObj.clientInput;
+		var userName = clientInput.userName;
+		var userBox = '#' + jObj.terminal + '_UserBox';
+		$(userBox).children().each(function() {
+			var self = $(this);
+			if (self.attr('termUser') == userName) {
+				var isGlowing = self.hasClass('glowingUser');
+				if (!isGlowing) {
+					self.addClass('glowingUser');
+				}
+				if (this.timer) {
+					console.log("this.timer is set");
+					clearTimeout(this.timer);
+					this.timer = false;
+				}
+				this.timer = setTimeout(function() {
+					self.removeClass("glowingUser");
+				}, 500);
+				console.log("Self.timer:-------------------\n\n\n\n\n\n\n");
+				console.log(self.timer);
+				console.log("\n\n\n\n\n\n-------------------");
+			}
+		});
 	}
 
 	if (jObj.command == "userJoin") {
 		console.log("Recieved userJoin command for terminal");
-		jObjUserJoin = jObj.userJoin;
+		var jObjUserJoin = jObj.userJoin;
 		var User = jObjUserJoin.user;
 		var Terminal = '#' + jObj.terminal + '_UserBox';
 		console.log($(Terminal));
@@ -319,7 +344,7 @@ function cliMsgProcTerminal(jObj) {
 		});
 		$(Terminal).append(msgDiv);
 	}
-	
+
 	else if (jObj.command == "userLeave") {
 		console.log("Received userLeave command");
 		jObj = jObj.userLeave;

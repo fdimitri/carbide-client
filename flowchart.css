@@ -305,7 +305,9 @@ path, ._jsPlumb_endpoint {
 ._jsPlumb_overlay {
     z-index:50;
     background: rgba(255,255,255,0.8);
-    max-width:80px;
+    max-width:85px;
+    padding-left:2px;
+    padding-right:2px;
 }
 #tableColor {
     width:200px;
