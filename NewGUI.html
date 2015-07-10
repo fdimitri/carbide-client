@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="jstree/themes/default/style.css" />
 	<link rel="stylesheet" href="quartzmenu/styles.css" />
 	<link rel="stylesheet" href="carbide-context.css" />
+	<link rel="stylesheet" type="text/css" href="upload.css" />
 	
 	
 
@@ -23,7 +24,8 @@
 	<script src="newTerminal.js"></script>	
 	<script src="jstree/jstree.js"></script>
 	<script src="quartzmenu/script.js"></script>
-
+	<script src="uploadfiles.js"></script>
+	<script src="testing/flow/flow.js"></script>
 
 	<!--<script src="terminaljs/terminal.js"></script>-->
 	
@@ -116,23 +118,13 @@
 			<div style="clear:both;"></div>
 			<div id="toolBarTop">
 
-				<!--<div class="toolBarItemTop">[button]</div>
-                        <div class="toolBarItemTop">[button]</div>
-                        <div class="toolBarItemTop">[button]</div>-->
+
 				<div id="toolBarTabs" class="ui-tabs"></div>
 			</div>
 			<div style="clear:both;"></div>
 		</div>
 
 		<div id="editorContainer">
-						<!--<ul id="jsTreeFile-ContextMenu" class="jsTreeContextMenu">	
-					    	<li><a href="#" class="contextMenuParent"><i></i><span class="contextMenuSep">&nbsp;</span>New</a>
-					    		<ul class="contextSubMenu">
-					    			<li id="cm-NewFile"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>File</a></li>
-					    		</ul>
-					    	</li>
-							<li id="cm-Opions"><a href="#"><i></i><span class="contextMenuSep">&nbsp;</span>Options</a></li>
-						</ul>-->
 						
 				<div id="toolBarSide">
 				    <ul>
@@ -211,7 +203,30 @@
 		</form>
 	</div>
 
-	
+	  <div class="flow-error">
+        Your browser, unfortunately, is not supported by Flow.js. The library requires support for <a href="http://www.w3.org/TR/FileAPI/">the HTML5 File API</a> along with <a href="http://www.w3.org/TR/FileAPI/#normalization-of-params">file slicing</a>.
+      </div>
+
+      <div class="flow-drop" ondragenter="jQuery(this).addClass('flow-dragover');" ondragend="jQuery(this).removeClass('flow-dragover');" ondrop="jQuery(this).removeClass('flow-dragover');">
+        Drop files here to upload or <a class="flow-browse-folder"><u>select folder</u></a> or <a class="flow-browse"><u>select from your computer</u></a> or <a class="flow-browse-image"><u>select images</u></a>
+      </div>
+      <div id="uploadDialog" style="display:none">
+	      <div class="flow-progress">
+	        <table>
+	          <tr>
+	            <td width="100%"><div class="progress-container"><div class="progress-bar"></div></div></td>
+	            <td class="progress-text" nowrap="nowrap"></td>
+	            <td class="progress-pause" nowrap="nowrap">
+	              <a href="#" onclick="r.upload(); return(false);" class="progress-resume-link"><img src="testing/flow/resume.png" title="Resume upload" /></a>
+	              <a href="#" onclick="r.pause(); return(false);" class="progress-pause-link"><img src="testing/flow/pause.png" title="Pause upload" /></a>
+	              <a href="#" onclick="r.cancel(); return(false);" class="progress-cancel-link"><img src="testing/flow/cancel.png" title="Cancel upload" /></a>
+	            </td>
+	          </tr>
+	        </table>
+	      </div>
+	      
+	      <ul class="flow-list"></ul>	
+      </div>
 </body>
 
 </html>

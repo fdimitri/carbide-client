@@ -1,4 +1,5 @@
     //globals     
+    var defaultObjectColor = "rgba(255,255,255,1)"; //default color for an object is white
     var arrowColor = "#61B7CF";
     var activeContainerId = ''; 
     var activeContainerShape = '';
@@ -49,21 +50,14 @@
                 hoverPaintStyle: endpointHoverStyle,
                 connectorHoverStyle: connectorHoverStyle,
                 dragOptions: {},
-                // overlays: [
-                //     [ "Label", {
-                //         location: [0.5, 1.5],
-                //         //label: "Drag",
-                //         label: "",
-                //         cssClass: "endpointSourceLabel"
-                //     } ]
-                // ]
+
        },
         // the definition of target endpoints (will appear when the user drags a connection)
         targetEndpoint = {
                 endpoint: "Rectangle",
-                paintStyle: { fillStyle: "#7AB02C", radius: 11 },
+                paintStyle: { fillStyle: "transparent", radius: 11 },
                 hoverPaintStyle: endpointHoverStyle,
-                maxConnections: -1,
+                maxConnections: 1,
                 dropOptions: { hoverClass: "hover", activeClass: "active" },
                 isTarget: true,
                 // overlays: [
@@ -135,6 +129,7 @@
             containment:"parent",
             drag: function( event, ui ) {
                console.log("x " + event.pos[0] + " y " + event.pos[1]);
+               
                
             },
            start: function( event, ui ) {
@@ -224,6 +219,7 @@
             instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
                 anchor: sourceAnchors[i], uuid: sourceUUID
             });
+            console.log("end point added to element " + "flowchart" + toId)
         }
         // for (var j = 0; j < targetAnchors.length; j++) {
         //     var targetUUID = toId + targetAnchors[j];
@@ -261,7 +257,10 @@
     }
     
     function requestNewElement(shape,boxId,x,y, thisId) { //thisId is an optional argument to specify the ID of the new element
-        if (typeof thisId === 'undefined') { thisId = ''; }
+        if (typeof thisId === 'undefined') { 
+            thisId = ''; 
+            
+        }
         
             if (shape == "circle") {
                 console.log("drawing a circle.");
@@ -284,39 +283,39 @@
                 console.log("drawing a decision.");
                 createNewElement("decision",boxId,x,y,thisId); //draw a new decision
             }
-            else { //old stuff follows
-            	var thisDialog = "dialog-dbEditor";
-    			changeDialogTitle(thisDialog,"Enter Table Name");
+    //         else { //old stuff follows
+    //         	var thisDialog = "dialog-dbEditor";
+    // 			changeDialogTitle(thisDialog,"Enter Table Name");
     		
-    			addDialogInfo(thisDialog," ");
-    			addDialogQuestion (thisDialog, 'Table name:', 'tableName', 'name', 'newTableSubmit'); //add text field to get table name
-    					$("#" + thisDialog).dialog({
-    						resizable: false,
-    						height: 210,
-    						width: 395,
-    						modal: true,
-    						buttons: {
-    							"Add Table": function() {
-    							    var tableName = $('#tableName').val();
-    							    createNewTable(boxId,x,y,tableName);
-    								$(this).dialog("close");
-    								removeDialogInfo(thisDialog);
-    				            	removeDialogQuestion(thisDialog);
+    // 			addDialogInfo(thisDialog," ");
+    // 			addDialogQuestion (thisDialog, 'Table name:', 'tableName', 'name', 'newTableSubmit'); //add text field to get table name
+    // 					$("#" + thisDialog).dialog({
+    // 						resizable: false,
+    // 						height: 210,
+    // 						width: 395,
+    // 						modal: true,
+    // 						buttons: {
+    // 							"Add Table": function() {
+    // 							    var tableName = $('#tableName').val();
+    // 							    createNewTable(boxId,x,y,tableName);
+    // 								$(this).dialog("close");
+    // 								removeDialogInfo(thisDialog);
+    // 				            	removeDialogQuestion(thisDialog);
     							
-    							},
-    							Cancel: function() {
-    								$(this).dialog("close");
-    								removeDialogInfo(thisDialog);
-    				            	removeDialogQuestion(thisDialog);
+    // 							},
+    // 							Cancel: function() {
+    // 								$(this).dialog("close");
+    // 								removeDialogInfo(thisDialog);
+    // 				            	removeDialogQuestion(thisDialog);
     				
-    							}
-    						}
-    					});
-            }
+    // 							}
+    // 						}
+    // 					});
+    //         }
     }
     
     function createNewElement(shape, boxId, x,y, thisId) { //thisId is an optional argument that specifies the new element ID
-        if (typeof thisId === 'undefined') { thisId = ''; }
+        if ((typeof thisId === 'undefined') || (thisId == '')) { thisId = ''; }
         else {
              thisId.replace(/\D/g,'');
              thisId = parseInt(thisId);
@@ -403,6 +402,11 @@
         }
         
          updateDraggable();
+         
+         //set default color for new objects
+         if (thisId == '') {
+             changeColorDefault('flowchartElement' + numElements);
+         }
          $('.ui-icon-gripsmall-diagonal-se').hide();
     }
     
@@ -539,7 +543,6 @@
         }
         else if( e.which == 1 )  { //left button
             
-              
             if ($(e.target).closest("._jsPlumb_overlay").length) { //this is a label
                 activeContainerShape = "activeLabel";
                 activeContainerId = $(e.target).closest("._jsPlumb_overlay").attr("id");
@@ -563,25 +566,7 @@
    
 
   
-    // $(".flowchart-boundbox").contextMenu({
-    //     selector: '.context-menu-one', 
-    //     trigger: 'left',
-    //     callback: function(key, options) {
-    //         var m = "clicked: " + key;
-    //         window.console && console.log(m) || alert(m); 
-    //     },
-    //     items: {
-    //         "edit": {name: "Edit", icon: "edit"},
-    //         "cut": {name: "Cut", icon: "cut"},
-    //         "copy": {name: "Copy", icon: "copy"},
-    //         "paste": {name: "Paste", icon: "paste"},
-    //         "delete": {name: "Delete", icon: "delete"},
-    //         "sep1": "---------",
-    //         "quit": {name: "Quit", icon: "quit"}
-    //     }
-    // });
-
-
+ 
 
      $(".flowchart-boundbox").contextmenu({
 
@@ -643,7 +628,7 @@
     							"Change Color": function() {
     							    var tableColor = $('#tableColor').val();
     							    lastColor = tableColor;
-    							    changeColor(activeContainerId,tableColor);
+    							    changeObjectColor(activeContainerId,tableColor);
     								$(this).dialog("close");
     								removeDialogInfo(thisDialog);
     				            	removeDialogColorPicker(thisDialog);
@@ -1032,10 +1017,10 @@ jsPlumb.ready(function () {
                 anchor: sourceAnchors[i], uuid: sourceUUID
             });
         }
-        for (var j = 0; j < targetAnchors.length; j++) {
-            var targetUUID = toId + targetAnchors[j];
-            instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
-        }
+        // for (var j = 0; j < targetAnchors.length; j++) {
+        //     var targetUUID = toId + targetAnchors[j];
+        //     instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
+        // }
     };
 
     // suspend drawing and initialise.
@@ -1074,6 +1059,7 @@ jsPlumb.ready(function () {
         });
         instance.bind("mousedown", function (conn, originalEvent) {
           activeConnection = conn;
+          console.log(activeConnection.id)
         });
 
         instance.bind("connectionDrag", function (connection) {
@@ -1096,7 +1082,7 @@ jsPlumb.ready(function () {
         });
     });
 
-    jsPlumb.fire("jsPlumbDemoLoaded", instance);
+    //jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
 
     // $(document).ready(function() {
@@ -1182,19 +1168,7 @@ function hideAllConnections() {
                     
 }
 
-function changeColor(containerId, newColor) {
-    
-    elementId = $('#' + containerId).find(".svg").attr("id");
-   
-    //clear prior fills
-    $('#' + elementId).find("path").removeAttr('fill');
-    $('#' + elementId).removeAttr('fill');
-    $('#' + elementId).find("circle").removeAttr('fill');
-    
- 
-    console.log("changing " + elementId + " to " + newColor);
-    $('#' + elementId).css('fill', newColor);
-}
+
 
 function flowchartLoadText(activeContainerId) {
     var insideHtml = $('#' + activeContainerId).find('.form-text-area').html();
@@ -1210,6 +1184,7 @@ $(document).on('keydown', function(e) {
 
 
 	if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
+
 	 	console.log("keydown acknowledged");
 	 	console.log("ELEMENTS:");
 	 	$('.flowchartBox').each(function() {
@@ -1232,10 +1207,13 @@ $(document).on('keydown', function(e) {
 	 	});
 	 	console.log("CONNECTIONS:");
 	 	instance.select().each(function(connection) {
-            var thisId = connection.id;
-            var thisSource = connection.source.id;
-            var thisTarget = connection.target.id;
-            console.log(thisId + " " + thisSource + " " + thisTarget + " ");
+	 	    
+	 	    // //this was all nonsense.
+	 	 //   console.log(connection.endpoints[0]._jsPlumb.uuid)
+             var thisId = connection.id;
+             var thisSource = connection.source.id;
+             var thisTarget = connection.target.id;
+    //         console.log(thisId + " " + thisSource + " " + thisTarget + " ");
             var thisAnchors = $.map(connection.endpoints, function(endpoint) {
 
                 return ([[endpoint.anchor.x, 
@@ -1246,7 +1224,8 @@ $(document).on('keydown', function(e) {
                 endpoint.anchor.offsets[1]]]);
         
             });
-            savedConnections.push({id: thisId, source: thisSource, target: thisTarget, anchors: thisAnchors});
+    //         savedConnections.push({id: thisId, source: thisSource, target: thisTarget, anchors: thisAnchors});
+             savedConnections.push({id: thisId, source: thisSource, target: thisTarget, uuids:[connection.endpoints[0]._jsPlumb.uuid,connection.endpoints[1]._jsPlumb.uuid],  anchors: thisAnchors}); //we only really need to save uuids
         });
 	 }
 	 
@@ -1259,31 +1238,207 @@ $(document).on('keydown', function(e) {
 	        instance.remove(thisId);
     	});
     	numElements = 0;
-    	connectionMap = '';
+    	//connectionMap = '';
 	}
-	
+if (e.altKey && (String.fromCharCode(e.which) === 'g' || String.fromCharCode(e.which) === 'G')) { //ALT-G keypress	
+    console.log("ALT G TEST FUNCTION");
+    var testObject = $(".flowchartBox").eq(0);
+    moveObject(testObject.attr("id"),testObject.position().left-10,testObject.position().top-10);
+}
+if (e.altKey && (String.fromCharCode(e.which) === 'h' || String.fromCharCode(e.which) === 'H')) { //ALT-H keypress	
+    console.log("ALT H TEST FUNCTION");
+}
 	
 	if (e.altKey && (String.fromCharCode(e.which) === 'j' || String.fromCharCode(e.which) === 'J')) { //ALT-J keypress
 	    var currentObj = {};
 	    for (var i = 0; i < savedElements.length; i++) {
 	        currentObj = savedElements[i];
-	        var thisShape = currentObj.type.substring(15); //cut off form-container-
-	        console.log("creating new: " + thisShape + " " + currentObj.id + " " + currentObj.x + " " +currentObj.y);
-	        requestNewElement(thisShape,"flowchart-demo",currentObj.x,currentObj.y,currentObj.id);
+	        addObject("flowchart-demo",currentObj.id,currentObj.type,currentObj.x,currentObj.y,currentObj.width,currentObj.height,currentObj.color,currentObj.text);
 	    }
+        
 	    for (i = 0; i < savedConnections.length; i++) {
 	        currentObj = savedConnections[i];
-	        instance.connect({
+	        var thisNewConnection = instance.connect({
 	            source:savedConnections[i].source,
 	            target:savedConnections[i].target,
-	            id:savedConnections[i].id,
-	            anchors: savedConnections[i].anchors,
+	            //anchors: savedConnections[i].anchors,
+	            uuids:savedConnections[i].uuids,
 	            paintStyle: connectorPaintStyle,
 	            connector: [ "Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true } ],
-	            
 	        });
+	        var newId = savedConnections[i].id;
+	        thisNewConnection.id = newId;
+	        if (connectionMap[newId]) {
+	            //first add the old arrow
+                updateConnectionArrow(newId);
+                console.log("updating arrow of " + newId);
+                //then add the old labels
+                if (connectionMap[newId].labels == 1) { //there was 1 label
+                console.log("updating label of " + newId);
+                    addConnectionLabel(newId, connectionMap[newId].label1, 1);
+                }
+                else if (connectionMap[newId].labels == 2) { //there were 2 labels
+                    addConnectionLabel(newId, connectionMap[newId].label1, 1);
+                    addConnectionLabel(newId, connectionMap[newId].label2, 2);
+                }
+	        }
 	    }
+	   // connectionMap.forEach(function(entry) {
+    //         console.log(entry);
+    //         activeConnection.removeOverlay("label2");
+    //         activeConnection.addOverlay([ "Label", {label:theLabel, id:"label1", location:.2}]); 
+    //         var newElement = activeConnection.getOverlay("label1").getElement(); //get the element of the new label
+    //         $(newElement).attr("connector", activeConnection.id); //set some attributes on this element for use in identifying it
+    //         $(newElement).attr("label", "1");
+            
+    //         activeConnection.removeOverlay("arrow");
+    //         activeConnection.addOverlay([ "Arrow", {direction:1, id:"arrow", location: 1, foldback:connectionMap[activeConnection.id].foldback, paintStyle:connectionMap[activeConnection.id].paintStyle}]); 
+
+
+    //     });
 	    
 	}
 	
 });
+
+
+//Functions for the API
+
+
+function getConnectionFromId(connectionId) { //takes a connection ID and returns a connection or returns false if no connection is found
+    var theConnection = '';
+    instance.select().each(function(connection) {
+        if (connection.id === connectionId) {
+          theConnection = connection;
+        }
+    });
+    if (theConnection) {
+        return(theConnection);
+    }
+    else {
+        return(false);
+    }
+
+}
+
+
+
+function addConnectionLabel(connectionId, theLabel, labelNumber) { //takes a connection, a label (html) a labelNumber (1 or 2)
+    var connection = getConnectionFromId(connectionId);
+    var labelId = "label" + labelNumber;
+    var labelLocation = .2;
+    if (labelNumber == 2) {
+        labelLocation = .8;
+    }
+    connection.removeOverlay(labelId); //remove the old label if it exists
+    connection.addOverlay([ "Label", {label:theLabel, id:labelId, location:labelLocation}]); 
+    var newElement = connection.getOverlay(labelId).getElement(); //get the element of the new label
+    $(newElement).attr("connector", connection.id); //set some attributes on this element for use in identifying it
+    $(newElement).attr("label", labelNumber);
+    //update connection map
+    if (labelNumber == 1) {
+        var numLabels = 1;
+        if (connectionMap[connection.id].labels == 2) { //if there were 2 labels then we're just replacing label 1 so there are still 2 labels
+            numLabels = 2;
+        }
+        connectionMap[connection.id] = { direction: connectionMap[connection.id].direction, location: connectionMap[connection.id].location, labels:numLabels, label1:theLabel, label2:connectionMap[connection.id].label2, foldback:connectionMap[connection.id].foldback, paintStyle:connectionMap[connection.id].paintStyle, };
+    }
+    else if (labelNumber == 2) {
+        connectionMap[connection.id] = { direction: connectionMap[connection.id].direction, location: connectionMap[connection.id].location, labels:2, label1:connectionMap[connection.id].label1, label2:theLabel, foldback:connectionMap[connection.id].foldback, paintStyle:connectionMap[connection.id].paintStyle, };
+    }
+}
+
+function removeConnectionLabel(connectionId, labelNumber) { //takes a connection and a label number, if the label number is 1 and there are 2 labels, moves label 2 to label 1
+    var connection = getConnectionFromId(connectionId);
+    if (labelNumber == 2) { //if this is label 2 we know there were 2 labels so we just remove it and set the number of labels to 1
+        connection.removeOverlay("label2");
+        connectionMap[connection.id] = {direction:connectionMap[connection.id].direction, location:connectionMap[connection.id].location, labels:1, label1:connectionMap[connection.id].label1, label2:'', foldback:connectionMap[connection.id].foldback, paintStyle:connectionMap[connection.id].paintStyle,};
+
+        }
+        else if (labelNumber == 1) { //if this was label 1, there could have been a 2nd label and if so we need to move it to the 1st position
+            if (connectionMap[connection.id].labels == 2) { //there were 2 labels so delete label 1 and move label 2 to label 1
+                var label2Contents = connectionMap[connection.id].label2;
+                activeConnection.removeOverlay("label2");
+                $('#' + activeContainerId).html(label2Contents); //set label 1 to what label 2 used to be
+                connectionMap[connection.id] = {direction:connectionMap[connection.id].direction, location:connectionMap[connection.id].location, labels:1, label1:label2Contents, label2:'', foldback:connectionMap[connection.id].foldback, paintStyle:connectionMap[connection.id].paintStyle,};
+
+                
+            }
+            else if (connectionMap[connection.id].labels == 1) { //there was 1 label so just delete it
+                activeConnection.removeOverlay("label1");
+                connectionMap[connection.id] = {direction:connectionMap[connection.id].direction, location:connectionMap[connection.id].location, labels:0, label1:'', label2:'', foldback:connectionMap[connection.id].foldback, paintStyle:connectionMap[connection.id].paintStyle,};
+            }
+        }
+}
+
+function updateConnectionArrow(connectionId) { //updates the connection arrow from the connection map (to get it out of default position)
+    var connection = getConnectionFromId(connectionId);
+    console.log('direction: ' + connectionMap[connectionId].direction + ' id: ' + "arrow" + ' location: ' + connectionMap[connectionId].location + ' foldback: ' + connectionMap[connectionId].foldback + ' paintStyle: ' +connectionMap[connectionId].paintStyle); 
+
+    connection.removeOverlay("arrow");
+	connection.addOverlay([ "Arrow", {direction:connectionMap[connectionId].direction, id:"arrow", location: connectionMap[connectionId].location, foldback:connectionMap[connectionId].foldback, paintStyle:connectionMap[connectionId].paintStyle}]); 
+
+}
+
+function addObject(boxId,objectId,typeClass,x,y,width,height,color,text) {
+    
+	        var thisShape = typeClass.substring(15); //cut off form-container-
+	        console.log("creating new: " + thisShape + " " + objectId + " " + x + " " + y + " " + width + " " + height);
+	        requestNewElement(thisShape,boxId,x,y,objectId);
+	        
+	        //wait for element creation, then change color, text, size
+	        var interval_id = setInterval(function(){ //wait for terminal creation then check the sizes
+						    
+			     if ($("#" + objectId).find(".svg").length > 0){
+			         // "exit" the interval loop with clearInterval command
+			         clearInterval(interval_id);
+			         changeObjectColor(objectId,color);
+            	     changeObjectText(objectId,text);
+            	     resizeObject(objectId,x,y,width,height);
+			      }
+			}, 200);
+							
+	        
+}
+function changeColorDefault(objectId) {
+    var interval_id = setInterval(function(){ //wait for object creation to color object
+         if ($("#" + objectId).find(".svg").length > 0){
+	         // "exit" the interval loop with clearInterval command
+	         clearInterval(interval_id);
+	         changeObjectColor(objectId,defaultObjectColor);
+	      }
+	}, 200);
+}
+function changeObjectColor(objectId, newColor) {
+        elementId = $('#' + objectId).find(".svg").attr("id");
+       console.log(elementId + " " + newColor);
+        //clear prior fills
+        $('#' + elementId).find("path").removeAttr('fill');
+        $('#' + elementId).removeAttr('fill');
+        $('#' + elementId).find("circle").removeAttr('fill');
+        $('#' + elementId).css('fill', newColor);
+}
+function changeObjectText(objectId, text) {
+    $('#' + objectId).find('.form-text-area').html(text);
+}
+function resizeObject(objectId, x, y, width, height) { //resize an object to width, height, with a top position of y and a left position of x
+    $('#' + objectId).width(width);
+    $('#' + objectId).height(height);
+    $('#' + objectId).css({top: y, x, position:'absolute'});
+    instance.repaintEverything(); //all connections must be repainted
+}
+function addConnection(sourceId,targetId,anchorsList,paintStyle) {
+    var thisNewConnection = instance.connect({
+        source:sourceId,
+        target:targetId,
+        anchors: anchorsList,
+        paintStyle: paintStyle,
+        connector: [ "Flowchart", { stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true } ],
+        
+    });
+}
+function moveObject(objectId,newX,newY) {
+    $('#'+objectId).css({top: newY, left: newX, position:'absolute'});
+    instance.repaintEverything(); //all connections must be repainted
+    
+}
