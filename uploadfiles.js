@@ -7,7 +7,7 @@ var uploadCancelButton = 'testing/flow/cancel.png';
 $(function () {
           var r = new Flow({
             target: serverTarget,
-            chunkSize: 1024*1024,
+            chunkSize: 4*1024*1024,
             testChunks: false,
             maxChunkRetries: 4,
             chunkRetryInterval: 2,
