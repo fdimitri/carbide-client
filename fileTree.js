@@ -405,7 +405,10 @@ $(function() {
 	});
 });
 
-function initFileTree(data) {
+function initFileTree(data, ftid) {
+	if (ftid == undefined) {
+		ftid = '#jsTreeFile';
+	}
 	if (!data) {
 		console.log("Asked to init with no data, using built-ins")
 		data = [{
@@ -419,8 +422,8 @@ function initFileTree(data) {
 		}, ]
 	}
 	console.log("Calling jstree() on");
-	console.log($('#jsTreeFile'));
-	$('#jsTreeFile').jstree({
+	console.log($(ftid));
+	$(ftid).jstree({
 		"core": {
 			// so that create works
 			'check_callback': function(operation, node, node_parent, node_position, more) {

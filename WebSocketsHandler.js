@@ -205,10 +205,21 @@ function cliMsgProcFileTree(jObj) {
 		console.log(myData.fileTree);
 		initFileTree($.parseJSON(myData.fileTree));
 	}
+	else if (jObj.command == "setFileTreeModalJSON") {
+		var myData = jObj.setFileTreeModalJSON;
+		console.log(myData.fileTree);
+		initFileTree($.parseJSON(myData.fileTree), "#miniFileTree");
+	}
+
 	else if (jObj.command == "deleteFile") {
 		//the server says to delete a file
 	}
+	else {
+		console.log(jObj.command)
+	}
 }
+
+
 
 function cliMsgProcChat(jObj) {
 	if (jObj.command == "sendMessage") {

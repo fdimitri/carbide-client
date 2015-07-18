@@ -61,7 +61,7 @@ function appendAddTabButton(paneId) {
 
 }
 
-function resetSizes() {
+function resetSizes(suppressArrangePanes) {
 	var pos = $("#windows").offset();
 	console.log("Windows position:");
 	console.log(pos);
@@ -85,8 +85,9 @@ function resetSizes() {
 
 	wd.css("width", rw.width());
 	wd.css("height", rw.height());
-
-	arrangePanes(lastPaneFormat);
+	if (suppressArrangePanes != 1) {
+		arrangePanes(lastPaneFormat);
+	}
 	$("body").css({
 		maxHeight: $(window).height()
 	});
@@ -264,6 +265,27 @@ $(
 										
 					};
 				wsSendMsg(JSON.stringify(statusJSON));
+			}
+			else if ($(event.target).closest('.addNewTab').length) { //the add new tab button is there to allow the user to open content in a new window pane
+				var thisDialog = "dialog-info";
+				changeDialogTitle(thisDialog,"Choose Content to Open");
+				addDialogIcon (thisDialog, "ui-icon-folder-open");
+				addDialogInfo (thisDialog, "Please choose something to open in this window pane.");
+				addDialogFileTree(thisDialog);
+				$("#" + thisDialog).dialog({
+			      modal: true,
+			      width: 475,
+			      height: 510,
+			      buttons: {
+			        Ok: function() {
+			          $(this).dialog( "close" );
+			        },
+			        Cancel: function() {
+						$(this).dialog("close");
+		
+					}
+			      }
+			    });
 			}
 			
 
@@ -957,7 +979,7 @@ function createNewPane() {
 			}
 			if (result.paneId) {
 
-				focusPane(result.paneId);
+				
 				
 				//send a message to the server to let it know that we've created a new pane
 				var statusJSON = {
@@ -972,20 +994,43 @@ function createNewPane() {
 
 
 				if (result.paneId != "#pane01") {
-					var newY = $(result.paneId).parent().height() / 2 - $(result.paneId).height() / 2;
-					var newX = $(result.paneId).parent().width() / 2 - $(result.paneId).width() / 2 - $("#toolBarSide").width() - $("#leftBar").width();
-					$(result.paneId).css({
-						top: newY,
-						left: newX,
-						position: 'absolute'
-					});
+					var interval_id = setInterval(function(){
+				     
+				     if($(result.paneId).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         //
+				         focusPane(result.paneId);
+				         var newY = $(result.paneId).parent().height() / 2 - $(result.paneId).height() / 2;
+						 var newX = $(result.paneId).parent().width() / 2 - $(result.paneId).width() / 2 - $("#toolBarSide").width() - $("#leftBar").width();
+						 $(result.paneId).css({
+							top: newY,
+							left: newX,
+							position: 'absolute'
+						 });
+						 $(result.paneId).attr("oldx", $(result.paneId).position().left);
+						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
+				      }
+					}, 10);
+					
 				}
 				else {
 				
+					var interval_id = setInterval(function(){
+				     
+				     if($(result.paneId).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         //
+				         focusPane(result.paneId);
+				         maximizePane("pane01");
+					 	 $('#pane01').attr('oldheight', ($('#pane01').height() / 2 ));
+					 	 $('#pane01').attr('oldwidth', ($('#pane01').width() / 2 ));
+					 	 $(result.paneId).attr("oldx", $(result.paneId).position().left);
+						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
+				      }
+					}, 10);
 					
-					maximizePane("pane01");
-					$('#pane01').attr('oldheight', ($('#pane01').height() / 2 ));
-					$('#pane01').attr('oldwidth', ($('#pane01').width() / 2 ));
 
 				}
 			}

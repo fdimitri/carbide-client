@@ -166,7 +166,8 @@ $(function() {
 
 });
 */
-
+var handleTarget = '';
+var windowLastWidth = '';
 $(function() {
 	var containerHeight = 0;
 	var containerWidth = 0;
@@ -181,8 +182,21 @@ $(function() {
 		cancel: ".maximizedPane",
 		handles: "all",
 		resize: function( event, ui ) {
-
 			
+			
+			
+			if (handleTarget.hasClass('ui-resizable-w')) { //correct problems when the pane is resized towards the left of the screen
+					if ($(ui.element).position().left <= 100) {
+						if (ui.size.width < (windowLastWidth - 100)) { //when there is a huge a sudden jump it means the pane tried to resize
+							$(ui.element).width(windowLastWidth);
+							$(this).resizable('widget').trigger('mouseup');
+							console.log("error found");
+							return(-1);
+						}
+					}
+
+			}
+			windowLastWidth = ui.size.width;
 			
 			containerHeight = ui.size.height;
 			containerWidth = ui.size.width;
@@ -209,6 +223,8 @@ $(function() {
 			
 		},
 		start: function(event, ui) {
+			windowLastWidth = ui.size.width;
+			handleTarget = $(event.originalEvent.target); //save a copy of the handle that is being used so that we know what direction they're moving in
 			lastPaneFormat = "";
 			//ui.element.addClass("activeWindow");
 			$(".windowPane").each(function() {
@@ -227,7 +243,7 @@ $(function() {
 
 		},
 		stop: function(event, ui) {
-			
+			windowLastWidth = 0;
 			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
 			$(this).attr("oldy", $(this).position().top);
 			$(this).attr("oldheight", $(this).height());

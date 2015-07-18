@@ -84,7 +84,6 @@ $(function() {
 					//var fileAndPath = ref.get_path(selectedNodes,"/");
 					//var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
 					var fileName = ref.get_selected(true)[0].text;
-
 					addDialogInfo (thisDialog, "You are about to delete Chat Room <strong>" + fileName + "</strong>. All saved chat data will be lost. Are you sure?");
 					$("#" + thisDialog).dialog({
 						resizable: false,
@@ -652,6 +651,7 @@ function removeDialogInfo (dialogId) {
 	$("#" + dialogId).find(".dialogClear").remove();	
 }
 function changeDialogTitle (dialogId, dialogTitle) {
+	$("#" + dialogId).closest('.ui-dialog').find('.ui-dialog-title').html(dialogTitle);
 	$("#" + dialogId).prop('title', dialogTitle);
 }
 function addDialogQuestion (dialogId, textLabel, textId, textName) { //add a text box to get info from the user
@@ -669,11 +669,39 @@ function addDialogColorPicker (dialogId, textLabel, colorId, colorName, defaultC
 function removeDialogColorPicker (dialogId) {
 	$("#" + dialogId).find(".dialogColorPicker").remove();	
 }
+function addDialogFileTree (dialogId) {
+	var dialogInfo = '<div class="dialogFileTree">';
+	dialogInfo = dialogInfo + '</div>';
+	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
+	// $('#jsTreeFile').clone().prop('id', 'miniFileTree' ).appendTo('.dialogFileTree');
+	// var thisProp;
+	// $('#miniFileTree').find('li').each(function() {
+	// 	thisProp = $(this).prop('id');
+	// 	$(this).prop('id', thisProp + '_mini');
+	// 	$(this).attr('aria-labelledby', thisProp + '_mini_anchor');
+	// 	$(this).find('a').prop('id', thisProp + '_mini_anchor');
+	
+	// });
+	var toAppend = '<div id="miniFileTree"></div>';
+	$(toAppend).appendTo('.dialogFileTree');
+	//get data and start file trees
+	console.log(":")
+	var statusJSON = {
+		"commandSet": "FileTree",
+		"command": "getFileTreeModalJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+}
+function removeDialogFileTree (dialogId) {
+	$("#" + dialogId).find(".dialogFileTree").remove();	
+}
 $(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
 	$('.dialog-window').bind('dialogclose', function(event) {
 		 dialogId = $(this).attr('id');
 		 removeDialogIcon(dialogId);
 		 removeDialogInfo(dialogId);
 		 changeDialogTitle(dialogId,"Information Dialog");
+		 removeDialogColorPicker (dialogId);
+		 removeDialogFileTree (dialogId);
  	});
 });

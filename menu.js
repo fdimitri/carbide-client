@@ -124,7 +124,7 @@ function arrangePanes(paneFormat) {
 	var currentWindow = "";
     var theWindowPane = $(".windowPane");
     lastPaneFormat = paneFormat; //save the pane format in case we resize the window
-    
+    resetSizes(1);
 
 	if (paneFormat == "1") {
 		mainPane = $(".windowPane").eq(0); //store the first pane, which will become our only pane
@@ -151,16 +151,16 @@ function arrangePanes(paneFormat) {
 		//setTimeout(function(){  //this is how REAL optimization is done! Take notes!
 			theWindowPane.css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
 		    currentWindow.height(theWindowPane.parent("div").height() - 10);
-			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+			currentWindow.width(theWindowPane.parent("div").width()/2 - 3);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			currentWindow = theWindowPane.eq(1);
-		    currentWindow.css({top: 5, left: theWindowPane.parent("div").width()/2 + 10, position:'absolute'});
+		    currentWindow.css({top: 0, left: theWindowPane.parent("div").width()/2 + 2, position:'absolute'});
 			currentWindow.height(theWindowPane.parent("div").height() - 10);
-			currentWindow.width(theWindowPane.parent("div").width()/2 - 15);
+			currentWindow.width(theWindowPane.parent("div").width()/2 - 3);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());

@@ -140,7 +140,8 @@
             stop: function( event, ui ) {
                 console.log("removing file lock");
                 
-            }
+            },
+            filter:".ui-resizable-handle",
             
         });    
         
