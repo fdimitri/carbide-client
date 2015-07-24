@@ -70,6 +70,8 @@ $('#jsTreeFile').keydown(function(e) {
         var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + newName); 
        
         var oldName = obj.node.original.text;
+
+        var srcPath = obj.node.original.li_attr.srcPath;
         
         /*
         var etrigger = 0;
@@ -100,11 +102,11 @@ $('#jsTreeFile').keydown(function(e) {
         */
         
     	var statusJSON = {
-			"commandSet": "base",
-			"command": "renameFile",
+			"commandSet": "FileTree",
+			"command": "renameEntry",
 			"key" : randomKey,
-			"renameFile" : {
-				"oldName" : oldName,
+			"renameEntry" : {
+				"srcPath" : srcPath,
 				"newName" : newName,
 			},
 		};
@@ -673,49 +675,59 @@ function createFile(fileDirectory) {
 }
 function deleteFile(fileName) {
 	var ref = $('#jsTreeFile').jstree(true),
-	sel = ref.get_selected();
-	if(!sel.length) { return false; }
+		sel = ref.get_selected();
+	if (!sel.length) {
+		return false;
+	}
 	sel = sel[0];
 	var selectedNodes = ref.get_selected();
-	var fileAndPath = ref.get_path(selectedNodes,"/");
+
+	var srcPath = $('#' + selectedNodes).attr("srcpath");
+
+	var fileAndPath = ref.get_path(selectedNodes, "/");
 	console.log("request to delete " + fileAndPath);
-	
-	
-	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + selectedNodes); 
+
+
+	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + selectedNodes);
 	var statusJSON = {
-			"commandSet": "base",
-			"command": "deleteFile",
-			"key" : randomKey,
-			"filename" : fileAndPath,
-		};
-		wsSendMsg(JSON.stringify(statusJSON));
-	
-		while (!getMsg(randomKey)) {
-			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
-	    }	
-		var result = getMsg(randomKey);
-		if (result['status'] == true) {
-			// Successful file delete
-			// Remove the node from the File Tree
-			//ref.delete_node(sel);
-		}
-		else {
-			//file deletion denied. Display dialog with error message.
-			var thisDialog = "dialog-info";
-			changeDialogTitle(thisDialog,"Error Deleting File");
-			addDialogIcon (thisDialog, "ui-icon-alert");
-			addDialogInfo (thisDialog, "The file was unable to be deleted.");
-			$("#" + thisDialog).dialog({
-		      modal: true,
-		      width: 375,
-		      height: 210,
-		      buttons: {
-		        Ok: function() {
-		          $( this ).dialog( "close" );
-		        }
-		      }
-		    });
-		}
+		"commandSet": "FileTree",
+		"command": "deleteEntry",
+		"key": randomKey,
+		"deleteEntry": {
+//			"srcPath": fileAndPath,
+			"srcPath": srcPath,
+		},
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
+	while (!getMsg(randomKey)) {
+		setTimeout(function() {
+			console.log('Waiting for reply')
+		}, 100); // wait 10ms for the connection...
+	}
+	var result = getMsg(randomKey);
+	if (result['status'] == true) {
+		// Successful file delete
+		// Remove the node from the File Tree
+		//ref.delete_node(sel);
+	}
+	else {
+		//file deletion denied. Display dialog with error message.
+		var thisDialog = "dialog-info";
+		changeDialogTitle(thisDialog, "Error Deleting File");
+		addDialogIcon(thisDialog, "ui-icon-alert");
+		addDialogInfo(thisDialog, "The file was unable to be deleted.");
+		$("#" + thisDialog).dialog({
+			modal: true,
+			width: 375,
+			height: 210,
+			buttons: {
+				Ok: function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+	}
 }
 function deleteChat(fileName) {
 		var ref = $('#jsTreeChat').jstree(true),

@@ -1,7 +1,7 @@
 var oldTheme = '';
 
 $(document).ready(function() {
-    
+
     
     var themelist = require("ace/ext/themelist");
 	var aceThemes = themelist.themesByName; //object hash of theme objects by name
@@ -20,6 +20,7 @@ $(document).ready(function() {
 	    
 	  }
 	}
+	
 	
 	$('.themeEntry').mouseover(function() {
 		//SAVE OLD THEME HERE
@@ -93,6 +94,10 @@ function numWindowPanes() {
     return ($('.windowPane').length);
 }
 
+function numTabBar() {
+    return ($('.tabBar').length);
+}
+
 function resizePanes(layout) {
     if (layout == '3pane1') {
         // blah blah
@@ -101,9 +106,11 @@ function resizePanes(layout) {
 
 function waitForWindowPane(conditions, callback, callBackVar) {
     setTimeout(function() {
-        if (numWindowPanes() >= conditions) {
+        if ((numWindowPanes() == conditions) && (numTabBar() == conditions)) {
             if (callback != null) {
-                callback(callBackVar);
+            	setTimeout(function() {
+                	callback(callBackVar);
+            	}, 200);
             }
             return;
         }
@@ -111,7 +118,7 @@ function waitForWindowPane(conditions, callback, callBackVar) {
             console.log("WAITING: " + numWindowPanes() + " UNTIL " + conditions)
             waitForWindowPane(conditions, callback, callBackVar);
         }
-    }, 50); // wait 10ms for the connection...
+    }, 100); // wait 10ms for the connection...
 }
 
 
@@ -144,11 +151,11 @@ function arrangePanes(paneFormat) {
 		*/
 
 		maximizePane($(".windowPane").eq(0).attr("id"));
-		
+
 	}
 	else if (paneFormat == "2a") { //2 Panes side by side
 
-		//setTimeout(function(){  //this is how REAL optimization is done! Take notes!
+		//setTimeout(function(){
 			theWindowPane.css("display", "block");
 			currentWindow = theWindowPane.eq(0);
 			currentWindow.css({top: 0, left: 0, position:'absolute'});
@@ -171,17 +178,17 @@ function arrangePanes(paneFormat) {
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width() - 7);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width() - 7);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -195,25 +202,25 @@ function arrangePanes(paneFormat) {
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height() - 12);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -226,25 +233,25 @@ function arrangePanes(paneFormat) {
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 10);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height() - 12);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -257,25 +264,25 @@ function arrangePanes(paneFormat) {
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height(($(".windowPane").parent("div").height() * 2)/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height(($(".windowPane").parent("div").height()*2)/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width() - 15);
+			currentWindow.css({top: ($(".windowPane").parent("div").height()*2)/3, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width() - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -287,25 +294,25 @@ function arrangePanes(paneFormat) {
 		//setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width() - 10);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width() - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: ($(".windowPane").parent("div").height())/3, left: 0, position:'absolute'});
+			currentWindow.height(($(".windowPane").parent("div").height()*2)/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: ($(".windowPane").parent("div").height())/3, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height(($(".windowPane").parent("div").height()*2)/3 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -318,33 +325,33 @@ function arrangePanes(paneFormat) {
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 			
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(3);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -357,41 +364,41 @@ function arrangePanes(paneFormat) {
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()*.4, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(3);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.4 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: $(".windowPane").parent("div").width()*.4, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(4);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.8 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height() - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.2 - 20);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()*.8, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -405,41 +412,41 @@ function arrangePanes(paneFormat) {
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height() - 12);
-			currentWindow.width($(".windowPane").parent("div").width()*.2 - 20);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height() - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()*.2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()*.6, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(3);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: $(".windowPane").parent("div").width()*.2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(4);
-			currentWindow.css({top: $(".windowPane").parent("div").height()/2 + 10, left: $(".windowPane").parent("div").width()*.6 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()/2 - 15);
-			currentWindow.width($(".windowPane").parent("div").width()*.4 - 20);
+			currentWindow.css({top: $(".windowPane").parent("div").height()/2, left: $(".windowPane").parent("div").width()*.6, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()/2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()*.4 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
@@ -453,41 +460,41 @@ function arrangePanes(paneFormat) {
 	//	setTimeout(function(){ 
 			$(".windowPane").css("display", "block");
 			currentWindow = theWindowPane.eq(0);
-			currentWindow.css({top: 5, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(1);
-			currentWindow.css({top: 5, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: 0, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(2);
-			currentWindow.css({top: $(".windowPane").parent("div").height()*.4 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.4, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(3);
-			currentWindow.css({top: $(".windowPane").parent("div").height()*.4 + 10, left: $(".windowPane").parent("div").width()/2 + 10, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()*.4 - 20);
-			currentWindow.width($(".windowPane").parent("div").width()/2 - 15);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.4, left: $(".windowPane").parent("div").width()/2, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.4 - 5);
+			currentWindow.width($(".windowPane").parent("div").width()/2 - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());
 
 			currentWindow = theWindowPane.eq(4);
-			currentWindow.css({top: $(".windowPane").parent("div").height()*.8 + 10, left: 5, position:'absolute'});
-			currentWindow.height($(".windowPane").parent("div").height()*.2 - 10);
-			currentWindow.width($(".windowPane").parent("div").width() - 12);
+			currentWindow.css({top: $(".windowPane").parent("div").height()*.8, left: 0, position:'absolute'});
+			currentWindow.height($(".windowPane").parent("div").height()*.2 - 5);
+			currentWindow.width($(".windowPane").parent("div").width() - 5);
 			currentWindow.resizable("enable");
 			checkTerminalSizes(currentWindow.attr("id"));
 			reportPanePosition (currentWindow.attr("id"), currentWindow.position().left, currentWindow.position().top, currentWindow.width(), currentWindow.height());

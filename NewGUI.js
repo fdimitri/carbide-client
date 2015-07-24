@@ -5,27 +5,108 @@ var deletedPanes = 0;
 var clickedElement = "";
 var lastFocusedPane = "";
 var currentTheme = "ace/theme/vibrant_ink";
+var rightBarOpen = 1; //the right bar is open by default (user box area) 0 = closed, 2 = expand arrow only
+var paneCounter = 0;
 
+////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
 
+$(document).ready(function() {
+	
 
-$(document).on('keydown', function(e) {
-
-
-	// if (e.altKey && (String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R')) { //ALT-R keypress
-	// 	console.log("keydown acknowledged")
-	// }
-});
-
-
-
-function triggerPaneResizes() {
-    $(".maximizedPane").each(function() {
-			console.log("found a maximized pane to resize");
-			maximizePane($(this).attr("id"));
+	$(document).on('keydown', function(e) {
+	
+	
+		if (e.altKey && (String.fromCharCode(e.which) === 'w' || String.fromCharCode(e.which) === 'W')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			options['speed'] = .4;
+			updateConnectionStatus(options);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'q' || String.fromCharCode(e.which) === 'Q')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			options['speed'] = 1;
+			updateConnectionStatus(options);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'a' || String.fromCharCode(e.which) === 'A')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			options['speed'] = 0;
+			options['reconnect'] = 0;
+			updateConnectionStatus(options);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'm' || String.fromCharCode(e.which) === 'M')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			var testVar = Math.floor((Math.random() * 1000) + 1);
+			var test2 = Math.floor((Math.random() * 1000) + 1);
+			addConnectedUser(testVar, 'Dummy' + testVar, 'test.html', '/src/proj/test.html', 'file', test2);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'n' || String.fromCharCode(e.which) === 'N')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			var testVar = $('.projectUserBox').last().attr("uid");
+			removeConnectedUser(testVar);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'b' || String.fromCharCode(e.which) === 'B')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			options['showLines'] = true;
+			options['linesHour'] = Math.floor((Math.random() * 10) + 1);
+			options['linesDay'] = Math.floor((Math.random() * 100) + 1);
+			options['linesProj'] = Math.floor((Math.random() * 10) + 1);
+			
+			var testVar = $('.projectUserBox').last().attr("uid");
+			var test2 = Math.floor((Math.random() * 1000) + 1);
+			var testVar2 = parseInt(testVar) + Math.floor((Math.random() * 10) + 1);
+			console.log("renaming user id " + testVar + " to " + "Dummy" + testVar2);
+			updateConnectedUser(testVar, '', 'NST.xml', '/bogus/src/path/NEWST.xml', 'terminal', '', options);
+		}
+		if (e.altKey && (String.fromCharCode(e.which) === 'v' || String.fromCharCode(e.which) === 'V')) { //ALT keypress
+			console.log("keydown acknowledged");
+			var options = [];
+			options['showLines'] = true;
+			options['linesHour'] = Math.floor((Math.random() * 10) + 1);
+			options['linesDay'] = Math.floor((Math.random() * 100) + 1);
+			options['linesProj'] = Math.floor((Math.random() * 10) + 1);
+			
+			var testVar = $('.projectUserBox').last().attr("uid");
+			var test2 = Math.floor((Math.random() * 1000) + 1);
+			var testVar2 = parseInt(testVar) + Math.floor((Math.random() * 10) + 1);
+			console.log("renaming user id " + testVar + " to " + "Dummy" + testVar2);
+			updateConnectedUser(testVar, '', 'oldtestlongfilenameyeah.css', '/new/src/path/oldtest.css', 'file', testVar2, options);
+		}
 	});
-}
+});
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-$(function() {
+
+
+
+
+
+
+
+		
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+$(document).ready(function() {
+	
+
+	createNewPane();
+	resetSizes();
 	$("#toolBarSide").resizable({
 		resize: function() {
 			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
@@ -42,98 +123,20 @@ $(function() {
 
 	$(document).on('resize', function() {
 		
-		console.log($(document).height());
+		//console.log($(document).height());
 	});
-	$(window).trigger('resize');
-});
-
-function removeAddTabButton(paneId) {
-		$('#' + paneId).find(".addNewTab").remove();
-		$('#' + paneId).find(".addTabAria").remove();
-}
-
-function appendAddTabButton(paneId) {
-		var numToInsert = paneId.replace(/\D/g, ''); //strip everything but numbers, get the pane id number
-		var newLi = '<li class="addNewTab"><a href="#addTab' + numToInsert + '"><span class="ui-icon ui-icon-folder-open"></span><p class="addTabText">+Add Tab</p></a></li>';
-		var newAriaDiv = '<div id="addTab' + numToInsert + '" class="addTabAria"><p class="addTabIntro">Drag a file onto the tab bar above, or click the "Add Tab" button to get started. The contents will appear here. You can add any type of content to this window pane. Files, Chats, Video; whatever you\'ve got.</p></div>';
-		$("#" + paneId).find(".menuList").append(newLi);
-		$("#" + paneId).find(".tabBar").append(newAriaDiv);
-
-}
-
-function resetSizes(suppressArrangePanes) {
-	var pos = $("#windows").offset();
-	console.log("Windows position:");
-	console.log(pos);
-	$("#editorContainer").height(
-		$(window).height() -
-		$("#topBar").height());
-	$("#editorContainer").width($(window).width());
-
-
-	$("#toolBarSide").height($(window).height() - 10);
-	var te = $("#toolBarSide ul");
-	var rw = $("#rightWindow");
-	var wd = $("#windows");
-	var rwWidth = $("#toolBarSide").outerWidth() + 21;
-	te.width($("#toolBarSide").height() - 2);
-	console.log("Resize event setting #rightWindow left to " + rwWidth)
-	rw.css("left", rwWidth);
-	//rw.css("left", 0);
-	rw.css("width", $(window).width() - rwWidth - 20);
-	rw.css("height", $(window).height() - rw.position()['top']);
-
-	wd.css("width", rw.width());
-	wd.css("height", rw.height());
-	if (suppressArrangePanes != 1) {
-		arrangePanes(lastPaneFormat);
-	}
-	$("body").css({
-		maxHeight: $(window).height()
+	
+	$(window).trigger('resize'); //trigger resize event
+	
+	$(window).resize(function() { //on resize event reset all sizes
+		resetSizes();
 	});
-	$("body").css("overflow", "hidden");
-
-	$(".maximizedPane").height($(".maximizedPane").parent().height() - 10);
-	$(".maximizedPane").width($(".maximizedPane").parent().width() - 10);
-	triggerPaneResizes();
-	$(".windowPane").each(function() { //check each window pane to see if has become too big for the window.
-		if (!$(this).hasClass("maximizedPane")) { //don't adjust maximized panes
-			var maxWidth = $(this).parent("#windows").width();
-			var maxHeight = $(this).parent("#windows").height();
-			//if this pane has become bigger than the maximum width/height due to window resizing, shrink it
-			console.log("MAX " + maxWidth + " " + maxHeight)
-			if ($(this).width() > maxWidth) {
-
-				$(this).width(maxWidth - 10);
-				$(this).css({left: 0, position:'absolute'});
-			}
-			if ($(this).height() > maxHeight) {
-
-				$(this).height(maxHeight - 10);
-				$(this).css({top: 0, position:'absolute'});
-			}
-		}
-	});
-
-
-}
-
-
-
-$(document).ready(function() {
-	resetSizes();
-	$(window).trigger('resize');
-});
-
-$(window).resize(function() {
-	resetSizes();
-});
-
-
-$(
-	function() {
-
-		$('body').mousedown(function(event) { //keep track of when the mouse goes down on buttons so dragging can be disabled
+	
+	$( "#userBar" ).sortable({
+			//put sortable options here
+    });
+	
+	$('body').mousedown(function(event) { //keep track of when the mouse goes down on buttons so dragging can be disabled
 			if ($(event.target).is('.paneMaximize') || $(event.target).is('.paneRestore') || $(event.target).is('.paneMinimize') || $(event.target).is('.paneClose')) {
 				clickedElement = "paneButton";
 			}
@@ -276,8 +279,21 @@ $(
 			      modal: true,
 			      width: 475,
 			      height: 510,
+			      open: function() {
+				      $(this).parents('.ui-dialog-buttonpane button:eq(0)').focus(); 
+				  },
 			      buttons: {
 			        Ok: function() {
+			        	var node = $('#miniFileTree').jstree(true).get_selected(true); //currently selected node in the file tree
+						for (var i=0; i < node.length; i = i+1) {
+							var thisNode = node[i]; //only duplicate one file
+							var fileName = thisNode.text;
+							var srcPath = thisNode.li_attr.srcPath;
+							console.log(fileName);
+							
+							newTab(thisNode.text, $(".activePane .tabBar").attr('id'), thisNode.id, thisNode.type, thisNode.li_attr.srcPath);
+							
+						}
 			          $(this).dialog( "close" );
 			        },
 			        Cancel: function() {
@@ -287,7 +303,9 @@ $(
 			      }
 			    });
 			}
-			
+			if ($(event.target).closest('#dialog-info').length > 0) { //if there is a dialog open, focus on the ok button whenever they click on the dialog
+				$(event.target).closest('.ui-dialog').find('.ui-dialog-buttonpane button:eq(0)').focus(); 
+			}
 
 
 			if ($(event.target).closest(".windowPane").length > 0) { //when a pane is clicked, make it the active pane
@@ -309,11 +327,296 @@ $(
 				}
 			}
 		});
+	
+	// var left = $("#leftBar").width() + $("#toolBarSide").width();
+	// var screenWidth = $('body').width();
+	// console.log("Setting new width to " + (screenWidth - (left + 24)));
+	// $("#rightWindow").width(screenWidth - left - 224);
+	// $("#rightWindow").offset({
+	// 	'left': left + 224,
+	// 	'top': '64'
+	// });
 
+	
+	var statusJSON = {
+		"commandSet": "FileTree",
+		"command": "getFileTreeJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getChatListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getTermListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
+	// var statusJSON = {
+	// 	"commandSet": "base",
+	// 	"command": "getChatTreeJSON",
+	// }; 
+	// wsSendMsg(JSON.stringify(statusJSON));
+
+	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
+//		var fileExt = myFileName.match(/\.\w+$/);
+		var modelist = require("ace/ext/modelist");
+		var mode = modelist.getModeForPath(myFileName).mode;
+		console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
+		console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
+		console.log($(mySelector));
+		$(mySelector).each(
+			function() {
+				var editor = ace.edit(mySelector.replace(/\#/, ''));
+				$(mySelector).ace = editor;
+				$(editor).attr('srcPath', $(mySelector).attr('srcPath'));
+				require("ace/ext/statusbar").StatusBar;
+				editor.session.setMode(mode);
+				var lt = require("ace/ext/language_tools");
+				console.log("Language tools:");
+				console.log(lt);
+				
+				// create a simple selection status indicator
+				//var statusBar = new StatusBar(editor, $(statusBar));
+				$(editor).attr('ignore', 'FALSE');
+				editor.setTheme(currentTheme);
+    // enable autocompletion and snippets
+				editor.setOptions({
+					enableBasicAutocompletion: true,
+					enableSnippets: true,
+					enableLiveAutocompletion: true,
+				});				
+				console.log(editor);
+				var statusJSON = {
+					"commandSet": "document",
+					"command": "getContents",
+					"targetDocument": $(editor).attr('srcPath'),
+					"getContents": {
+						"document": $(editor).attr('srcPath'),
+					},
+				};
+				console.log("The pre should still exist right now..");
+				console.log($(mySelector));
+
+				wsSendMsg(JSON.stringify(statusJSON));
+
+				editor.getSession().on("change", function(e) {
+					//console.log("Change on editor");
+					//console.log(editor);
+					//console.log(e);
+					$.fn.aceChange(editor, e);
+				});
+			}
+		);
+	};
+	
+	$.fn.aceChange = function(editor, e) {
+		console.log(e);
+		if ($(editor).attr('ignore') == 'TRUE') return;
+		var action = e.data.action;
+		if (action == 'insertText') {
+			var startChar = e.data.range.start.column;
+			var startLine = e.data.range.start.row;
+			var text = e.data.text;
+			var statusJSON = {
+				"commandSet": "document",
+				"command": "insertDataSingleLine",
+				"document": $(editor).attr('srcPath'),
+				"sourceEditor": $(editor).attr('id'),
+				"insertDataSingleLine": {
+					"type": "input",
+					"ch": startChar,
+					"line": startLine,
+					"data": text,
+				}
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+		}
+		if (action == 'removeText') {
+			var startChar = e.data.range.start.column;
+			var startLine = e.data.range.start.row;
+			var text = e.data.text;
+			var statusJSON = {
+				"commandSet": "document",
+				"command": "deleteDataSingleLine",
+				"document": $(editor).attr('srcPath'),
+				"sourceEditor": $(editor).attr('id'),
+				"deleteDataSingleLine": {
+					"type": "input",
+					"ch": startChar,
+					"line": startLine,
+					"data": text,
+				},
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+		}
+		if (action == 'insertLines') {
+			var startChar = e.data.range.start.column;
+			var startLine = e.data.range.start.row;
+			var endChar = e.data.range.end.column;
+			var endLine = e.data.range.end.row;
+			var linesChanged = e.data.lines;
+			var statusJSON = {
+				"commandSet": "document",
+				"command": "insertDataMultiLine",
+				"document": $(editor).attr('srcPath'),
+				"sourceEditor": $(editor).attr('id'),
+				"insertDataMultiLine": {
+					"type": "input",
+					"startChar": startChar,
+					"startLine": startLine,
+					"endChar": endChar,
+					"endLine": endLine,
+					"data": linesChanged,
+				}
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+
+		}
+		if (action == 'removeLines') {
+			var startChar = e.data.range.start.column;
+			var startLine = e.data.range.start.row;
+			var endChar = e.data.range.end.column;
+			var endLine = e.data.range.end.row;
+			var linesChanged = JSON.stringify(e.data.lines);
+			var statusJSON = {
+				"commandSet": "document",
+				"command": "deleteDataMultiLine",
+				"document": $(editor).attr('srcPath'),
+				"sourceEditor": $(editor).attr('id'),
+				"deleteDataMultiLine": {
+					"type": "input",
+					"startLine": startLine,
+					"endLine": endLine,
+					"startChar": startChar,
+					"endChar": endChar,
+					"lines": linesChanged,
+				}
+			};
+			wsSendMsg(JSON.stringify(statusJSON));
+			console.log(statusJSON);
+		}
+
+		// e.type, etc
 	}
-);
 
-/////////////////////////////////////////////////////		
+
+
+
+
+});
+
+
+function createNewPane() {
+	paneCounter++;
+	var MyObject = [{
+		'paneCounter': paneCounter,
+		'delPanes': deletedPanes,
+	}, ];
+
+	$.ajax({
+		url: "/createPane.php",
+		type: 'post',
+		data: {
+			jsonSend: JSON.stringify(MyObject),
+		},
+		datatype: 'json',
+		success: function(data) {
+			var result = JSON.parse(data);
+			if (result.success === false) {
+				console.log(result['failReasons']);
+				return;
+			}
+			if (result.html) {
+				console.log("Appending HTML..");
+				var html_result = result.html;
+				$("#windows").append(html_result);
+			}
+			if (result.script) {
+				eval(result.script);
+			}
+			if (result.paneId) {
+
+				
+				
+				//send a message to the server to let it know that we've created a new pane
+				var statusJSON = {
+						"commandSet": "client",
+						"command": "paneOpen",
+						"paneOpen" : {
+							"paneId" : result.paneId.replace('#',''),
+						},
+						
+				};
+				wsSendMsg(JSON.stringify(statusJSON));
+
+
+				if (result.paneId != "#pane01") {
+					var interval_id = setInterval(function(){
+				     
+				     if($(result.paneId).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         //
+				         focusPane(result.paneId);
+				         var newY = $(result.paneId).parent().height() / 2 - $(result.paneId).height() / 2;
+						 var newX = $(result.paneId).parent().width() / 2 - $(result.paneId).width() / 2 - $("#toolBarSide").width() - $("#leftBar").width();
+						 $(result.paneId).css({
+							top: newY,
+							left: newX,
+							position: 'absolute'
+						 });
+						 $(result.paneId).attr("oldx", $(result.paneId).position().left);
+						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
+				      }
+					}, 10);
+					
+				}
+				else {
+				
+					var interval_id = setInterval(function(){
+				     
+				     if($(result.paneId).length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         //
+				         focusPane(result.paneId);
+				         maximizePane("pane01");
+					 	 $('#pane01').attr('oldheight', ($('#pane01').height() / 2 ));
+					 	 $('#pane01').attr('oldwidth', ($('#pane01').width() / 2 ));
+					 	 $(result.paneId).attr("oldx", $(result.paneId).position().left);
+						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
+				      }
+					}, 10);
+					
+
+				}
+			}
+			$(result.paneId).addClass("activePane");
+			console.log("Successfully loaded data for new pane");
+			$(result.paneId).attr("oldx", $(result.paneId).position().left); //these attributes are used if a pane is restored
+			$(result.paneId).attr("oldy", $(result.paneId).position().top);
+			$(result.paneId).attr("oldheight", $(result.paneId).height());
+			$(result.paneId).attr("oldwidth", $(result.paneId).width());
+
+
+		},
+		error: function(data, error, xqhr) {
+			console.log("Error creating new pane: " + data);
+			console.log("Error creating new pane: " + error);
+			console.log("Error creating new pane: " + xqhr);
+			return false;
+		},
+	});
+}
+
+
 function closeTab(tab) {
 					var thisLi = tab.parents("li");
 
@@ -495,9 +798,10 @@ function maximizePane(paneId) {
 	thisPane.css("display", "block");
 	thisPane.height(thisPane.parent().height() - 25);
 	thisPane.width(thisPane.parent().width() - 10);
-	
+	console.log("REPORTING " + thisPane.find('.menuList').children('li').length);
+	thisPane.find('.menuList').children('li').removeClass('activeTab');
+	thisPane.find('.menuList').children('li').last().addClass('activeTab');
 	checkTerminalSizes(paneId);
-	
 	thisPane.resizable("disable");
 
 	var statusJSON = {
@@ -694,6 +998,7 @@ function closePane(paneId) {
 	$("div .windowPane").each(function() { //check every window pane for higher numbered panes and reduce their name by 1
 		var thisNumber = $(this).find(".paneTitle").text();
 		thisNumber = parseInt(thisNumber.match(/\d+/)[0]);
+		console.log("REDUCING PANE " + thisNumber);
 		if (thisNumber > paneNumber) { //process the current pane if it was numbered higher than the original pane
 			var newNumber = thisNumber - 1;
 			var s1 = newNumber + ""; //turn the number into a string to add leading zeros to numbers less than 10
@@ -727,6 +1032,8 @@ function closePane(paneId) {
 
 			var paneSearch = "Pane " + s2; //we search the window pane tabs, copy the icon box, and insert the new name where appropriate
 			var foundPane = $("div .windowPaneTab[panetitle='" + paneSearch + "']");
+			console.log(foundPane);
+			console.log(foundPane.children(".windowPaneTabIcons"))
 			var windowPaneBox = foundPane.children(".windowPaneTabIcons").get(0).outerHTML; //this is the icon box
 			foundPane.empty().append("Pane " + s1 + windowPaneBox); //add the new name and the new icon box
 			foundPane.attr("panetitle", "Pane " + s1); //update the pane title attribute which is used for searching
@@ -944,305 +1251,6 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 
 }
 
-var paneCounter = 0;
-createNewPane();
-
-
-
-function createNewPane() {
-	paneCounter++;
-	var MyObject = [{
-		'paneCounter': paneCounter,
-		'delPanes': deletedPanes,
-	}, ];
-
-	$.ajax({
-		url: "/createPane.php",
-		type: 'post',
-		data: {
-			jsonSend: JSON.stringify(MyObject),
-		},
-		datatype: 'json',
-		success: function(data) {
-			var result = JSON.parse(data);
-			if (result.success === false) {
-				console.log(result['failReasons']);
-				return;
-			}
-			if (result.html) {
-				console.log("Appending HTML..");
-				var html_result = result.html;
-				$("#windows").append(html_result);
-			}
-			if (result.script) {
-				eval(result.script);
-			}
-			if (result.paneId) {
-
-				
-				
-				//send a message to the server to let it know that we've created a new pane
-				var statusJSON = {
-						"commandSet": "client",
-						"command": "paneOpen",
-						"paneOpen" : {
-							"paneId" : result.paneId.replace('#',''),
-						},
-						
-				};
-				wsSendMsg(JSON.stringify(statusJSON));
-
-
-				if (result.paneId != "#pane01") {
-					var interval_id = setInterval(function(){
-				     
-				     if($(result.paneId).length != 0){
-				         // "exit" the interval loop with clearInterval command
-				         clearInterval(interval_id);
-				         //
-				         focusPane(result.paneId);
-				         var newY = $(result.paneId).parent().height() / 2 - $(result.paneId).height() / 2;
-						 var newX = $(result.paneId).parent().width() / 2 - $(result.paneId).width() / 2 - $("#toolBarSide").width() - $("#leftBar").width();
-						 $(result.paneId).css({
-							top: newY,
-							left: newX,
-							position: 'absolute'
-						 });
-						 $(result.paneId).attr("oldx", $(result.paneId).position().left);
-						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
-				      }
-					}, 10);
-					
-				}
-				else {
-				
-					var interval_id = setInterval(function(){
-				     
-				     if($(result.paneId).length != 0){
-				         // "exit" the interval loop with clearInterval command
-				         clearInterval(interval_id);
-				         //
-				         focusPane(result.paneId);
-				         maximizePane("pane01");
-					 	 $('#pane01').attr('oldheight', ($('#pane01').height() / 2 ));
-					 	 $('#pane01').attr('oldwidth', ($('#pane01').width() / 2 ));
-					 	 $(result.paneId).attr("oldx", $(result.paneId).position().left);
-						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
-				      }
-					}, 10);
-					
-
-				}
-			}
-			$(result.paneId).addClass("activePane");
-			console.log("Successfully loaded data for new pane");
-			$(result.paneId).attr("oldx", $(result.paneId).position().left); //these attributes are used if a pane is restored
-			$(result.paneId).attr("oldy", $(result.paneId).position().top);
-			$(result.paneId).attr("oldheight", $(result.paneId).height());
-			$(result.paneId).attr("oldwidth", $(result.paneId).width());
-
-
-		},
-		error: function(data, error, xqhr) {
-			console.log("Error creating new pane: " + data);
-			console.log("Error creating new pane: " + error);
-			console.log("Error creating new pane: " + xqhr);
-			return false;
-		},
-	});
-}
-
-
-
-
-$(document).ready(function() {
-	
-
-	// var left = $("#leftBar").width() + $("#toolBarSide").width();
-	// var screenWidth = $('body').width();
-	// console.log("Setting new width to " + (screenWidth - (left + 24)));
-	// $("#rightWindow").width(screenWidth - left - 224);
-	// $("#rightWindow").offset({
-	// 	'left': left + 224,
-	// 	'top': '64'
-	// });
-
-	
-	var statusJSON = {
-		"commandSet": "FileTree",
-		"command": "getFileTreeJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
-	var statusJSON = {
-		"commandSet": "base",
-		"command": "getChatListJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
-
-	var statusJSON = {
-		"commandSet": "base",
-		"command": "getTermListJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
-
-	// var statusJSON = {
-	// 	"commandSet": "base",
-	// 	"command": "getChatTreeJSON",
-	// }; 
-	// wsSendMsg(JSON.stringify(statusJSON));
-
-	$.fn.buildAce = function(mySelector, myFileName, statusBar) {
-//		var fileExt = myFileName.match(/\.\w+$/);
-		var modelist = require("ace/ext/modelist");
-		var mode = modelist.getModeForPath(myFileName).mode;
-		console.log("buildAce called with mySelector: " + mySelector + " and myFileName: " + myFileName);
-		console.log("buildAce Calaculated ace.edit() call: " + mySelector.replace(/\#/, ''));
-		console.log($(mySelector));
-		$(mySelector).each(
-			function() {
-				var editor = ace.edit(mySelector.replace(/\#/, ''));
-				$(mySelector).ace = editor;
-				$(editor).attr('srcPath', $(mySelector).attr('srcPath'));
-				require("ace/ext/statusbar").StatusBar;
-				editor.session.setMode(mode);
-				var lt = require("ace/ext/language_tools");
-				console.log("Language tools:");
-				console.log(lt);
-				
-				// create a simple selection status indicator
-				//var statusBar = new StatusBar(editor, $(statusBar));
-				$(editor).attr('ignore', 'FALSE');
-				editor.setTheme(currentTheme);
-    // enable autocompletion and snippets
-				editor.setOptions({
-					enableBasicAutocompletion: true,
-					enableSnippets: true,
-					enableLiveAutocompletion: true,
-				});				
-				console.log(editor);
-				var statusJSON = {
-					"commandSet": "document",
-					"command": "getContents",
-					"targetDocument": $(editor).attr('srcPath'),
-					"getContents": {
-						"document": $(editor).attr('srcPath'),
-					},
-				};
-				console.log("The pre should still exist right now..");
-				console.log($(mySelector));
-
-				wsSendMsg(JSON.stringify(statusJSON));
-
-				editor.getSession().on("change", function(e) {
-					//console.log("Change on editor");
-					//console.log(editor);
-					//console.log(e);
-					$.fn.aceChange(editor, e);
-				});
-			}
-		);
-	};
-	
-	$.fn.aceChange = function(editor, e) {
-		console.log(e);
-		if ($(editor).attr('ignore') == 'TRUE') return;
-		var action = e.data.action;
-		if (action == 'insertText') {
-			var startChar = e.data.range.start.column;
-			var startLine = e.data.range.start.row;
-			var text = e.data.text;
-			var statusJSON = {
-				"commandSet": "document",
-				"command": "insertDataSingleLine",
-				"document": $(editor).attr('srcPath'),
-				"sourceEditor": $(editor).attr('id'),
-				"insertDataSingleLine": {
-					"type": "input",
-					"ch": startChar,
-					"line": startLine,
-					"data": text,
-				}
-			};
-			wsSendMsg(JSON.stringify(statusJSON));
-			console.log(statusJSON);
-		}
-		if (action == 'removeText') {
-			var startChar = e.data.range.start.column;
-			var startLine = e.data.range.start.row;
-			var text = e.data.text;
-			var statusJSON = {
-				"commandSet": "document",
-				"command": "deleteDataSingleLine",
-				"document": $(editor).attr('srcPath'),
-				"sourceEditor": $(editor).attr('id'),
-				"deleteDataSingleLine": {
-					"type": "input",
-					"ch": startChar,
-					"line": startLine,
-					"data": text,
-				},
-			};
-			wsSendMsg(JSON.stringify(statusJSON));
-			console.log(statusJSON);
-		}
-		if (action == 'insertLines') {
-			var startChar = e.data.range.start.column;
-			var startLine = e.data.range.start.row;
-			var endChar = e.data.range.end.column;
-			var endLine = e.data.range.end.row;
-			var linesChanged = e.data.lines;
-			var statusJSON = {
-				"commandSet": "document",
-				"command": "insertDataMultiLine",
-				"document": $(editor).attr('srcPath'),
-				"sourceEditor": $(editor).attr('id'),
-				"insertDataMultiLine": {
-					"type": "input",
-					"startChar": startChar,
-					"startLine": startLine,
-					"endChar": endChar,
-					"endLine": endLine,
-					"data": linesChanged,
-				}
-			};
-			wsSendMsg(JSON.stringify(statusJSON));
-			console.log(statusJSON);
-
-		}
-		if (action == 'removeLines') {
-			var startChar = e.data.range.start.column;
-			var startLine = e.data.range.start.row;
-			var endChar = e.data.range.end.column;
-			var endLine = e.data.range.end.row;
-			var linesChanged = JSON.stringify(e.data.lines);
-			var statusJSON = {
-				"commandSet": "document",
-				"command": "deleteDataMultiLine",
-				"document": $(editor).attr('srcPath'),
-				"sourceEditor": $(editor).attr('id'),
-				"deleteDataMultiLine": {
-					"type": "input",
-					"startLine": startLine,
-					"endLine": endLine,
-					"startChar": startChar,
-					"endChar": endChar,
-					"lines": linesChanged,
-				}
-			};
-			wsSendMsg(JSON.stringify(statusJSON));
-			console.log(statusJSON);
-		}
-
-		// e.type, etc
-	}
-
-
-
-
-
-});
-
-
 function moveTab(receiver, sender, tab) {
 
 
@@ -1350,9 +1358,91 @@ function moveTab(receiver, sender, tab) {
 	$("#" + paneId).find(".tabBar").tabs("option", "active", -1);
 	$("#" + sentPaneId).find(".tabBar").tabs("option", "active", -1);
 	$(".tabBar").tabs("refresh");
+	checkTerminalSizes(paneId);
 
 }
 
+function triggerPaneResizes() {
+    $(".maximizedPane").each(function() {
+			console.log("found a maximized pane to resize");
+			maximizePane($(this).attr("id"));
+	});
+}
+function removeAddTabButton(paneId) {
+		$('#' + paneId).find(".addNewTab").remove();
+		$('#' + paneId).find(".addTabAria").remove();
+}
+
+function appendAddTabButton(paneId) {
+		var numToInsert = paneId.replace(/\D/g, ''); //strip everything but numbers, get the pane id number
+		var newLi = '<li class="addNewTab"><a href="#addTab' + numToInsert + '"><span class="ui-icon ui-icon-folder-open"></span><p class="addTabText">+Add Tab</p></a></li>';
+		var newAriaDiv = '<div id="addTab' + numToInsert + '" class="addTabAria"><p class="addTabIntro">Drag a file onto the tab bar above, or click the "Add Tab" button to get started. The contents will appear here. You can add any type of content to this window pane. Files, Chats, Video; whatever you\'ve got.</p></div>';
+		$("#" + paneId).find(".menuList").append(newLi);
+		$("#" + paneId).find(".tabBar").append(newAriaDiv);
+
+}
+
+function resetSizes(suppressArrangePanes) {
+	var pos = $("#windows").offset();
+	console.log("Windows position:");
+	console.log(pos);
+	$("#editorContainer").height(
+		$(window).height() -
+		$("#topBar").height());
+	$("#editorContainer").width($(window).width());
 
 
+	$("#toolBarSide").height($(window).height() - 10);
+	var te = $("#toolBarSide ul");
+	var rw = $("#rightWindow");
+	var wd = $("#windows");
+	var rwWidth = $("#toolBarSide").outerWidth() + 21;
+	te.width($("#toolBarSide").height() - 2);
+	console.log("Resize event setting #rightWindow left to " + rwWidth)
+	rw.css("left", rwWidth);
+	//rw.css("left", 0);
+	if (rightBarOpen == 0) { //no right bar at all
+		rw.css("width", $(window).width() - rwWidth - 20);
+	}
+	else if (rightBarOpen == 1) { //full right bar
+		rw.css("width", $(window).width() - rwWidth - 155); //extra room for the right bar
+	}
+	else if (rightBarOpen == 2) { //mini right bar: expand arrow only
+		rw.css("width", $(window).width() - rwWidth - 40); //20 px allocated for the arrow
+	}
+	rw.css("height", $(window).height() - rw.position()['top']);
 
+	wd.css("width", rw.width());
+	wd.css("height", rw.height());
+	if (suppressArrangePanes != 1) {
+		arrangePanes(lastPaneFormat);
+	}
+	$("body").css({
+		maxHeight: $(window).height()
+	});
+	$("body").css("overflow", "hidden");
+
+	$(".maximizedPane").height($(".maximizedPane").parent().height() - 10);
+	$(".maximizedPane").width($(".maximizedPane").parent().width() - 10);
+	triggerPaneResizes();
+	$(".windowPane").each(function() { //check each window pane to see if has become too big for the window.
+		if (!$(this).hasClass("maximizedPane")) { //don't adjust maximized panes
+			var maxWidth = $(this).parent("#windows").width();
+			var maxHeight = $(this).parent("#windows").height();
+			//if this pane has become bigger than the maximum width/height due to window resizing, shrink it
+			console.log("MAX " + maxWidth + " " + maxHeight)
+			if ($(this).width() > maxWidth) {
+
+				$(this).width(maxWidth - 10);
+				$(this).css({left: 0, position:'absolute'});
+			}
+			if ($(this).height() > maxHeight) {
+
+				$(this).height(maxHeight - 10);
+				$(this).css({top: 0, position:'absolute'});
+			}
+		}
+	});
+
+
+}
