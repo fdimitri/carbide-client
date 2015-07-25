@@ -752,3 +752,8 @@ margin-left: 20px;
 .projectUserBox {
 	word-wrap: break-word;
 }
+.userFileLink {
+	text-decoration: underline;
+	color:rgba(0,0,140,1.0);
+	cursor: pointer;
+}

@@ -40,7 +40,7 @@ $(document).ready(function() {
 			var options = [];
 			var testVar = Math.floor((Math.random() * 1000) + 1);
 			var test2 = Math.floor((Math.random() * 1000) + 1);
-			addConnectedUser(testVar, 'Dummy' + testVar, 'test.html', '/src/proj/test.html', 'file', test2);
+			addConnectedUser(testVar, 'Dummy' + testVar, 'test.js', '/test.js', 'file', test2);
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'n' || String.fromCharCode(e.which) === 'N')) { //ALT keypress
 			console.log("keydown acknowledged");
@@ -60,7 +60,7 @@ $(document).ready(function() {
 			var test2 = Math.floor((Math.random() * 1000) + 1);
 			var testVar2 = parseInt(testVar) + Math.floor((Math.random() * 10) + 1);
 			console.log("renaming user id " + testVar + " to " + "Dummy" + testVar2);
-			updateConnectedUser(testVar, '', 'NST.xml', '/bogus/src/path/NEWST.xml', 'terminal', '', options);
+			updateConnectedUser(testVar, '', 'testterm', '', 'terminal', '', options);
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'v' || String.fromCharCode(e.which) === 'V')) { //ALT keypress
 			console.log("keydown acknowledged");
@@ -135,6 +135,26 @@ $(document).ready(function() {
 	$( "#userBar" ).sortable({
 			//put sortable options here
     });
+    
+    $(document).on('click', '.userFileLink', function() { 
+    	console.log("please say you heard my click!")
+    		var fileName = $(event.target).text();
+    		var srcPath = $(event.target).attr("srcpath");
+    		var fileType = $(event.target).attr("srctype");
+    		var userId = $(event.target).closest('.projectUserBox').attr("uid"); //we will use the userid as the originid in this case
+    		if ($(".windowPane").length == 0) {
+				createNewPane();
+				waitForNewWindow(1, newTab, fileName, userId, fileType, srcPath);
+				
+
+			}
+			else {
+				
+				newTab(fileName, $(".activePane .tabBar").attr('id'), userId, fileType, srcPath);
+			}
+    });
+    
+    
 	
 	$('body').mousedown(function(event) { //keep track of when the mouse goes down on buttons so dragging can be disabled
 			if ($(event.target).is('.paneMaximize') || $(event.target).is('.paneRestore') || $(event.target).is('.paneMinimize') || $(event.target).is('.paneClose')) {
@@ -241,34 +261,34 @@ $(document).ready(function() {
 					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focus it.
 				}
 			}
-			else if ($(event.target).is('.tabBar a')) {
-				$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
-				$(event.target).closest("li").addClass("activeTab");
+			// else if ($(event.target).is('.tabBar a')) {
+			// 	$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
+			// 	$(event.target).closest("li").addClass("activeTab");
 
 
-				var activeTabId = $(event.target).closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
-				var thisTabLocation = $.inArray(activeTabId, activeTabs);
-				if (thisTabLocation > -1) {
-					activeTabs.splice(thisTabLocation, 1);
-				}
+			// 	var activeTabId = $(event.target).closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
+			// 	var thisTabLocation = $.inArray(activeTabId, activeTabs);
+			// 	if (thisTabLocation > -1) {
+			// 		activeTabs.splice(thisTabLocation, 1);
+			// 	}
 				
 			
 				
-				//inform the server that we've focused this tab in case someone is tracking our movements
-				activeTabs.push(activeTabId);
-				console.log(activeTabs);
-				var statusJSON = {
-						"commandSet": "client",
-						"command": "tabFocus",
-						"tabFocus" : {
-							"tabId" :  activeTabId,
-							"paneId" : $(event.target).closest(".windowPane").attr("id"),
+			// 	//inform the server that we've focused this tab in case someone is tracking our movements
+			// 	activeTabs.push(activeTabId);
+			// 	console.log(activeTabs);
+			// 	var statusJSON = {
+			// 			"commandSet": "client",
+			// 			"command": "tabFocus",
+			// 			"tabFocus" : {
+			// 				"tabId" :  activeTabId,
+			// 				"paneId" : $(event.target).closest(".windowPane").attr("id"),
 							
-						},
+			// 			},
 										
-					};
-				wsSendMsg(JSON.stringify(statusJSON));
-			}
+			// 		};
+			// 	wsSendMsg(JSON.stringify(statusJSON));
+			// }
 			else if ($(event.target).closest('.addNewTab').length) { //the add new tab button is there to allow the user to open content in a new window pane
 				var thisDialog = "dialog-info";
 				changeDialogTitle(thisDialog,"Choose Content to Open");
@@ -1229,22 +1249,32 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		},
 	});
 	//tabs.tabs("refresh").tabs({ active:num_Tabs});
-	tabSaved.tabs("refresh");
-	$("#" + tabBarId).tabs({
-		active: num_Tabs
-	});
-
-	$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
-	$('a[href="#' + tabName + '"]').parent("li").addClass("activeTab");
-
-
-	var activeTabId = $('a[href="#' + tabName + '"]').closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
-	var thisTabLocation = $.inArray(activeTabId, activeTabs);
-	if (thisTabLocation > -1) {
-		activeTabs.splice(thisTabLocation, 1);
-	}
-	activeTabs.push(activeTabId);
-
+	
+	
+	//once this tab is created we will run a check on terminal sizes because terminals hate to be the correct size
+	
+	var interval_id = setInterval(function(){ //wait for tab li creation then perform housekeeping tasks
+						    
+	     if ($('a[href="#' + tabName + '"]').closest("li").length > 0){
+	         // "exit" the interval loop with clearInterval command
+	         clearInterval(interval_id);
+	         //checkTerminalSizes(paneId); //this gets checked already when the terminal is focused which it will be automatically
+	         tabSaved.tabs("refresh");
+			$("#" + tabBarId).tabs({
+				active: num_Tabs
+			});
+		
+			$(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
+			$('a[href="#' + tabName + '"]').parent("li").addClass("activeTab");
+			var activeTabId = $('a[href="#' + tabName + '"]').closest("li").attr('aria-controls'); //add this tab to the activeTabs array and remove prior instances
+			var thisTabLocation = $.inArray(activeTabId, activeTabs);
+			if (thisTabLocation > -1) {
+				activeTabs.splice(thisTabLocation, 1);
+			}
+			activeTabs.push(activeTabId);
+	      }
+	}, 20);
+	
 
 
 	return (num_Tabs + 1);

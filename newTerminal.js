@@ -206,6 +206,9 @@ function registerTerminalClose(term) {
 }
 
 function checkTerminalSizes (paneId) {
+    console.log(arguments.callee.caller.toString());
+
+
     setTimeout(function() {
         var thisPane = $('#' + paneId);
         var thisActiveTab = thisPane.find(".activeTab");

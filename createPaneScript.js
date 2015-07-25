@@ -3,7 +3,41 @@
 $(function() {
 	initializeSortable();
 	function initializeSortable() {
-		var tabs = $( "%tabBar%" ).tabs();
+		var tabs = $( "%tabBar%" ).tabs({
+			activate: function (event, ui) {
+			    checkTerminalSizes(ui.newPanel.closest('.windowPane').attr('id')); //we must fix the terminal size when a new tab comes into focus
+			    
+			    var tabId = ui.newPanel.attr('id');
+			    //mark this new tab as active tab, tell the server
+			    $(".menuList").children("li").removeClass("activeTab"); //remove all active tabs and set a new one
+				
+				$('li[aria-controls="' + tabId + '"]').addClass("activeTab");
+
+
+				var activeTabId = tabId; //add this tab to the activeTabs array and remove prior instances
+				var thisTabLocation = $.inArray(activeTabId, activeTabs);
+				if (thisTabLocation > -1) {
+					activeTabs.splice(thisTabLocation, 1);
+				}
+				
+			
+				
+				//inform the server that we've focused this tab in case someone is tracking our movements
+				activeTabs.push(activeTabId);
+				console.log(activeTabs);
+				var statusJSON = {
+						"commandSet": "client",
+						"command": "tabFocus",
+						"tabFocus" : {
+							"tabId" :  activeTabId,
+							"paneId" : ui.newPanel.closest('.windowPane').attr('id'),
+							
+						},
+										
+					};
+				wsSendMsg(JSON.stringify(statusJSON));
+			 }
+		});
         
         tabs.find( ".ui-tabs-nav" ).sortable({
             connectWith: '.ui-tabs-nav',

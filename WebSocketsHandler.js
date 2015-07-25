@@ -406,7 +406,7 @@ function cliMsgProcTerminal(jObj) {
 					self.removeClass("glowingUser");
 				}, 500);
 				console.log("Self.timer:-------------------\n\n\n\n\n\n\n");
-				console.log(self.timer);
+				console.log(this.timer);
 				console.log("\n\n\n\n\n\n-------------------");
 			}
 		});
@@ -718,13 +718,16 @@ function updateConnectedUser(userId, userName, fileName, fileSrcPath, fileType, 
 																									//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
 	var thisUser = $('[uid="' + userId + '"]');
 	var userHtml = '';
+	if (!fileSrcPath) {
+		var fileSrcPath = '';
+	}
 	if (typeof options === 'undefined') {
 		var options = userDefaultOptions;
 	}
 	if (userName) {
 		thisUser.find('.projectUserName').html('<strong>' + userName + '</strong>');
 	}
-	if (fileName && fileSrcPath && fileType) { //these must all be sent together
+	if (fileName && fileType) { //these must all be sent together
 		userHtml = '<strong>File:</strong> ';
 		if ((typeof currentLine === 'undefined') || (currentLine < 0)) { //there won't be a current line for terminals or chats
 			userHtml = userHtml + '<span class="userFileLink" srcpath="' + fileSrcPath + '" srctype="' + fileType + '" linenumber="-1">';
