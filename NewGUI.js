@@ -342,7 +342,7 @@ $(document).ready(function() {
 					// 	activePanes.splice(thisPaneLocation,1);
 					// }
 					// activePanes.push(activePaneId);
-				if (!$(event.target).is('.paneClose')) { //don't trigger when we are closing a pane
+				if ((!$(event.target).is('.paneClose')) && (!$(event.target).is('.paneMinimize'))) { //don't trigger when we are closing a pane or Minimizing
 					focusPane($(event.target).closest(".windowPane").attr('id'));
 				}
 			}
@@ -727,7 +727,9 @@ function focusPane(paneId) {
 	if (paneId.indexOf('#') !== -1) {
 		paneId = paneId.slice(1);
 	}
-	console.log(paneId);
+	if ($('#' + paneId).hasClass('minimizedPane')) { //restore the pane if it is minimized
+		restorePane(paneId);
+	}
 	var thisPaneLocation = $.inArray(paneId, activePanes); //find this pane in the active panes. if it exists remove it
 	if (thisPaneLocation > -1) {
 		activePanes.splice(thisPaneLocation, 1);
@@ -810,6 +812,7 @@ function maximizePane(paneId) {
 	// thisPane.attr("oldwidth", thisPane.width());
 	// thisPane.attr("oldheight", thisPane.height());
 	thisPane.addClass("maximizedPane");
+	thisPane.removeClass("minimizedPane");
 	thisPane.css({
 		top: 5,
 		left: 5,
@@ -851,10 +854,12 @@ function restorePane(paneId) {
 	thisPane.resizable("enable");
 	spanMinMax.removeClass("paneRestore");
 	spanMinMax.addClass("paneMaximize");
+	
 	thisPane.height(thisPane.attr("oldheight"));
 	thisPane.width(thisPane.attr("oldwidth"));
 	thisPane.css("display", "block");
 	thisPane.removeClass("maximizedPane");
+	thisPane.removeClass("minimizedPane");
 	spanMinMax.removeClass("ui-icon-newwin"); //remove icon for restore
 	spanMinMax.addClass("ui-icon-extlink"); //add the icon for maximize
 
@@ -926,6 +931,7 @@ function minimizePane(paneId) {
 
 	}
 	thisPane.removeClass("maximizedPane");
+	thisPane.addClass("minimizedPane");
 	thisPane.css("display", "none");
 	//now find the pane in the windowPaneTabs and show the restore button
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "visible");
@@ -1125,7 +1131,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "chat") { //a duplicate chat is considered to be any chat active within any pane
+	else if (tabType == "chat") { //a duplicate chat is considered to be any chat by this name active within any pane
 		var foundFile = $('li[filename="' + filename + '"]');
 		if (foundFile.length) {
 			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing chat
@@ -1135,21 +1141,16 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "terminal") {
-		
-		
-		/*WE ACTUALLY WANT TO ALLOW MULTIPLE TERMINALS PER PANE!!!!!!!!!!!!!!!
-		
-		if ($("#" + tabBarId).find("#" + tabName).length) { //only allow 1 terminal per window Pane
-			console.log("We already have this tab open!");
-			$("#" + paneId).find(".tabBar").tabs().tabs("refresh");
-			var listItemIndex = $("#" + paneId).find('[srcpath="' + srcPath + '"]').index();
-		
-			$("#" + paneId).find(".tabBar").tabs().tabs("refresh").tabs("option", "active", listItemIndex).tabs("refresh");
-			console.log("attempted to set active tab to " + listItemIndex + " because of ");
-			console.log("#" + paneId);
+	else if (tabType == "terminal") {//a duplicate terminal is considered to be any terminal by this name active within any pane
+		var foundFile = $('li[filename="' + filename + '"]');
+		if (foundFile.length) {
+			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing terminal
+			foundFile.closest(".tabBar").tabs().tabs("refresh");
+			foundFile.closest(".tabBar").tabs().tabs("option", "active", foundFile.index()).tabs("refresh");
+			
 			return;
-		}*/
+		}
+		
 	}
 	removeAddTabButton(tabBarId);
 	

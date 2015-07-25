@@ -288,14 +288,15 @@ $('#jsTreeFile').keydown(function(e) {
 							var thisPane = $('#' + $('#' + tabBarId).closest('.windowPane').attr("id"));
 						    var thisActiveTab = thisPane.find(".activeTab");
 						    
-					    	var interval_id = setInterval(function(){ //wait for terminal creation then check the sizes
+						    //cancel this because the terminal gets focused and calls the resize!!!!!!!!!
+					  //  	var interval_id = setInterval(function(){ //wait for terminal creation then check the sizes
 						    
-							     if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length != 0){
-							         // "exit" the interval loop with clearInterval command
-							         clearInterval(interval_id);
-							         checkTerminalSizes($('#' + tabBarId).closest('.windowPane').attr("id"));
-							      }
-							}, 10);
+							//      if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length != 0){
+							//          // "exit" the interval loop with clearInterval command
+							//          clearInterval(interval_id);
+							//          checkTerminalSizes($('#' + tabBarId).closest('.windowPane').attr("id"));
+							//       }
+							// }, 10);
 						    
 						}   
 							

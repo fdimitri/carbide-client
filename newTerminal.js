@@ -113,8 +113,8 @@ function resizeTerminalByObj(terminalObj) {
 	    var terminalObj = $("#" + terminalId);
 	 */
      var term = getTerminalByDiv(terminalObj.attr('id'));
-     console.log("getTerminalByDiv returned:");
-     console.log(term);
+    //  console.log("getTerminalByDiv returned:");
+    //  console.log(term);
 
 //      term.terminal.resize(1,1);
 //      console.log("Entered resizeTerminalByObj");
@@ -130,16 +130,16 @@ function resizeTerminalByObj(terminalObj) {
 	      
      
      
-     console.log(terminalObj.height());
-     console.log(terminalObj.width());
+    //  console.log(terminalObj.height());
+    //  console.log(terminalObj.width());
      
-     console.log(terminalObj.parent().attr("id"));
-     console.log(terminalObj.attr("id"));
+    //  console.log(terminalObj.parent().attr("id"));
+    //  console.log(terminalObj.attr("id"));
      
      
      
      var newRows = parseInt(terminalObj.height() / height);
-     var newCols = parseInt(terminalObj.width() / width);
+     var newCols = parseInt(terminalObj.width() / width) - 2;
      console.log("Terminal width/height:" + width + "x" + height)
      console.log("Parent width/height:" + terminalObj.width() + "x" + terminalObj.height());
      console.log("Terminal should in actuality be " + newCols + "x" + newRows + " in size and not 80x24");
@@ -206,7 +206,6 @@ function registerTerminalClose(term) {
 }
 
 function checkTerminalSizes (paneId) {
-    console.log(arguments.callee.caller.toString());
 
 
     setTimeout(function() {
@@ -216,11 +215,11 @@ function checkTerminalSizes (paneId) {
     		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
     		var activeTerminal = getTerminalByName(activeTerminalName);
     		resizeTerminalByName(activeTerminalName);
-    		var rows = activeTerminal.terminal.getRows();
-    		var cols = activeTerminal.terminal.getCols();
-    		thisPane.find(".terminalWindow").each(function() {
-    		    resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
-    		});
+    // 		var rows = activeTerminal.terminal.getRows();
+    // 		var cols = activeTerminal.terminal.getCols();
+    // 		thisPane.find(".terminalWindow").each(function() {
+    // 		    resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
+    // 		});
     	}
     }, 100); 
 }
