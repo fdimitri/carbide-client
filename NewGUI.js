@@ -932,6 +932,32 @@ function minimizePane(paneId) {
 	}
 	thisPane.removeClass("maximizedPane");
 	thisPane.addClass("minimizedPane");
+	thisPane.removeClass("activePane"); //take away active pane status
+	
+	//find the previously active pane and make it the new active pane (if all panes are minimzed: change nothing. We will have to restore this pane if it needs to be used as an active pane in that case)
+	var prevActivePane;
+	for (var i = 1; i <= activePanes.length; i = i-1) {
+		prevActivePane = activePanes[activePanes.length - i];
+		if (!$('#' + prevActivePane).hasClass('.minimizedPane')) { //this means we've found an acceptable pane to change to the active pane.
+			var oldPaneLocation = $.inArray(paneId, activePanes); //this was the pane we just minimized array location
+			activePanes.splice(oldPaneLocation, 1); //remove it from active panes array
+			//these following lines are already taken care of in function focusPane
+			// var thisPaneLocation = $.inArray(prevActivePane, activePanes); //this is the new replacement pane array location
+			// activePanes.splice(thisPaneLocation, 1); //remove it from where it was in active pane array
+			// activePanes.push(prevActivePane); //add it to the end of active pane array
+			// $('#' + prevActivePane).addClass('activePane');
+			focusPane(prevActivePane);
+			break;
+		}
+		
+	}
+	
+	var thisPaneLocation = $.inArray(paneId, activePanes); //find this pane in the active panes. if it exists remove it
+	if (thisPaneLocation > -1) {
+		activePanes.splice(thisPaneLocation, 1);
+	}
+	activePanes.push(paneId); //after having removed this pane from any prior instances in the array we push it to the end
+	
 	thisPane.css("display", "none");
 	//now find the pane in the windowPaneTabs and show the restore button
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "visible");
