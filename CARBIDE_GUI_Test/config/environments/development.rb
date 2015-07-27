@@ -1,20 +1,27 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.app_domain = 'http://weirdim-frankd412.c9.io/'
-
+  config.app_domain = 'http://www.frank-d.info:3000/'
+  config.web_console.whitelisted_ips = '0.0.0.0/0'
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { host: config.app_domain }
+  config.serve_static_files = true
+  config.action_mailer.default_url_options = { host: 'frank-d.info' }
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com', 
-    port: '587',
+    address: 'smtp.zoho.com',
+    port: 465,
     enable_starttls_auto: true,
-    user_name: 'frankd412@gmail.com',
-    password: '1979.Formula',
-    authentication: :plain,
-    domain: 'gmail.com'
+    domain: 'frank-d.info',
+    user_name: 'frankd@frank-d.info',
+    password: 'bu:tln563',
+    authentication: :login,
+    enable_starttls_auto: true,
+    ssl: true,
+    tls: true,
   }
-
+  config.action_mailer.default_options = {
+    from: 'frankd@frank-d.info',
+  }
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -28,7 +35,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  #config.action_mailer.raise_delivery_errors = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -49,8 +56,8 @@ Rails.application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
-  
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end

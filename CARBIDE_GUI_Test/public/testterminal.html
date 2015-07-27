@@ -1,0 +1,83 @@
+<html>
+    <head>
+        	<script src="WebSocketsHandler.js"></script>
+        	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+
+	<script src="client.js"></script>
+	<script src="newTerminal.js"></script>
+	<style type="text/css">
+	.terminal {
+		font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+		font-size: 11px;
+		color: rgb(240, 240, 240);
+		background: #383734 !important; 
+		padding: 3px;
+		border: none !important;
+	}
+
+
+	
+	</style>
+        	<script src="termjs/src/term.js"></script>
+
+        <script>
+        
+    
+        
+window.addEventListener('load', function() {
+     /*        var term = new Terminal({
+      cols: 80,
+      rows: 24,
+      screenKeys: true,
+      useStyle: true,
+    });
+    
+    term.on('title', function(title) {
+    //   document.title = title;
+    // Set the tab title here instead of document.title
+    });
+
+		var eMsg = {
+			"commandSet": "base",
+			"command": "openTerminal",
+			"openTerminal": {
+				"termName": "Terminal1",
+			},
+		};
+        wsSendMsg(JSON.stringify(eMsg));
+
+    term.on('data', function(data) {
+		var eMsg = {
+			"commandSet": "term",
+			"command": "inputChar",
+			"termTarget": "Terminal1",
+			"inputChar": {
+				"term": "Terminal1",
+				"data" : data,
+			},
+		};
+        wsSendMsg(JSON.stringify(eMsg));
+        // We should encode this data for JSON to send to the server, for now we'll log it
+        console.log("Term.on(data) fired!");
+        console.log(data);
+    });
+    
+    term.open($("#terminalPlace").get(0));
+
+    term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+ */
+ 
+ var term = addTerminal ("Terminal1","terminalPlace1",80,24);
+ console.log(getTerminalByDiv("terminalPlace1"));
+ console.log(getTerminalByName("Terminal1"));
+ 
+}, false);
+
+        </script>
+    </head>
+    <body>
+        <div class="terminalWindow" terminalId="Terminal1" id="terminalPlace1">
+        </div>
+        
+    </body>
+</html>

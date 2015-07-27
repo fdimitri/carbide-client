@@ -1,0 +1,193 @@
+
+
+.contextMenuItem {
+  left:25px;
+  position:absolute;
+  padding:0;
+  margin:0;
+}
+.contextMenuShortcut {
+  float:right;
+  font-size:0.8pt;
+  font-style:italic;
+  margin-right:20px;
+}
+.ui-contextmenu .ui-icon {
+  top:-4px !important;
+}
+
+.ui-contextmenu {
+  display: none;
+  z-index:999999;
+}
+.ui-contextmenu,
+.ui-contextmenu ul {
+  margin: 0;
+  padding: 2px;
+  position: absolute;
+  background: #f5f5f5;
+  width:260px;
+  border: 1px solid #979797;
+  box-shadow: 2px 2px 2px #999999;
+}
+.ui-contextmenu ul {
+  list-style: none;
+  left: 100%;
+  margin-top: -2.7em;
+  margin-left: -4px;
+}
+.ui-contextmenu .ui-contextmenu-right ul {
+  left: auto;
+  right: 100%;
+  margin-left: auto;
+  margin-right: -4px;
+}
+.ui-contextmenu li {
+  list-style: none;
+  padding: 0 !important;
+  position: relative !important;
+  height:25px;
+}
+.ui-contextmenu li, .ui-contextmenu span {
+  /*font-size: 0.8em !important;*/
+  font-size:11pt;
+  line-height: 1.5em !important;
+  font-weight: normal !important;
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+  
+}
+/*.ui-state-active, .ui-state-focus {*/
+/*  border:0 !important;*/
+/*  margin: 0 !important;*/
+/*  padding: 0 !important;*/
+/*  top: 0 !important;*/
+
+/*}*/
+.contextSubMenu {
+ left:100px !important;
+ position: absolute !important;
+
+
+}
+/*.ui-contextmenumenu-sub a, .ui-contextmenumenu-sub span, .ui-contextmenumenu-sub i {*/
+/*  position: relative !important;*/
+/*  left: 0px !important;*/
+/*}*/
+.ui-contextmenu li > a {
+  height: 1.5em;
+  display: block;
+  /*padding: 0 2em 0 2em;*/
+  padding: 0 1.5em 0 1.0em;
+  text-decoration: none;
+  width: auto;
+  color: black;
+  white-space: nowrap;
+  /*line-height: 2.4em;*/
+  line-height: 1.5em;
+  
+  text-shadow: 1px 1px 0 white;
+  border-radius: 1px;
+}
+.ui-contextmenu li > a:hover {
+  position: relative;
+  background-color: #e8eff7;
+  box-shadow: 0 0 2px #0a6aa1;
+}
+.ui-contextmenu li > a.ui-contextmenu-parent {
+  background-image: url("data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAIORI4JlrqN1oMSnmmZDQUAOw==");
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+.ui-contextmenu li > a:focus {
+  outline: 0;
+}
+.ui-contextmenu .ui-contextmenu-hover > a {
+  position: relative;
+  background-color: #e8eff7;
+  box-shadow: 0 0 2px #0a6aa1;
+}
+.ui-contextmenu .ui-contextmenu-separator > a,
+.ui-contextmenu .ui-contextmenu-separator > a:hover {
+  background: white;
+  border: 0;
+  border-top: 1px solid #e2e3e3;
+  height: 1px;
+  min-height: 1px;
+  max-height: 1px;
+  padding: 0;
+  margin: 0 0 0 2.4em;
+  border-left: 1px solid #e0e0e0;
+  text-shadow: 0 0 0 transparent;
+  box-shadow: 0 0 0 transparent;
+  border-radius: 0;
+}
+.ui-contextmenu .ui-contextmenumenu-disabled a,
+.ui-contextmenu .ui-contextmenumenu-disabled a:hover {
+  color: silver;
+  background-color: transparent;
+  border: 0;
+  box-shadow: 0 0 0;
+}
+.ui-contextmenu li > a > i {
+  text-decoration: none;
+  display: inline-block;
+  /*width: 2.4em;*/
+  height: 2.4em;
+  background: transparent;
+  margin: 0 0 0 -2em;
+  vertical-align: top;
+  text-align: center;
+  line-height: 2.4em;
+}
+.ui-contextmenu li > a > i:empty {
+  /*width: 2.4em;*/
+  line-height: 2.4em;
+}
+.ui-contextmenu li > a .ui-contextmenumenu-sep {
+  display: inline-block;
+  width: 1px;
+  height: 1.3em;
+  background: white;
+  margin: 0 0.5em 0 0;
+  border-left: 1px solid #e2e3e3;
+}
+.ui-contextmenu .ui-contextmenumenu-shortcut {
+  font-size: 0.8em;
+  color: silver;
+  opacity: 0.5;
+  display: none;
+}
+.ui-contextmenu-rtl ul {
+  left: auto;
+  right: 100%;
+  margin-left: auto;
+  margin-right: -4px;
+}
+.ui-contextmenu-rtl li > a.ui-contextmenu-parent {
+  background-image: url("data:image/gif;base64,R0lGODlhCwAHAIAAACgoKP///yH5BAEAAAEALAAAAAALAAcAAAINjI+AC7rWHIsPtmoxLAA7");
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+.ui-contextmenu-rtl .ui-contextmenu-separator > a {
+  margin: 0 2.4em 0 0;
+  border-left: 0;
+  border-right: 1px solid #e2e3e3;
+}
+.ui-contextmenu-rtl .ui-contextmenu-left ul {
+  right: auto;
+  left: 100%;
+  margin-left: -4px;
+  margin-right: auto;
+}
+.ui-contextmenu-rtl li > a > i {
+  margin: 0 -2em 0 0;
+}
+.ui-contextmenu-rtl li > a .ui-contextmenumenu-sep {
+  margin: 0 0 0 0.5em;
+  border-left-color: white;
+  background: #e2e3e3;
+}
+.jstree-contextmenu {
+  font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+}
+

@@ -1,0 +1,45 @@
+
+Logged in as: <%= @user.name %> and reachable through <%=
+if (@user.unconfirmed_email && @user.unconfirmed_email.length)
+  email = @user.unconfirmed_email  + "(Unconfirmed)"
+else
+  email = @user.email
+end
+email
+%>
+<div>
+Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
+
+Demo the <%= link_to :project %>
+</div>
+
+<div>
+Projects you own: (<%= @myProjects.count.to_s %>)
+<% @myProjects.each do |proj| %>
+<div>
+Name: <%=  proj.name %><br/>
+Users (<%= proj.Users.count.to_s %>):
+<% proj.Users.each do |user| %>
+<%= user.name %>
+<% end %>
+</div>
+<% end %>
+
+<div>
+Projects you're engaged in: (<%= @user.Projects.count.to_s %>)
+<% @user.Projects.each do |proj| %>
+<div>
+Name: <%=  proj.name %><br/>
+Users (<%= proj.Users.count.to_s %>):
+<% proj.Users.each do |user| %>
+<%= user.name %>
+<% end %>
+</div>
+<% end %>
+
+
+Your user dump:
+<pre>
+  <%= YAML.dump(@myProjects.first.class.to_s) %>
+<%= YAML.dump(@user) %>
+</pre>

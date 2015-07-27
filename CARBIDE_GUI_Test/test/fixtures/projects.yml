@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Name: MyString
+  Owner_id: 
+  ProjectProfile_id: 
+
+two:
+  Name: MyString
+  Owner_id: 
+  ProjectProfile_id: 

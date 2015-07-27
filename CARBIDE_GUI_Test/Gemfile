@@ -39,6 +39,7 @@ gem 'omniauth-linkedin'
 gem 'omniauth-google'
 gem 'omniauth-github', :github => 'intridea/omniauth-github'
 gem 'omniauth-openid', :github => 'intridea/omniauth-openid'
+gem 'omniauth-google-oauth2'
 # Use Unicorn as the app server
 # gem 'unicorn'
 

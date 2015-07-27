@@ -3,9 +3,10 @@
 #   # :confirmable, :lockable, :timeoutable and :omniauthable
 #   devise :database_authenticatable, :registerable,
 #         :recoverable, :rememberable, :trackable, :validatable, :omniauthable
-         
+
 # end
 class User < ActiveRecord::Base
+
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/
 
@@ -15,6 +16,11 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
+
+  has_many :OwnedProjects, class_name: "Project", foreign_key: "Owner_id"
+  has_many :ProjectsUser
+  has_many :Projects, :through => :ProjectsUser
+
 
   def self.find_for_oauth(auth, signed_in_resource = nil)
 

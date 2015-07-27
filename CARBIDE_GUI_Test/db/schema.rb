@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724234010) do
+ActiveRecord::Schema.define(version: 20150727052110) do
+
+  create_table "Projects", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "Owner_id"
+    t.integer  "ProjectProfile_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "Projects", ["Owner_id"], name: "index_projects_on_Owner_id"
+  add_index "Projects", ["ProjectProfile_id"], name: "index_projects_on_ProjectProfile_id"
 
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id"
@@ -22,6 +33,26 @@ ActiveRecord::Schema.define(version: 20150724234010) do
   end
 
   add_index "identities", ["user_id"], name: "index_identities_on_user_id"
+
+  create_table "project_profiles", force: :cascade do |t|
+    t.text     "About"
+    t.string   "Homepage"
+    t.integer  "Project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "project_profiles", ["Project_id"], name: "index_project_profiles_on_Project_id"
+
+  create_table "projects_users", force: :cascade do |t|
+    t.integer  "User_id"
+    t.integer  "Project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "projects_users", ["Project_id"], name: "index_projects_users_on_Project_id"
+  add_index "projects_users", ["User_id"], name: "index_projects_users_on_User_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -37,6 +68,10 @@ ActiveRecord::Schema.define(version: 20150724234010) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "name"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

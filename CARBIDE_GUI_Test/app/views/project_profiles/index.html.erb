@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Project Profiles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>About</th>
+      <th>Homepage</th>
+      <th>Project</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @project_profiles.each do |project_profile| %>
+      <tr>
+        <td><%= project_profile.About %></td>
+        <td><%= project_profile.Homepage %></td>
+        <td><%= project_profile.Project %></td>
+        <td><%= link_to 'Show', project_profile %></td>
+        <td><%= link_to 'Edit', edit_project_profile_path(project_profile) %></td>
+        <td><%= link_to 'Destroy', project_profile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Project profile', new_project_profile_path %>
