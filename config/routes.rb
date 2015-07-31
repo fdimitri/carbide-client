@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  post 'create_gui_content/createPane'
+  post 'create_gui_content/createContent'
   get 'create_gui_content/createPane'
-
   get 'create_gui_content/createContent'
 
   resources :project_profiles

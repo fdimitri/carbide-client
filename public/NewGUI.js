@@ -11,7 +11,11 @@ var paneCounter = 0;
 ////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
-	
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+  }
+});	
 
 	$(document).on('keydown', function(e) {
 	
@@ -559,20 +563,20 @@ $(document).ready(function() {
 
 function createNewPane() {
 	paneCounter++;
-	var MyObject = [{
-		'paneCounter': paneCounter,
-		'delPanes': deletedPanes,
-	}, ];
+	var MyObject = {
+	};
 
 	$.ajax({
-		url: "/createPane.php",
+		url: "/create_gui_content/createPane.json",
 		type: 'post',
 		data: {
-			jsonSend: JSON.stringify(MyObject),
+		'paneCounter': paneCounter,
+		'delPanes': deletedPanes,
 		},
 		datatype: 'json',
 		success: function(data) {
-			var result = JSON.parse(data);
+			var result = $.parseJSON(data);
+			result = result.reply;
 			if (result.success === false) {
 				console.log(result['failReasons']);
 				return;
@@ -1163,7 +1167,7 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
 
 function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId " + originId + " srcPath:" + srcPath);
-	
+	tabType = tabType.charAt(0).toUpperCase() + tabType.slice(1);
 	// if (filename == "Default Terminal") {
 	// 	var numTerminals = $('li[type="terminal"]').length; //count the terminals
 	// 	filename = "Terminal_" + (numTerminals + 1);
@@ -1176,7 +1180,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	var tabNameNice = filename;
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
 	//if ($("#" + tabName).length) {
-	if (tabType == "file") {
+	if (tabType == "File") {
 		if ($("#" + tabBarId).find('[srcpath="' + srcPath + '"]').length) { //check for duplicate files
 		
 			console.log("We already have this tab open!");
@@ -1189,7 +1193,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "chat") { //a duplicate chat is considered to be any chat by this name active within any pane
+	else if (tabType == "Chat") { //a duplicate chat is considered to be any chat by this name active within any pane
 		var foundFile = $('li[filename="' + filename + '"]');
 		if (foundFile.length) {
 			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing chat
@@ -1199,7 +1203,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "terminal") {//a duplicate terminal is considered to be any terminal by this name active within any pane
+	else if (tabType == "Terminal") {//a duplicate terminal is considered to be any terminal by this name active within any pane
 		var foundFile = $('li[filename="' + filename + '"]');
 		if (foundFile.length) {
 			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing terminal
@@ -1219,26 +1223,26 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		"<li type='" + tabType + "' srcpath='" + srcPath + "' filename='" + filename + "'><a href='#" + tabName + "'>" + tabNameNice + "</a><div class='tabIconBox'><span class='reloadButton ui-icon-arrowrefresh-1-s ui-icon'>Refresh Tab</span><span class='closeButton ui-icon ui-icon-close' role='presentation'>Remove Tab</span></div><div class='tabIconClear'></div></li>"
 	);
 	$("#" + tabBarId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
-	var MyObject = [{
+	var MyObject = {
+	};
+	console.log("AJAX POST gto createConte with srcPath = " + srcPath);
+	$.ajax({
+		url: "/create_gui_content/createContent.json",
+		type: 'post',
+		data: {
 		'tabName': tabName,
 		'tabType': tabType,
 		'paneId': tabBarId,
 		'originId': originId,
 		'chatTarget': filename,
 		'srcPath': srcPath,
-	}, ];
-	console.log("AJAX POST gto createConte with srcPath = " + srcPath);
-	$.ajax({
-		url: "/createContent.php",
-		type: 'post',
-		data: {
-			jsonSend: JSON.stringify(MyObject),
 		},
 		datatype: 'json',
 		success: function(data) {
 		//ADD SERVER CALL HERE
 			console.log(data);
 			var result = JSON.parse(data);
+			result = result.reply;
 			if (result.success === false) {
 				console.log(result['failReasons']);
 				$("#" + tabName + " .ui-icon-close").click();
@@ -1253,7 +1257,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				console.log("Script receieved!");
 				eval(result.script);
 			}
-			if (tabType == 'chat') {
+			if (tabType == 'Chat') {
 				var statusJSON = {
 					"commandSet": "chat",
 					"chatCommand": "joinChannel",
