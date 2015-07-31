@@ -5,7 +5,7 @@ $(document).ready(function() {
 	 console.log("Terminal ID:" + terminalId + " Name: %terminalName%")
 	 var terminalId = $("#%terminalId%").find(".terminalWindow").attr('id');
 	 var terminalObj = $("#" + terminalId);
-	 resizeTerminalByObj(terminalObj);
+	 //resizeTerminalByObj(terminalObj);
 });
 
 

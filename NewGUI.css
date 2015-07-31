@@ -562,7 +562,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
     width: 250px;
     float:left;
 	min-height:600px;
-	z-index:3;
+	z-index:4;
 	border-right-width: 2px;
 	
 
@@ -756,4 +756,15 @@ margin-left: 20px;
 	text-decoration: underline;
 	color:rgba(0,0,140,1.0);
 	cursor: pointer;
+}
+.disconnectBlock {
+	text-align:center;
+}
+.disconnectBlock h1 {
+	font-size:40pt;
+	color:rgba(0,0,0,1.0);
+}
+.disconnectBlock h2 {
+	font-size:30pt;
+	color:rgba(0,0,0,1.0);
 }

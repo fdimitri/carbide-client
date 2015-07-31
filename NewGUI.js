@@ -5,7 +5,7 @@ var deletedPanes = 0;
 var clickedElement = "";
 var lastFocusedPane = "";
 var currentTheme = "ace/theme/vibrant_ink";
-var rightBarOpen = 1; //the right bar is open by default (user box area) 0 = closed, 2 = expand arrow only
+var rightBarOpen = 0; //the right bar is open by default (user box area) 0 = closed, 2 = expand arrow only
 var paneCounter = 0;
 
 ////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,7 @@ $(document).ready(function() {
 			var options = [];
 			options['speed'] = 1;
 			updateConnectionStatus(options);
+			enableScreen();
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'a' || String.fromCharCode(e.which) === 'A')) { //ALT keypress
 			console.log("keydown acknowledged");
@@ -34,12 +35,13 @@ $(document).ready(function() {
 			options['speed'] = 0;
 			options['reconnect'] = 0;
 			updateConnectionStatus(options);
+			disableScreen();
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'm' || String.fromCharCode(e.which) === 'M')) { //ALT keypress
 			console.log("keydown acknowledged");
 			var options = [];
 			var testVar = Math.floor((Math.random() * 1000) + 1);
-			var test2 = Math.floor((Math.random() * 1000) + 1);
+			var test2 = Math.floor((Math.random() * 10) + 11);
 			addConnectedUser(testVar, 'Dummy' + testVar, 'test.js', '/test.js', 'file', test2);
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'n' || String.fromCharCode(e.which) === 'N')) { //ALT keypress
@@ -137,10 +139,10 @@ $(document).ready(function() {
     });
     
     $(document).on('click', '.userFileLink', function() { 
-    	console.log("please say you heard my click!")
     		var fileName = $(event.target).text();
     		var srcPath = $(event.target).attr("srcpath");
     		var fileType = $(event.target).attr("srctype");
+    		var lineNumber = $(event.target).attr("linenumber");
     		var userId = $(event.target).closest('.projectUserBox').attr("uid"); //we will use the userid as the originid in this case
     		if ($(".windowPane").length == 0) {
 				createNewPane();
@@ -149,9 +151,29 @@ $(document).ready(function() {
 
 			}
 			else {
-				
+				prepareActivePane(); //make sure we have an active pane that isn't minimized
 				newTab(fileName, $(".activePane .tabBar").attr('id'), userId, fileType, srcPath);
 			}
+			if (fileType == 'file') { //if this is a file we should jump to the line they're on
+				
+				var intervalCounter = 0;
+				var interval_id = setInterval(function(){ //we must wait for an active pane before we find the tab bar id (in case a new window was created)
+					intervalCounter = intervalCounter + 1;
+					 if (intervalCounter > 400) {
+					 	clearInterval(interval_id);
+					 }
+					 else {
+					     if ($('.activePane').length){ //wait for an active pane to exist
+					        // "exit" the interval loop with clearInterval command
+					        clearInterval(interval_id);
+							var editorSelector = "file_tab-" + $(".activePane .tabBar").attr('id') + "-" + fileName; //this should be the ID of the pre inside the new tab
+							editorSelector = editorSelector.replace(/\./g, '_');
+							goToEditorLine(editorSelector,lineNumber);
+					      }
+					 }
+				}, 20);
+			}
+			
     });
     
     
@@ -258,7 +280,9 @@ $(document).ready(function() {
 					else {
 						restorePane($(event.target).closest(".windowPaneTab").attr("pane")); //if the pane wasn't maximized we'll restore it}
 					}
-					focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focus it.
+					
+					//we no longer have to focus the pane from here since we do it from both maximize pane and restore pane
+					//focusPane($(event.target).closest(".windowPaneTab").attr("pane")); //and we'll also focus it.
 				}
 			}
 			// else if ($(event.target).is('.tabBar a')) {
@@ -783,12 +807,14 @@ function focusPane(paneId) {
 		
 		//set last focused pane to this one
 		lastFocusedPane = paneId;
+
+		checkTerminalSizes(paneId);
 	}
+
 
 }
 
 function maximizePane(paneId) {
-
 	// This is the html for a Maximize button: <span class="paneMaximize ui-icon ui-icon-extlink">
 
 	var thisPane = $("div #" + paneId);
@@ -824,7 +850,7 @@ function maximizePane(paneId) {
 	console.log("REPORTING " + thisPane.find('.menuList').children('li').length);
 	thisPane.find('.menuList').children('li').removeClass('activeTab');
 	thisPane.find('.menuList').children('li').last().addClass('activeTab');
-	checkTerminalSizes(paneId);
+	//checkTerminalSizes(paneId);
 	thisPane.resizable("disable");
 
 	var statusJSON = {
@@ -842,8 +868,8 @@ function maximizePane(paneId) {
         		console.log(editor);
         		editor[0].resize(true);
     });
-
-
+	focusPane(paneId);
+	checkTerminalSizes(paneId);
 }
 
 
@@ -890,7 +916,7 @@ function restorePane(paneId) {
 	}
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "hidden");
 	
-	checkTerminalSizes(paneId);
+	//checkTerminalSizes(paneId);
 	var panePosition = thisPane.position();
 	
 	var statusJSON = {
@@ -913,7 +939,8 @@ function restorePane(paneId) {
         		console.log(editor);
         		editor[0].resize(true);
     });
-	
+	focusPane(paneId);
+	checkTerminalSizes(paneId);
 }
 
 function minimizePane(paneId) {
@@ -936,9 +963,14 @@ function minimizePane(paneId) {
 	
 	//find the previously active pane and make it the new active pane (if all panes are minimzed: change nothing. We will have to restore this pane if it needs to be used as an active pane in that case)
 	var prevActivePane;
-	for (var i = 1; i <= activePanes.length; i = i-1) {
+
+	for (var i = 1; i <= activePanes.length; i = i+1) {
 		prevActivePane = activePanes[activePanes.length - i];
-		if (!$('#' + prevActivePane).hasClass('.minimizedPane')) { //this means we've found an acceptable pane to change to the active pane.
+		console.log("examining pane " + prevActivePane);
+
+		if (!$('#' + prevActivePane).hasClass('minimizedPane')) { //this means we've found an acceptable pane to change to the active pane.
+
+
 			var oldPaneLocation = $.inArray(paneId, activePanes); //this was the pane we just minimized array location
 			activePanes.splice(oldPaneLocation, 1); //remove it from active panes array
 			//these following lines are already taken care of in function focusPane
@@ -1278,7 +1310,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	//tabs.tabs("refresh").tabs({ active:num_Tabs});
 	
 	
-	//once this tab is created we will run a check on terminal sizes because terminals hate to be the correct size
+	//once this tab is created we will run some housekeeping functions
 	
 	var interval_id = setInterval(function(){ //wait for tab li creation then perform housekeeping tasks
 						    
@@ -1415,6 +1447,7 @@ function moveTab(receiver, sender, tab) {
 	$("#" + paneId).find(".tabBar").tabs("option", "active", -1);
 	$("#" + sentPaneId).find(".tabBar").tabs("option", "active", -1);
 	$(".tabBar").tabs("refresh");
+	
 	checkTerminalSizes(paneId);
 
 }
@@ -1502,4 +1535,37 @@ function resetSizes(suppressArrangePanes) {
 	});
 
 
+}
+function prepareActivePane() { //make sure there is an active pane even if they are all minimized
+	if ($('.activePane').length <= 0) { //no active panes found by class
+		if (activePanes.length > 0) { //there are active panes in the array of previously active panes
+			restorePane(activePanes[activePanes.length - 1]);
+		}
+		else { //if there were no active panes in the array something has gone wrong. We will just restore the first pane we find
+			restorePane($(".windowPane").eq(0).attr("id"));
+		}
+	}
+}
+
+function goToEditorLine(editorSelector,lineNumber) {
+	var editor;
+	editorSelector = editorSelector.replace(/\#/, ''); //remove possible # from selector id
+	var intervalCounter = 0;
+	var interval_id = setInterval(function(){ //wait for the editor instance to exist because it may have not been created yet
+		 intervalCounter = intervalCounter + 1;
+		 if (intervalCounter > 400) {
+		 	clearInterval(interval_id);
+		 }
+		 else {
+		 	editor = ace.edit(editorSelector);
+		     if (editor.getSession().getValue().length){ //wait for the ace content to exist before attempting to scroll to it
+		        // "exit" the interval loop with clearInterval command
+		        clearInterval(interval_id);
+				editor.resize(true);
+				editor.scrollToLine(lineNumber, true, true, function () {});
+				editor.gotoLine(lineNumber, 0, true);
+		      }
+		 }
+	}, 20);
+	
 }
