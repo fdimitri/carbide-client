@@ -665,12 +665,77 @@ function updateConnectionStatus(options) { //options['speed'] is between 0 and 1
 		$('#connectionBox').html('Connected...');
 	}
 	else {
-		console.log("GOOD NEWS!");
 		connectionStatus = true;
 		$('#connectionBox').addClass('connectionFast');
 		$('#connectionBox').html('Connected.');
 	}
 }
+
+function disableScreen() {
+	var greyDiv = '<div class="disconnectBlock" style="width:100%; height:100%; position:absolute; background-color:rgba(200,200,200,0.7); z-index:9999;"><h1>Disconnected!</h1><h2>Please wait while the server is contacted.</h2></div>';
+	$('#editorContainer').prepend(greyDiv);
+	var editorSelector;
+	$('.ace_editor').each(function() {
+		editorSelector = $(this).attr("id");
+		editor = ace.edit(editorSelector);
+		editor.setOptions({
+	    readOnly: true,
+	    highlightActiveLine: false,
+	    highlightGutterLine: false
+		})
+		editor.renderer.$cursorLayer.element.style.opacity=0;
+	});
+}
+function enableScreen() {
+	$('.disconnectBlock').remove();
+	var editorSelector;
+	$('.ace_editor').css('background:rgba(200,200,200,0.0)');
+	$('.ace_editor').each (function() {
+		editorSelector = $(this).attr("id");
+		editor = ace.edit(editorSelector);
+		editor.setOptions({
+	    readOnly: false,
+	    highlightActiveLine: true,
+	    highlightGutterLine: true
+		})
+		editor.renderer.$cursorLayer.element.style.opacity=1;
+	})
+}
+
+//these functions got CANCELLED
+// function disableAllEditors() {
+// 	var editorSelector;
+// var greyDiv;
+// 	$('.ace_editor').each(function() {
+// 		editorSelector = $(this).attr("id");
+// 		editor = ace.edit(editorSelector);
+// 		editor.setOptions({
+// 	    readOnly: true,
+// 	    highlightActiveLine: false,
+// 	    highlightGutterLine: false
+// 		})
+// 		editor.renderer.$cursorLayer.element.style.opacity=0;
+// 		//append grey div above this div so no one can interact
+// 		greyDiv = '<div class="filegreyblock" style="width:' + $(this).width() + 'px; height:' + $(this).height() + 'px; position:absolute; background-color:rgba(200,200,200,0.7); z-index:9999;"></div>';
+// 		$(this).find('.ace_content').prepend(greyDiv);
+// 	})
+// }
+// function enableAllEditors() {
+// 	var editorSelector;
+// 	$('.ace_editor').css('background:rgba(200,200,200,0.0)');
+// 	$('.ace_editor').each (function() {
+// 		editorSelector = $(this).attr("id");
+// 		editor = ace.edit(editorSelector);
+// 		editor.setOptions({
+// 	    readOnly: false,
+// 	    highlightActiveLine: true,
+// 	    highlightGutterLine: true
+// 		})
+// 		editor.renderer.$cursorLayer.element.style.opacity=1;
+// 		$('.filegreyblock').remove();
+// 	})
+
+// }
 
 function addConnectedUser(userId, userName, fileName, fileSrcPath, fileType, currentLine, options) { //filetype is file, terminal, chat
 																									//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
@@ -708,10 +773,18 @@ function addConnectedUser(userId, userName, fileName, fileSrcPath, fileType, cur
 	userHtml = userHtml + '</ul></div>';
 	userHtml = userHtml + '</div>';
 	$('#userBar').append(userHtml);
+	if (rightBarOpen == 0) {
+		rightBarOpen = 1; //open the user bar if there were no users
+		resetSizes();
+	}
 }
 
 function removeConnectedUser(userId) {
 	$('[uid="' + userId + '"]').remove();
+	if ($('.projectUserBox').length <= 0) { //there are no more users left, minimize the user bar
+		rightBarOpen = 0;
+		resetSizes();
+	}
 }
 
 function updateConnectedUser(userId, userName, fileName, fileSrcPath, fileType, currentLine, options) { //filetype is file, terminal, chat

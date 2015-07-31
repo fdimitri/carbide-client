@@ -107,6 +107,7 @@ function resizeTerminalByName(terminalName) {
 
 
 function resizeTerminalByObj(terminalObj) {
+
     /*
         From: createContentTerminal.js, how we get "term id" from "tab id" 
     	var terminalId = $("#%terminalId%").find(".terminalWindow").attr('id');
@@ -125,8 +126,8 @@ function resizeTerminalByObj(terminalObj) {
 //      var height = terminalObj.children('.terminal').first().height();
 //      var width = terminalObj.children('.terminal').first().width();
      
-     var width = term.terminal.getNormalizedWidth();
-     var height = term.terminal.getNormalizedHeight();
+     var width = Math.ceil(term.terminal.getNormalizedWidth());
+     var height = Math.floor(term.terminal.getNormalizedHeight());
 	      
      
      
@@ -208,9 +209,13 @@ function registerTerminalClose(term) {
 function checkTerminalSizes (paneId) {
 
 
-    setTimeout(function() {
+    //setTimeout(function() {
         var thisPane = $('#' + paneId);
         var thisActiveTab = thisPane.find(".activeTab");
+        console.log(thisActiveTab);
+        console.log(thisActiveTab.attr("aria-controls"));
+        console.log($("#" + (thisActiveTab).attr("aria-controls")));
+        console.log($("#" + (thisActiveTab).attr("aria-controls")).find('.terminal'));
     	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
     		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
     		var activeTerminal = getTerminalByName(activeTerminalName);
@@ -221,5 +226,5 @@ function checkTerminalSizes (paneId) {
     // 		    resizeTerminalByNameWithSize($(this).attr("terminalId"), cols - 1, rows);
     // 		});
     	}
-    }, 100); 
+    //}, 100); 
 }

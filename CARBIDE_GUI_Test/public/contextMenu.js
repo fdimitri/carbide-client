@@ -11,14 +11,15 @@ $(function() {
             select: function(event, ui) {
             	
                 if (ui.cmd == "openInPane") {
+                	var node;
                 	if (ui.item.data().type == "file") {
-						var node = $('#jsTreeFile').jstree(true).get_selected(true);
+						node = $('#jsTreeFile').jstree(true).get_selected(true);
                 	}
                 	else if (ui.item.data().type == "chat") {
-                		var node = $('#jsTreeChat').jstree(true).get_selected(true);
+                		node = $('#jsTreeChat').jstree(true).get_selected(true);
                 	}
                 	else if (ui.item.data().type == "terminal") {
-                		var node = $('#jsTreeTerminal').jstree(true).get_selected(true);
+                		node = $('#jsTreeTerminal').jstree(true).get_selected(true);
                 	}
 					var nodeLength = node.length;
 					for (var i = 0; i < nodeLength; i++) {

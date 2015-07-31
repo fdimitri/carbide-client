@@ -220,17 +220,12 @@ $('#jsTreeFile').keydown(function(e) {
 				if (t.closest('.windowPane').length) {
 
 
-					console.log("Data");
-					console.log(data);
-					console.log("Data . Data");
-					console.log(data.data);
+
 					var draggedItem = $("#" + data.data.obj[0].id);
 
 					console.log(draggedItem);
 					if (draggedItem.hasClass("jsTreeFile")) {
-						console.log("TARGET");
-						console.log(data.event.target);
-						console.log("ID");
+						
 						//var thisParent = $(data.event.target).closest('div').attr('id');
 						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
 						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
@@ -238,8 +233,7 @@ $('#jsTreeFile').keydown(function(e) {
 							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
 						}
 						else {
-							console.log(data);
-							console.log($("#" + data.data.obj[0].id));
+							
 							//console.log($("#" + data.data.obj[0].id).closest('li').attr('srcPath'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
 							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
@@ -276,9 +270,7 @@ $('#jsTreeFile').keydown(function(e) {
 							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the file they dragged in
 						}
 						else {
-							console.log(data);
-							console.log($("#" + data.data.obj[0].id));
-							console.log($("#" + data.data.obj[0].id).closest('li'));
+
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
 							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
 							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'terminal', '');
@@ -622,8 +614,16 @@ function initFileTree(data, ftid) {
 
 			}
 			else {
-				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
-				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				prepareActivePane();
+			 	var interval_id = setInterval(function(){ //wait for active pane before calling new tab
+					    
+				     if ($(".activePane").length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				      }
+				}, 10);
+				//newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				//	   	console.log(node);
 			}
 		}
@@ -887,8 +887,15 @@ function initChatTree(data) {
 
 			}
 			else {
-				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
-				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				prepareActivePane();
+			 	var interval_id = setInterval(function(){ //wait for active pane before calling new tab
+					    
+				     if ($(".activePane").length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				      }
+				}, 10);
 				//	   	console.log(node);
 			}
 		}
@@ -964,8 +971,16 @@ function initTermTree(data) {
 
 			}
 			else {
-				console.log($(".windowPane").attr("id") + " " + $(".windowPane").attr("class"));
-				newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				//if no panes have an active pane they must all be minimized. we will restore the most recent active pane from the array of active panes
+				prepareActivePane();
+			 	var interval_id = setInterval(function(){ //wait for active pane before calling new tab
+					    
+				     if ($(".activePane").length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				      }
+				}, 10);
 				//	   	console.log(node);
 			}
 		}

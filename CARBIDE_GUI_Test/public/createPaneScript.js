@@ -5,7 +5,6 @@ $(function() {
 	function initializeSortable() {
 		var tabs = $( "%tabBar%" ).tabs({
 			activate: function (event, ui) {
-			    checkTerminalSizes(ui.newPanel.closest('.windowPane').attr('id')); //we must fix the terminal size when a new tab comes into focus
 			    
 			    var tabId = ui.newPanel.attr('id');
 			    //mark this new tab as active tab, tell the server
@@ -36,6 +35,30 @@ $(function() {
 										
 					};
 				wsSendMsg(JSON.stringify(statusJSON));
+				if ($('li[aria-controls="' + tabId + '"]').attr('type') == 'terminal') { //there is a terminal on this line. we must make sure it is built fully
+					var intervalCounter = 0;
+					var interval_id = setInterval(function(){ //wait for terminal creation then check the sizes
+						 intervalCounter = intervalCounter + 1;
+						 if (intervalCounter > 400) {
+						 	clearInterval(interval_id);
+						 }
+						 else {
+						     if (ui.newPanel.find('.terminal').length > 0){
+						     	console.log("rock N ROLE");
+						     	console.log(ui.newPanel);
+						     	console.log(ui.newPanel.find('.terminal'));
+						     	console.log(ui.newPanel.find('.terminal').length)
+						         // "exit" the interval loop with clearInterval command
+						         clearInterval(interval_id);
+						         checkTerminalSizes(ui.newPanel.closest('.windowPane').attr('id')); //we must fix the terminal size when a new tab comes into focus
+						      }
+						 }
+					}, 20);
+					
+				}
+				// ui.newPanel.find('.filegreyblock').height(ui.newPanel.find('.ace_editor').height());
+				// ui.newPanel.find('.filegreyblock').width(ui.newPanel.find('.ace_editor').width());
+			    
 			 }
 		});
         
@@ -250,7 +273,6 @@ $(function() {
 
 			}
 			//else { console.log("there is no chat window."); }
-			
 			
 			checkTerminalSizes($(this).attr("id"));
 		
