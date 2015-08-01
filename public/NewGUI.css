@@ -416,9 +416,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	margin: 0px;
 	background: rgba(255,255,255,0.95);
 }
-.cInputBox {
-	width: 100%;
-}
+
 .AriaTab {
 	/*min-height: 320px;*/
 
@@ -433,7 +431,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
   position: absolute;
 }
 .cInputBox {
-	width: 100%;
+	width: calc(100% - 4px);
 }
 .cMsgT {
 	font-family: monospace;
@@ -443,24 +441,32 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	border: 0px;
 	border-collapse: collapse;
 }
+.cMsgT p {
+	display: inline;
+	padding-left:5px;
+}
 .cMsgT tr td {
 	word-break: break-word;
 	word-wrap: break-word;
 	white-space: pre-wrap;
-	vertical-align: top;
+	vertical-align: center;
 }
 .cMsgT tr td:nth-child(1) {
 	width: 100px;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */      
 }
 .cMsgT tr td:nth-child(2) {
-	width: calc(100%-100px);
+	width: calc(100% - 100px);
 	text-align: left;
 }
 
 .cMsgT tr td:nth-child(2) p {
 	border-left: 1px dotted rgba(0,0,0,0.9);
 	border-radius:2px;
-	display: block;
+	/*display: block;*/
 	word-break: break-word;
 	word-wrap: break-word;
 	white-space: pre-wrap;

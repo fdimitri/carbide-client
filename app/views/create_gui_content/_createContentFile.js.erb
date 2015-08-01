@@ -1,4 +1,4 @@
-$("#%paneId%").on('resize', function() {
+$("#<%= @paneId %>").on('resize', function() {
     console.log("Pane has been resized");
     $(this).find('.preAceEdit').each(function() {
         console.log("AceEditor pre container resize triggered");
@@ -7,8 +7,8 @@ $("#%paneId%").on('resize', function() {
     });
 });
 
-// $("#file_%tabName%").on('keydown', function ( e ) {
-//     console.log("Our paneId is %paneId%");
+// $("#file_<%= @tabName %>").on('keydown', function ( e ) {
+//     console.log("Our paneId is <%= @paneId %>");
     
 //     if ( e.altKey && ( String.fromCharCode(e.which) === 'r' || String.fromCharCode(e.which) === 'R' ) ) { //ALT-R keypress
 //         var te = $(this);

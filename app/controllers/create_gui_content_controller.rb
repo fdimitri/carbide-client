@@ -4,7 +4,6 @@ class CreateGuiContentController < ApplicationController
   def setHeaders
     puts "setHeaders()"
     response.headers["Content-Type"] = "text/html"
-    puts response.inspect
   end
   def createPane
     setVarsPane(params)
@@ -32,8 +31,9 @@ class CreateGuiContentController < ApplicationController
     @paneCounter = "%.2d" % params['paneCounter']
     @delPanes = params['delPanes']
     @pane = "#pane" + @paneCounter
+    @paneId = "#pane" + @paneCounter
     @tabBar = "#tabBar" + @paneCounter
-    @paneX = "#pane" + @paneCounter
+    @paneX = "pane" + @paneCounter
     @paneTitle = "Pane " + (@paneCounter.to_i - @delPanes.to_i).to_s
 # <!--$newScript = preg_replace('/%pane%/', sprintf("#pane%02d", $paneCounter), $oldScript);-->
 # <!--$newScript = preg_replace('/%tabBar%/', sprintf("#tabBar%02d", $paneCounter), $newScript);-->
@@ -61,7 +61,18 @@ class CreateGuiContentController < ApplicationController
   end
 
   def createContentChat
+    setVarsContent(params)
+
   end
+  
+  def createContentFile
+    setVarsContent(params)
+  end
+  
+  def createContentTerminal
+    setVarsContent(params)
+  end
+  
   
   def setVarsContent(params)
     @data = params
@@ -69,6 +80,13 @@ class CreateGuiContentController < ApplicationController
     @tabType = params['tabType']
     @paneId = params['paneId']
     @chatTarget = params['chatTarget']
+    @srcPath = params['srcPath']
+    #Terminal-only params
+  	@containerId = @tabName + '_C';
+    @terminalContainerId = @containerId
+    @terminalId = @tabName
+    @terminalName = @chatTarget
+
   end
 
 end

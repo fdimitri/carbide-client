@@ -1272,7 +1272,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				console.log(ws);
 				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
-			else if (tabType == 'file') {
+			else if (tabType == 'File') {
 				//var te = $("#" + tabName).find('textarea');
 				var te = $("#" + tabName).find('.preAceEdit');
 				console.log("Searching " + tabName + " to add editor to..");
