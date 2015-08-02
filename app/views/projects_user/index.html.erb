@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Projects</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Project Name</th>
+      <th>Project Owner</th>
+      <!--<th>Users</th>-->
+      <th>This User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @projects_users.each do |pu_assoc| %>
+    <% next if !pu_assoc.Project.is_visible_to_user?(current_user.id) %>
+    <% project = pu_assoc.Project %>
+    <% owner = pu_assoc.Project.Owner %>
+    <% user = pu_assoc.User %>
+      <tr>
+        <td><%= link_to project.name, project %> (ID: <%= project.id %>)</td>
+        <td><%= link_to owner.name, owner %></td>
+        <!--<td>-->
+        <!--    <% project.Users.each do |user| %>-->
+        <!--    <%= link_to user.name, user %>-->
+        <!--    <% end %>-->
+        <!--</td>-->
+        <td><%=  link_to user.name, user %> (ID: <%= user.id %>)</td>
+        <td><%= link_to 'Show', project %></td>
+        <td><%= link_to 'Edit', edit_project_path(project) %></td>
+        <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

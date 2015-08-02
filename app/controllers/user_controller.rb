@@ -32,12 +32,15 @@ class UserController < ApplicationController
   # GET/PATCH /users/:id/finish_signup
   def finish_signup
     @user = User.find(params[:id])
+    puts "OpenSSL version:" + OpenSSL::OPENSSL_VERSION
     # authorize! :update, @user
     if request.patch? && params[:user] #&& params[:user][:email]
       if @user.update(user_params)
-        @user.skip_reconfirmation!
+        if @user.respond_to?('skip_reconfirmation')
+          @user.skip_reconfirmation!
+        end
         sign_in(@user, :bypass => true)
-        redirect_to @user, notice: 'Your profile was successfully updated.'
+        redirect_to '/user', notice: 'Your profile was successfully updated.'
         #redirect_to '/', notice: 'Your profile was successfully updated.'
       else
         @show_errors = true

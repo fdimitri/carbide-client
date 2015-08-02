@@ -284,6 +284,18 @@
                 console.log("drawing a decision.");
                 createNewElement("decision",boxId,x,y,thisId); //draw a new decision
             }
+            else if (shape == "io") {
+                console.log("drawing an input/output box.");
+                createNewElement("io",boxId,x,y,thisId); //draw a new io
+            }
+            else if (shape == "action") {
+                console.log("drawing an action.");
+                createNewElement("action",boxId,x,y,thisId); //draw a new action
+            }
+            else if (shape == "startend") {
+                console.log("drawing a start/end.");
+                createNewElement("startend",boxId,x,y,thisId); //draw a new start/end
+            }
     //         else { //old stuff follows
     //         	var thisDialog = "dialog-dbEditor";
     // 			changeDialogTitle(thisDialog,"Enter Table Name");
@@ -401,7 +413,48 @@
             
             addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "Top", "Bottom"]);
         }
-        
+        else if (shape == "io") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-io">' + 
+			    '<img src="uml/parallelogram.svg" class="form-io svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-io-boxholder"><div class="form-io-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["BottomLeft", "TopRight", "Top", "Bottom"]);
+        }
+        else if (shape == "action") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-action">' + 
+			    '<img src="uml/rectangle.svg" class="form-action svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-action-boxholder"><div class="form-action-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopLeft", "Top", "TopRight", "RightMiddle", "BottomRight", "Bottom", "BottomLeft", "LeftMiddle"]);
+        }
+        else if (shape == "startend") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-startend">' + 
+			    '<img src="uml/startend.svg" class="form-startend svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-startend-boxholder"><div class="form-startend-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["Top", "RightMiddle", "Bottom", "LeftMiddle"]);
+        }
          updateDraggable();
          
          //set default color for new objects
@@ -530,6 +583,15 @@
           else if ($(e.target).closest(".form-container-decision").length) { //check if they activated a decision menu
               activeContainerShape = "decision";
           }
+          else if ($(e.target).closest(".form-container-io").length) { //check if they activated an i/o menu
+              activeContainerShape = "io";
+          }
+          else if ($(e.target).closest(".form-container-action").length) { //check if they activated an action menu
+              activeContainerShape = "action";
+          }
+          else if ($(e.target).closest(".form-container-startend").length) { //check if they activated a start/end menu
+              activeContainerShape = "startend";
+          }
           else if ($(e.target).closest("._jsPlumb_overlay").length) { //this is a label
               activeContainerShape = "activeLabel";
           }
@@ -613,6 +675,27 @@
     		        var yLocation = (event.pageY - parentOffset.top);
     		        
     		        requestNewElement("decision",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new decision
+                }
+                else if (ui.cmd == "createIo") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("io",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new IO
+                }
+                else if (ui.cmd == "createAction") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("action",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new action
+                }
+                else if (ui.cmd == "createStartEnd") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("startend",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new start/end
                 }
                 else if (ui.cmd == "changeColor") {
                     var thisDialog = "dialog-dbEditor";
@@ -907,7 +990,7 @@
             },
             beforeOpen: function(event, ui) {
 
-                if ((activeContainerShape == "circle") || (activeContainerShape == "note") || (activeContainerShape == "document") || (activeContainerShape == "folder") || (activeContainerShape == "decision")) { //they activated a circle, note, document, folder, decision menu
+                if ((activeContainerShape == "circle") || (activeContainerShape == "note") || (activeContainerShape == "document") || (activeContainerShape == "folder") || (activeContainerShape == "decision") || (activeContainerShape == "io") || (activeContainerShape == "action") || (activeContainerShape == "startend")) { //they activated a circle, note, document, folder, decision, io, action menu
                     $(".flowchart-boundbox").contextmenu("replaceMenu", [
                         {title: '<span class="contextMenuItem">Edit Text</span>', cmd: "editText"},
                         {title: '<span class="contextMenuItem">Change Color</span>', cmd: "changeColor"},
@@ -955,11 +1038,14 @@
                 else { //this is the regular menu. 
                      $(".flowchart-boundbox").contextmenu("replaceMenu", [
                         {title: '<span class="contextMenuItem">Create New...</span>', children: [
-                            {title: '<span class="contextMenuItem">Circle</span>', cmd: "createCircle"},
+                            {title: '<span class="contextMenuItem">Start/End</span>', cmd: "createStartEnd"},
+                            {title: '<span class="contextMenuItem">Action</span>', cmd: "createAction"},
                             {title: '<span class="contextMenuItem">Note</span>', cmd: "createNote"},
                             {title: '<span class="contextMenuItem">Folder</span>', cmd: "createFolder"},
                             {title: '<span class="contextMenuItem">Document</span>', cmd: "createDocument"},
                             {title: '<span class="contextMenuItem">Decision</span>', cmd: "createDecision"},
+                            {title: '<span class="contextMenuItem">Input/Output</span>', cmd: "createIo"},
+                            {title: '<span class="contextMenuItem">Circle</span>', cmd: "createCircle"},
                         ]}
                     ]);
                 }

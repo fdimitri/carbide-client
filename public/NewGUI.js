@@ -667,7 +667,7 @@ function createNewPane() {
 
 function closeTab(tab) {
 					var thisLi = tab.parents("li");
-
+console.log(thisLi)
 					var numberOfTabs = tab.closest(".menuList").find("li").length;
 					var controllerPane = tab.closest(".windowPane").attr("id");
 					
@@ -703,6 +703,7 @@ function closeTab(tab) {
 					}
 					
 					if (thisLi.attr('type') == 'terminal') {
+						
 						var ariaTabName = thisLi.attr("aria-controls");
 						
 						var termName = $('#' + ariaTabName).find('.terminalWindow').attr('terminalId');
@@ -811,7 +812,6 @@ function focusPane(paneId) {
 		
 		//set last focused pane to this one
 		lastFocusedPane = paneId;
-
 		checkTerminalSizes(paneId);
 	}
 
@@ -908,15 +908,17 @@ function restorePane(paneId) {
 		if (thisPane.width() > (thisPane.parent().width() - 10)) {
 			thisPane.width(thisPane.parent().width() - 10);
 		}
-
 	}
 	else {
-
+		thisPane.parent().css({position: 'relative'});
+		var thisX = parseInt(thisPane.attr("oldx"));
+		var thisY = parseInt(thisPane.attr("oldy"));
 		thisPane.css({
-			top: thisPane.attr("oldy"),
-			left: thisPane.attr("oldx"),
+			top: thisY,
+			left: thisX,
 			position: 'absolute'
 		});
+
 	}
 	$(".windowPaneTab[pane='" + paneId + "']").find(".windowPaneTabFocus").css("visibility", "hidden");
 	
@@ -1167,7 +1169,7 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
 
 function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	console.log("Called with filename:" + filename + " tabBarId:" + tabBarId + " originId " + originId + " srcPath:" + srcPath);
-	tabType = tabType.charAt(0).toUpperCase() + tabType.slice(1);
+	var tabTypeU = tabType.charAt(0).toUpperCase() + tabType.slice(1);
 	// if (filename == "Default Terminal") {
 	// 	var numTerminals = $('li[type="terminal"]').length; //count the terminals
 	// 	filename = "Terminal_" + (numTerminals + 1);
@@ -1180,7 +1182,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	var tabNameNice = filename;
 	console.log("tabName is set to " + tabName + " and num_Tabs is set to " + num_Tabs);
 	//if ($("#" + tabName).length) {
-	if (tabType == "File") {
+	if (tabType == "file") {
 		if ($("#" + tabBarId).find('[srcpath="' + srcPath + '"]').length) { //check for duplicate files
 		
 			console.log("We already have this tab open!");
@@ -1193,7 +1195,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "Chat") { //a duplicate chat is considered to be any chat by this name active within any pane
+	else if (tabType == "chat") { //a duplicate chat is considered to be any chat by this name active within any pane
 		var foundFile = $('li[filename="' + filename + '"]');
 		if (foundFile.length) {
 			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing chat
@@ -1231,7 +1233,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 		type: 'post',
 		data: {
 		'tabName': tabName,
-		'tabType': tabType,
+		'tabType': tabTypeU,
 		'paneId': tabBarId,
 		'originId': originId,
 		'chatTarget': filename,
@@ -1257,7 +1259,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				console.log("Script receieved!");
 				eval(result.script);
 			}
-			if (tabType == 'Chat') {
+			if (tabType == 'chat') {
 				var statusJSON = {
 					"commandSet": "chat",
 					"chatCommand": "joinChannel",
@@ -1272,7 +1274,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				console.log(ws);
 				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
-			else if (tabType == 'File') {
+			else if (tabType == 'file') {
 				//var te = $("#" + tabName).find('textarea');
 				var te = $("#" + tabName).find('.preAceEdit');
 				console.log("Searching " + tabName + " to add editor to..");

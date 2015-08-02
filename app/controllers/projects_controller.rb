@@ -16,6 +16,7 @@ class ProjectsController < ApplicationController
   def new
     @project = Project.new
     @project_profile = ProjectProfile.new
+    @project_user = ProjectsUser.new
     #@project.ProjectProfile.build
   end
 
@@ -43,6 +44,8 @@ class ProjectsController < ApplicationController
     projParams[:ProjectProfile_id] = @project_profile.id
     @project_profile.update(profParams)
     @project.update(projParams)
+    firstUser = ProjectsUser.new(:Project_id => @project.id, :User_id => @current_user.id)
+    saveResult &= firstUser.save
     respond_to do |format|
       if saveResult
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
@@ -66,10 +69,6 @@ class ProjectsController < ApplicationController
       @project_profile.update(profile_params)
       @project_profile.Project_id = @project.id
     end
-
-    puts "!!!!!----!!!!!!"
-    YAML.dump(project_params)
-    puts "!!!!!----!!!!!!"
 
     updateSuccesss = @project_profile.update(profile_params)
     begin
@@ -99,6 +98,7 @@ class ProjectsController < ApplicationController
     end
   end
 
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project

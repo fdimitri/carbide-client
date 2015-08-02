@@ -1,3 +1,23 @@
 // Place all the styles related to the User controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#userProjectsOwned, #userProjectsEngaged {
+    border-style:solid;
+    border-color:rgba(0,0,0,1.0);
+    border-width:2px;
+    margin:10px;
+    
+    td {
+        padding-left:10px;
+        padding-right:10px;
+        padding-top:3px;
+        padding-bottom:3px;
+    }
+}
+#userProjectsOwned {
+    color:rgba(10,10,10,1.0);
+}
+#userProjectsEngaged {
+    color:rgba(20,20,20,1.0);
+}

@@ -8,14 +8,26 @@ Rails.application.routes.draw do
   resources :projects
 
   root to: "home#index"
-  # devise_scope :user do
-  #   get 'sign_in', :to => 'devise/sessions#new', :as => :login
-  #   get 'logout', :to => 'devise/sessions#destroy', :as => :logout
-  # end
-  devise_for :user, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }
+  devise_for :user, :controllers => { omniauth_callbacks: 'omniauth_callbacks' }, :skip => [:sessions]
+  devise_scope :user do
+    get '/user/signin' => 'devise/sessions#new', :as => :new_user_session
+    post '/user/signin' => 'devise/sessions#create', :as => :user_session
+    match '/user/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, via: [:get, :post, :patch, :delete]
+  end
   match '/user/:id/finish_signup' => 'user#finish_signup', via: [:get, :patch], :as => :finish_signup
-  resources :user
+   #devise_scope :user do
+     #get 'sign_in', :to => 'devise/sessions#new', :as => :login
+     #get 'logout', :to => 'devise/sessions#destroy', :as => :logout
+     #get 'sign_out', :to => 'devise/sessions#destroy', :as => :sign_out
+     #delete 'sign_out', :to => 'devise/sessions#destroy', :as => :sign_out
+   #end
 
+  resources :user
+  resources :projects_user, :only => [:new, :create, :index]
+  get 'projects_user/inviteUserToProject'
+  get 'projects_user/inviteTest'
+  post 'projects_user/inviteUserToProject'
+  post 'projects_user/inviteTest'  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

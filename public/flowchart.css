@@ -8,6 +8,9 @@
     overflow:hidden;
     z-index:20;
     position:absolute;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .form-circle {
@@ -66,6 +69,27 @@
     background-color:rgba(0,0,0,0.0);
 }
 .form-folder {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-io {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-action {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-startend {
     position:absolute;
     width:100%;
     height:100%;
@@ -131,7 +155,66 @@
     flex-direction: column;
     z-index:17;
 }
+.form-io-boxholder {
 
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+}
+.form-io-innerbox {
+
+    width:50%;
+    height:98%;
+    margin: auto;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-action-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+}
+.form-action-innerbox {
+
+    width:96%;
+    height:96%;
+    margin: auto;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-startend-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+}
+.form-startend-innerbox {
+
+    width:80%;
+    height:90%;
+    margin: auto;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
 .form-text-area {
     margin: auto;
      z-index:19;

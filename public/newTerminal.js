@@ -46,7 +46,9 @@ function addTerminal (terminalName,divName,columns,rows){
     
     term.open($("#" + divName).get(0));
 
+    checkTerminalSizes($("#" + divName).closest(".windowPane").attr("id"));
     term.write('\x1b[31mTerminal Initialized!\x1b[m\r\n');
+    
     return(term);
 
 }    
@@ -126,7 +128,7 @@ function resizeTerminalByObj(terminalObj) {
 //      var height = terminalObj.children('.terminal').first().height();
 //      var width = terminalObj.children('.terminal').first().width();
      
-     var width = Math.ceil(term.terminal.getNormalizedWidth());
+     var width = term.terminal.getNormalizedWidth();
      var height = Math.floor(term.terminal.getNormalizedHeight());
 	      
      
@@ -208,7 +210,6 @@ function registerTerminalClose(term) {
 
 function checkTerminalSizes (paneId) {
 
-
     //setTimeout(function() {
         var thisPane = $('#' + paneId);
         var thisActiveTab = thisPane.find(".activeTab");
@@ -219,6 +220,7 @@ function checkTerminalSizes (paneId) {
     	if ($("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').length) {
     		var activeTerminalName = $("#" + (thisActiveTab).attr("aria-controls")).find('.terminalWindow').attr("terminalId");
     		var activeTerminal = getTerminalByName(activeTerminalName);
+
     		resizeTerminalByName(activeTerminalName);
     // 		var rows = activeTerminal.terminal.getRows();
     // 		var cols = activeTerminal.terminal.getCols();

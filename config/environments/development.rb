@@ -1,27 +1,49 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.app_domain = 'http://www.frank-d.info:3000/'
+  config.app_domain = 'http://http://weirdim-frankd412.c9.io/'
   config.web_console.whitelisted_ips = '0.0.0.0/0'
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.serve_static_files = true
-  config.action_mailer.default_url_options = { host: 'frank-d.info' }
+
+  # config.action_mailer.default_url_options = { host: 'frank-d.info' }
+  # config.action_mailer.smtp_settings = {
+  #   address: 'smtp.zoho.com',
+  #   port: 465,
+  #   enable_starttls_auto: true,
+  #   domain: 'frank-d.info',
+  #   user_name: 'frankd@frank-d.info',
+  #   password: 'bu:tln563',
+  #   authentication: :login,
+  #   enable_starttls_auto: true,
+  #   ssl: true,
+  #   tls: true,
+  # }
+  # config.action_mailer.default_options = {
+  #   from: 'frankd@frank-d.info',
+  # }
+
+
+  config.action_mailer.default_url_options = { host: 'gmail.com' }
   config.action_mailer.smtp_settings = {
-    address: 'smtp.zoho.com',
-    port: 465,
+    address: 'smtp.gmail.com',
+    port: 587,
     enable_starttls_auto: true,
-    domain: 'frank-d.info',
-    user_name: 'frankd@frank-d.info',
-    password: 'bu:tln563',
-    authentication: :login,
+    domain: 'gmail.com',
+    user_name: 'frankd412@gmail.com',
+    password: '1979Formula',
+    authentication: :plain,
     enable_starttls_auto: true,
     ssl: true,
     tls: true,
+    ssl_version: 'SSLv3',
   }
   config.action_mailer.default_options = {
-    from: 'frankd@frank-d.info',
+    from: 'frankd412@gmail.com',
   }
+
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.

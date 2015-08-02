@@ -1,5 +1,4 @@
-
-Logged in as: <%= @user.name %> and reachable through <%=
+Logged in as: <%= link_to @user.name, @user %> and reachable through <%=
 if (@user.unconfirmed_email && @user.unconfirmed_email.length)
   email = @user.unconfirmed_email  + "(Unconfirmed)"
 else
@@ -7,39 +6,68 @@ else
 end
 email
 %>
+
+
 <div>
 Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
-
-Demo the <%= link_to :project %>
 </div>
 
 <div>
-Projects you own: (<%= @myProjects.count.to_s %>)
-<% @myProjects.each do |proj| %>
-<div>
-Name: <%=  proj.name %><br/>
-Users (<%= proj.Users.count.to_s %>):
-<% proj.Users.each do |user| %>
-<%= user.name %>
-<% end %>
+  <h2>Projects you own: (<%= @myProjects.count.to_s %>)</h2>
+    <table id="userProjectsOwned">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Users</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+  <% @myProjects.each do |proj| %>
+        <tr>
+          <td><%= link_to proj.name, proj %></td>
+          <td>(<%= proj.Users.count.to_s %>): 
+            <% proj.Users.each do |user| %>
+            <%= link_to user.name, user %>
+            <% end %>
+          </td>
+          <td>
+            <% @projects_user = ProjectsUser.new() %>
+            Invite user: <%= render :partial => "/projects_user/inviteUserToProject", :locals =>  { :project_id => proj.id }, :object => @projects_user %> <br/>
+            Give Project: <%= render :partial => "/projects/giveOwnership", :locals => { :project_id => proj.id } %>
+          </td>
+        </tr>
+  <% end %>
+      </tbody>
+    </table>
+  </div>
+  
 </div>
-<% end %>
 
 <div>
-Projects you're engaged in: (<%= @user.Projects.count.to_s %>)
-<% @user.Projects.each do |proj| %>
-<div>
-Name: <%=  proj.name %><br/>
-Users (<%= proj.Users.count.to_s %>):
-<% proj.Users.each do |user| %>
-<%= user.name %>
-<% end %>
+  <h2>Projects you're engaged in: (<%= @user.Projects.count.to_s %>)</h2>
+  <table id="userProjectsEngaged">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Users</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+  <% @user.Projects.each do |proj| %>
+  <tr><td><%= link_to proj.name, proj %></td>
+    <td>(<%= proj.Users.count.to_s %>):
+      <% proj.Users.each do |user| %>
+      <%= link_to user.name, user %>
+      <% end %>
+    </td>
+    <td>
+            Leave Project
+    </td>
+  </tr>
+  <% end %>
 </div>
-<% end %>
 
 
-Your user dump:
-<pre>
-  <%= YAML.dump(@myProjects.first.class.to_s) %>
-<%= YAML.dump(@user) %>
-</pre>
+
