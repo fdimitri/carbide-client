@@ -296,6 +296,38 @@
                 console.log("drawing a start/end.");
                 createNewElement("startend",boxId,x,y,thisId); //draw a new start/end
             }
+            else if (shape == "merge") {
+                console.log("drawing a merge.");
+                createNewElement("merge",boxId,x,y,thisId); //draw a new merge
+            }
+            else if (shape == "extract") {
+                console.log("drawing an extract.");
+                createNewElement("extract",boxId,x,y,thisId); //draw a new extract
+            }
+            else if (shape == "preparation") {
+                console.log("drawing a preparation.");
+                createNewElement("preparation",boxId,x,y,thisId); //draw a new preparation
+            }
+            else if (shape == "manualinput") {
+                console.log("drawing a manual input.");
+                createNewElement("manualinput",boxId,x,y,thisId); //draw a new manual input
+            }
+            else if (shape == "internalstorage") {
+                console.log("drawing an internal storage.");
+                createNewElement("internalstorage",boxId,x,y,thisId); //draw a new internal storage
+            }
+            else if (shape == "subroutine") {
+                console.log("drawing a subroutine.");
+                createNewElement("subroutine",boxId,x,y,thisId); //draw a new subroutine
+            }
+            else if (shape == "multidocument") {
+                console.log("drawing a multidocument.");
+                createNewElement("multidocument",boxId,x,y,thisId); //draw a new multidocument
+            }
+            else if (shape == "manualoperation") {
+                console.log("drawing a manual operation.");
+                createNewElement("manualoperation",boxId,x,y,thisId); //draw a new manual operation
+            }
     //         else { //old stuff follows
     //         	var thisDialog = "dialog-dbEditor";
     // 			changeDialogTitle(thisDialog,"Enter Table Name");
@@ -455,6 +487,118 @@
             
             addNewEndpoints('Element' + numElements, ["Top", "RightMiddle", "Bottom", "LeftMiddle"]);
         }
+        else if (shape == "merge") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-merge">' + 
+			    '<img src="uml/triangle.svg" class="form-merge svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-merge-boxholder"><div class="form-merge-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopLeft", "Top", "TopRight", "Bottom"]);
+        }
+        else if (shape == "extract") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-extract">' + 
+			    '<img src="uml/extract.svg" class="form-extract svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-extract-boxholder"><div class="form-extract-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["Top", "BottomRight", "Bottom", "BottomLeft"]);
+        }
+        else if (shape == "preparation") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-preparation">' + 
+			    '<img src="uml/preparation.svg" class="form-preparation svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-preparation-boxholder"><div class="form-preparation-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["Top", "RightMiddle", "Bottom", "LeftMiddle"]);
+        }
+        else if (shape == "manualinput") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-manualinput">' + 
+			    '<img src="uml/manualinput.svg" class="form-manualinput svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-manualinput-boxholder"><div class="form-manualinput-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopRight", "RightMiddle", "BottomRight", "Bottom", "BottomLeft", "LeftMiddle"]);
+        }
+        else if (shape == "internalstorage") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-internalstorage">' + 
+			    '<img src="uml/internalstorage.svg" class="form-internalstorage svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-internalstorage-boxholder"><div class="form-internalstorage-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopLeft", "Top", "TopRight", "RightMiddle", "BottomRight", "Bottom", "BottomLeft", "LeftMiddle"]);
+        }
+        else if (shape == "subroutine") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-subroutine">' + 
+			    '<img src="uml/subroutine.svg" class="form-subroutine svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-subroutine-boxholder"><div class="form-subroutine-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new document to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopLeft", "Top", "TopRight", "RightMiddle", "BottomRight", "Bottom", "BottomLeft", "LeftMiddle"]);
+        }
+        else if (shape == "multidocument") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-multidocument">' + 
+			    '<img src="uml/multidocument.svg" class="form-multidocument svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-multidocument-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new multidocument to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "BottomLeft", "TopRight", "Top"]);
+        }
+        else if (shape == "manualoperation") {
+            console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
+            
+            var newDivs = '<div id="flowchartElement' + numElements + '" class="flowchartBox form-outer-box form-container-manualoperation">' + 
+			    '<img src="uml/manualoperation.svg" class="form-manualoperation svg" id="shape' + numElements + '"/>' + 
+			    '<div class="form-manualoperation-boxholder"><div class="form-manualoperation-innerbox">' + 
+			    '<div class="form-text-area"></div></div></div></div>';
+			    
+			$('#' + boxId).append(newDivs); //append the new manual operation to the parent box
+
+            $("#flowchartElement" + numElements).eq(0).css({top: y, left: x, position:'absolute'});
+            
+            addNewEndpoints('Element' + numElements, ["TopLeft", "Top", "TopRight", "Bottom"]);
+        }
          updateDraggable();
          
          //set default color for new objects
@@ -592,6 +736,30 @@
           else if ($(e.target).closest(".form-container-startend").length) { //check if they activated a start/end menu
               activeContainerShape = "startend";
           }
+          else if ($(e.target).closest(".form-container-merge").length) { //check if they activated a merge menu
+              activeContainerShape = "merge";
+          }
+          else if ($(e.target).closest(".form-container-extract").length) { //check if they activated an extract menu
+              activeContainerShape = "extract";
+          }
+          else if ($(e.target).closest(".form-container-preparation").length) { //check if they activated a preparation menu
+              activeContainerShape = "preparation";
+          }
+          else if ($(e.target).closest(".form-container-manualinput").length) { //check if they activated a manual input menu
+              activeContainerShape = "manualinput";
+          }
+          else if ($(e.target).closest(".form-container-internalstorage").length) { //check if they activated an internal storage menu
+              activeContainerShape = "internalstorage";
+          }
+          else if ($(e.target).closest(".form-container-subroutine").length) { //check if they activated a subroutine menu
+              activeContainerShape = "subroutine";
+          }
+          else if ($(e.target).closest(".form-container-multidocument").length) { //check if they activated a multidocument menu
+              activeContainerShape = "multidocument";
+          }
+          else if ($(e.target).closest(".form-container-manualoperation").length) { //check if they activated a manual operation menu
+              activeContainerShape = "manualoperation";
+          }
           else if ($(e.target).closest("._jsPlumb_overlay").length) { //this is a label
               activeContainerShape = "activeLabel";
           }
@@ -696,6 +864,62 @@
     		        var yLocation = (event.pageY - parentOffset.top);
     		        
     		        requestNewElement("startend",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new start/end
+                }
+                else if (ui.cmd == "createMerge") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("merge",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new merge
+                }
+                else if (ui.cmd == "createExtract") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("extract",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new extract
+                }
+                else if (ui.cmd == "createPreparation") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("preparation",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new preparation
+                }
+                else if (ui.cmd == "createManualInput") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("manualinput",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new manual input
+                }
+                else if (ui.cmd == "createInternalStorage") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("internalstorage",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new internal storage
+                }
+                else if (ui.cmd == "createSubroutine") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("subroutine",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new subroutine
+                }
+                else if (ui.cmd == "createMultiDocument") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("multidocument",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new multidocument
+                }
+                else if (ui.cmd == "createManualOperation") {
+                    var parentOffset = $(this).parent().offset(); 
+    		        var xLocation = (event.pageX - parentOffset.left);
+    		        var yLocation = (event.pageY - parentOffset.top);
+    		        
+    		        requestNewElement("manualoperation",activeContainerId,xLocation,yLocation); //create dialogs to start process of creating a new manual operation
                 }
                 else if (ui.cmd == "changeColor") {
                     var thisDialog = "dialog-dbEditor";
@@ -990,7 +1214,7 @@
             },
             beforeOpen: function(event, ui) {
 
-                if ((activeContainerShape == "circle") || (activeContainerShape == "note") || (activeContainerShape == "document") || (activeContainerShape == "folder") || (activeContainerShape == "decision") || (activeContainerShape == "io") || (activeContainerShape == "action") || (activeContainerShape == "startend")) { //they activated a circle, note, document, folder, decision, io, action menu
+                if ((activeContainerShape == "circle") || (activeContainerShape == "note") || (activeContainerShape == "document") || (activeContainerShape == "folder") || (activeContainerShape == "decision") || (activeContainerShape == "io") || (activeContainerShape == "action") || (activeContainerShape == "startend") || (activeContainerShape == "merge") || (activeContainerShape == "extract") || (activeContainerShape == "preparation") || (activeContainerShape == "manualinput") || (activeContainerShape == "internalstorage") || (activeContainerShape == "subroutine") || (activeContainerShape == "multidocument") || (activeContainerShape == "manualoperation")) { //they activated a circle, note, document, folder, decision, io, action, start/end, merge, extract, preparation, manual input, internal storage, subroutine, multidocument, manual operation menu
                     $(".flowchart-boundbox").contextmenu("replaceMenu", [
                         {title: '<span class="contextMenuItem">Edit Text</span>', cmd: "editText"},
                         {title: '<span class="contextMenuItem">Change Color</span>', cmd: "changeColor"},
@@ -1040,11 +1264,19 @@
                         {title: '<span class="contextMenuItem">Create New...</span>', children: [
                             {title: '<span class="contextMenuItem">Start/End</span>', cmd: "createStartEnd"},
                             {title: '<span class="contextMenuItem">Action</span>', cmd: "createAction"},
+                            {title: '<span class="contextMenuItem">Input/Output/Data</span>', cmd: "createIo"},
+                            {title: '<span class="contextMenuItem">Manual Input</span>', cmd: "createManualInput"},
+                            {title: '<span class="contextMenuItem">Manual Operation</span>', cmd: "createManualOperation"},
+                            {title: '<span class="contextMenuItem">Preparation</span>', cmd: "createPreparation"},
+                            {title: '<span class="contextMenuItem">Decision</span>', cmd: "createDecision"},
+                            {title: '<span class="contextMenuItem">Merge</span>', cmd: "createMerge"},
+                            {title: '<span class="contextMenuItem">Extract</span>', cmd: "createExtract"},
                             {title: '<span class="contextMenuItem">Note</span>', cmd: "createNote"},
                             {title: '<span class="contextMenuItem">Folder</span>', cmd: "createFolder"},
                             {title: '<span class="contextMenuItem">Document</span>', cmd: "createDocument"},
-                            {title: '<span class="contextMenuItem">Decision</span>', cmd: "createDecision"},
-                            {title: '<span class="contextMenuItem">Input/Output</span>', cmd: "createIo"},
+                            {title: '<span class="contextMenuItem">Multi-Document</span>', cmd: "createMultiDocument"},
+                            {title: '<span class="contextMenuItem">Subroutine</span>', cmd: "createSubroutine"},
+                            {title: '<span class="contextMenuItem">Internal Storage</span>', cmd: "createInternalStorage"},
                             {title: '<span class="contextMenuItem">Circle</span>', cmd: "createCircle"},
                         ]}
                     ]);

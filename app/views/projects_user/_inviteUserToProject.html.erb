@@ -1,6 +1,6 @@
 Partial form for invite user to project
-<%= form_for @projects_user, url: projects_user_path, html: { method: :post } do |f| %>
-
+<%= form_for @projects_user, remote: true, url: { :controller => "projects_user", :action => "create", :format => "json" }, html: { method: :post, multipart: true } do |f| %>
+<!--%= form_for @projects_user, url: projects_user_path, action: 'create' do |f| %> !-->
   <% if @projects_user.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@projects_user.errors.count, "error") %> prohibited this project from being saved:</h2>
@@ -12,7 +12,8 @@ Partial form for invite user to project
       </ul>
     </div>
   <% end %>
-
+<%= f.hidden_field :Project_id, :value => project_id %>
+<%= f.hidden_field :AddedBy_id, :value => current_user.id %>
   <div class="field">
     <%= f.label :User_id %><br>
     <%= f.text_field :User_id %>
@@ -20,5 +21,8 @@ Partial form for invite user to project
 
   <div class="actions">
     <%= f.submit %>
+  </div>
+  <div>
+      This form thinks the project is // <%= project_id %> //
   </div>
 <% end %>

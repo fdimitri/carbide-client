@@ -1,11 +1,15 @@
 class ProjectsUserController < ApplicationController
-  before_action :set_projects_user #, only: [:show, :edit, :update, :destroy, :finish_signup]
-  
+  before_action :set_projects_user, only: [:show, :edit, :update, :destroy, :inviteTest]
+
   def index
     @projects_users = ProjectsUser.all
     @visible_projects = []
     @projects_users.each do |project_assoc|
-        if (project_assoc.Project.is_visible_to_user?(current_user.id))
+        if (project_assoc && project_assoc.Project && project_assoc.Project.is_visible_to_user?(current_user.id))
+            @visible_projects << project_assoc
+        else
+            project_assoc.Project_id = 4
+            project_assoc.save!
             @visible_projects << project_assoc
         end
     end
@@ -32,8 +36,26 @@ class ProjectsUserController < ApplicationController
   end
   
     def create
-        myParams = params.require(:projects_user).permit(:User_id, :Project_id)
-        @projects_user = ProjectsUser.new(myParams)
+        if (!projects_user_params[:Project_id])
+            format.html { render :index, location: @projects_user }
+            return
+        end
+        
+        @projects_user = ProjectsUser.new(projects_user_params)
+        respond_to do |format|
+            if @projects_user.save
+                format.html { redirect_to @projects_user, notice: 'Project profile was successfully created.' }
+                myResponse = {:data => @projects_user, :status => true }
+                format.json { render json: myResponse }
+            else
+                format.html { render :new }
+                format.json { render json: @projects_user.errors, status: :unprocessable_entity }
+            end
+        end
+    end
+
+    def inviteUserToProject
+        @projects_user = ProjectsUser.new(projects_user_params)
         respond_to do |format|
             if @projects_user.save
                 format.html { redirect_to @projects_user, notice: 'Project profile was successfully created.' }
@@ -43,21 +65,6 @@ class ProjectsUserController < ApplicationController
                 format.json { render json: @projects_user.errors, status: :unprocessable_entity }
             end
         end
-    end
-
-    def inviteUserToProject
-    @projects_user = ProjectsUser.new(projects_user_params)
-
-    respond_to do |format|
-      if @projects_user.save
-        format.html { redirect_to @projects_user, notice: 'Project profile was successfully created.' }
-        format.json { render :show, status: :created, location: @projects_user }
-      else
-        format.html { render :new }
-        format.json { render json: @projects_user.errors, status: :unprocessable_entity }
-      end
-    end
-
     end
     
   # PATCH/PUT /projects_users/1
@@ -86,7 +93,7 @@ class ProjectsUserController < ApplicationController
   
   private
     def set_projects_user
-      if (params[:id] && param[:id].to_i > 0)
+      if (params[:id] && params[:id].to_i > 0)
         @projects_user = ProjectsUser.find(params[:id])
       else
         @projects_user = ProjectsUser.new

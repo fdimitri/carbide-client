@@ -96,6 +96,55 @@
     z-index:16;
     background-color:rgba(0,0,0,0.0);
 }
+.form-merge {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-extract {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-preparation {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-manualinput {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-subroutine {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-multidocument {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
+.form-manualoperation {
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:16;
+    background-color:rgba(0,0,0,0.0);
+}
 .form-note-innerbox {
 
     width:85%;
@@ -114,6 +163,20 @@
     margin-left:1%;
     margin-right:1%;
     height:83%;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-multidocument-innerbox {
+
+    width:89%;
+    margin-left:4%;
+    margin-right:7%;
+    height:77%;
+    margin-top:3%;
     background-color:rgba(0,0,0,0.0);
     display:inline-flex;
     text-align:center;
@@ -208,6 +271,177 @@
     width:80%;
     height:90%;
     margin: auto;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-merge-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+}
+.form-merge-innerbox {
+
+    width:50%;
+    height:51%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:0;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-extract-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+
+}
+.form-extract-innerbox {
+
+    width:50%;
+    height:55%;
+    margin: auto;
+    position:absolute;
+    bottom:5px;
+    left:25%;
+
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-preparation-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+}
+.form-preparation-innerbox {
+
+    width:50%;
+    height:96%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:0;
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-manualinput-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+
+}
+.form-manualinput-innerbox {
+
+    width:96%;
+    height:77%;
+    margin: auto;
+    position:absolute;
+    bottom:6px;
+    left:2%;
+
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-internalstorage-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+
+}
+.form-internalstorage-innerbox {
+
+    width:85%;
+    height:96%;
+    margin: auto;
+    position:absolute;
+    bottom:6px;
+    left:13%;
+
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-subroutine-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+
+}
+.form-subroutine-innerbox {
+
+    width:74%;
+    height:96%;
+    margin: auto;
+    position:absolute;
+    bottom:6px;
+    left:13%;
+
+    background-color:rgba(0,0,0,0.0);
+    display:inline-flex;
+    text-align:center;
+    overflow:hidden;
+    flex-direction: column;
+    z-index:17;
+}
+.form-manualoperation-boxholder {
+
+    display:inline-flex;
+    text-align:center;
+    width:100%;
+    height:100%;
+
+
+}
+.form-manualoperation-innerbox {
+
+    width:50%;
+    height:98%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    position: absolute;
+    top: 0;
+    left:25%;
+
     background-color:rgba(0,0,0,0.0);
     display:inline-flex;
     text-align:center;

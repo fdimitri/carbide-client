@@ -14,3 +14,22 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$('form .new_projects_user').on('ajax:success', function(event, data, status, xhr) {
+    event.preventDefault();
+    console.log(event);
+    console.log(data);
+    console.log(status);
+    console.log(xhr);
+  // Do your thing, data will be the response
+});
+
+
+$('form .new_projects_user').on('ajax:error', function(xhr, status, error) {
+    console.log(xhr);
+    console.log(status);
+    console.log(error);
+  // Do your thing, data will be the response
+});
+
+

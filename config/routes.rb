@@ -23,7 +23,7 @@ Rails.application.routes.draw do
    #end
 
   resources :user
-  resources :projects_user, :only => [:new, :create, :index]
+  resources :projects_user
   get 'projects_user/inviteUserToProject'
   get 'projects_user/inviteTest'
   post 'projects_user/inviteUserToProject'

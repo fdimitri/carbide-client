@@ -1,3 +1,5 @@
+<p id="notice"><%= notice %></p>
+
 Logged in as: <%= link_to @user.name, @user %> and reachable through <%=
 if (@user.unconfirmed_email && @user.unconfirmed_email.length)
   email = @user.unconfirmed_email  + "(Unconfirmed)"
@@ -34,7 +36,7 @@ Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
           <td>
             <% @projects_user = ProjectsUser.new() %>
             Invite user: <%= render :partial => "/projects_user/inviteUserToProject", :locals =>  { :project_id => proj.id }, :object => @projects_user %> <br/>
-            Give Project: <%= render :partial => "/projects/giveOwnership", :locals => { :project_id => proj.id } %>
+            <!--Give Project: <!-- %= render :partial => "/projects/giveOwnership", :locals => { :project_id => proj.id } %>-->
           </td>
         </tr>
   <% end %>
