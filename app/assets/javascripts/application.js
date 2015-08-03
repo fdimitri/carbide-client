@@ -10,10 +10,21 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
+//= require jquery2
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require jquery-ui
+//= require ./quartzmenu/script
+//= require jquery.ui-contextmenu
+//= require menu
+$('document').on('ajax:success', function (e, d, s, xhr) {
+   console.log("Ajax success!");
+   console.log(e);
+   console.log(d);
+   console.log(s);
+   console.log(xhr);
+   
+});
 
 $('form .new_projects_user').on('ajax:success', function(event, data, status, xhr) {
     event.preventDefault();
@@ -32,4 +43,9 @@ $('form .new_projects_user').on('ajax:error', function(xhr, status, error) {
   // Do your thing, data will be the response
 });
 
-
+$(document).ready(function() {
+    $(".menu_userDashboard").click(function() {
+		var host = "http://"+window.location.hostname;
+        window.location.href = host + '/user';
+    });
+});

@@ -2,15 +2,13 @@
 <html>
 <head>
   <title>CARBIDEGuiTest</title>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-  <link rel="stylesheet" href="/jstree/themes/default/style.css" />
+  <!--link rel="stylesheet" href="/assets/jstree/themes/default/style.css" /--!>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'projects', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
 <%= yield %>
-
 </body>
 </html>

@@ -1,10 +1,13 @@
 var serverTarget = 'http://172.17.0.42:6400/upload';
-var uploadResumeButton = 'testing/flow/resume.png';
-var uploadPauseButton = 'testing/flow/pause.png';
-var uploadCancelButton = 'testing/flow/cancel.png';
+var uploadResumeButton = '/assets/flow/resume.png';
+var uploadPauseButton = '/assets/flow/pause.png';
+var uploadCancelButton = '/assets/flow/cancel.png';
+
+
 
 
 $(function () {
+
           var r = new Flow({
             target: serverTarget,
             chunkSize: 4*1024*1024,

@@ -1,0 +1,32 @@
+<% if @project %>
+						<!--<li><a href='#'><span style="font-weight:800;color:#fff;"><%= @project.name %> Project Admin: <%= @project.Owner.name %></span></a></li>-->
+						<% end %>
+						<% if current_user %>
+						<li class='has-sub'><a href='#'><span style="font-weight:800;color:#fff;">Logged in as: <%= current_user.name %></span></a>
+							<ul>
+										<li class="menu_userDashboard"><a href='#'><span>Go to Dashboard</span></a>
+										</li>
+							</ul>
+						</li>
+						<% end %>
+					</ul>
+
+				</div>
+<% if defined? @include_menuRightBar %>
+					<div id="menuRightBar">
+						<div id="connectionBox" class="connectionNone">
+							Disconnected.
+						</div>
+					</div>
+<% end %>
+					<div style="clear:both;"></div>
+
+			</div>
+			<div style="clear:both;"></div>
+			<div id="toolBarTop">
+
+
+				<div id="toolBarTabs" class="ui-tabs"></div>
+			</div>
+			<div style="clear:both;"></div>
+		</div>

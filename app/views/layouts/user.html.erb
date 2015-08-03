@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CARBIDE Users</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<%= render 'layouts/topbarstart' %>
+<%= render 'layouts/topbarend' %>
+<div id="editorContainer">
+
+				<div id="toolBarSide">
+				    <ul>
+				        <li><a href="#tabs-1">Projects</a>
+				        </li>
+				        <li><a href="#tabs-2">Users</a>
+				        </li>
+				        <li><a href="#tabs-3">Preferences</a>
+				        </li>
+				    </ul>
+				    <div id="tabs-1">
+
+				    	<div id="userProjects">
+				    	  
+				    	</div>
+				    </div>
+				    <div id="tabs-2">
+				        <div id="userUsers"></div>
+				    </div>
+				    <div id="tabs-3">
+                <div id="userPreferences"></div>
+				    </div>
+
+				</div>
+
+			<div id="rightWindow">
+
+				<div id="windows">
+
+<%= yield %>
+
+				</div>
+
+
+			</div>
+			<!--<div style="clear:both;"></div>-->
+			<div id="rightBar">
+				<div id="userBar">
+
+				</div>
+			</div>
+
+
+		</div>
+</body>
+</html>

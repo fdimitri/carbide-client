@@ -18,6 +18,7 @@ var ws = false;
 
 
 $(document).ready(function() {
+	console.log("WebSocketsHandler getting ready!");
  	ws = new WebSocket("ws://frank-d.info:8080/");
 	ws.onmessage = function(evt) {
 		console.log("onmessage fired: " + evt);
@@ -74,22 +75,28 @@ $(document).ready(function() {
 ////FUNCTION DEFINITIONS FOLLOW
 
 function waitForSocketConnection(socket, callback) {
-		setTimeout(function() {
+	console.log("Wait for socket Connection!");
+	if (socket.readyState === 1) {
+		callback();
+	}
+	while (socket.readyState !== 1) {
+		console.log("Socket not yet ready..");
+		timer = setTimeout(function() {
+			console.log("Waiting for socket connection");
+			console.log(callback);
+			
 			if (socket.readyState === 1) {
 				if (callback != null) {
 					callback();
 				}
 				return;
-
-			}
-			else {
-				waitForSocketConnection(socket, callback);
-			}
-
-		}, 10); // wait 10ms for the connection...
+				}
+		}, 125); // wait 10ms for the connection...
+	}
 }
 
 function wsSendMsg(msg) {
+	console.log("Entering wsSendMsg");
 	while (!ws) {
 		setTimeout(function() {
 			waitForWebSocket();

@@ -198,7 +198,9 @@ body {
 }
 .activePane {
 }
-
+.paneTitle {
+	padding-left:10px;
+}
 #toolBarTabs {
 	display:inline;
 }
@@ -253,6 +255,8 @@ body {
 }
 #editorContainer {
 	overflow: hidden;
+	width:100%;
+	height:100%;
 }
 
 
@@ -671,15 +675,26 @@ margin-left: 20px;
 	/*cursor:hand;*/
 }
 .addNewTab a {
+	width:100%;
+	margin-top:-8px !important;
+}
+.addNewTab .ui-icon {
 
-	margin-top:-8px;
+	display:inline-block;
+
 }
 .addTabIntro {
-	color:#FFFFFF;
-	margin:50px;
+	color:#FFFFFF !important;
+	margin:50px !important;
 }
 .ui-icon-folder-open {
 	display:inline-block;
+}
+.addNewTab { 
+	float: left;
+    padding: .5em 1em;
+    text-decoration: none;
+    /*width:120px;*/
 }
 .addTabText {
 	display:inline-block;
