@@ -1,4 +1,6 @@
 var messageQueue = {};
+var socketMessageQueue = [];
+
 var msgQueueDefaultOptions = {
 	'deleteAll': true,
 	'getWholeHash': true,
@@ -66,6 +68,7 @@ $(document).ready(function() {
 		updateConnectionStatus(connOpts); //update connection status to show fully connected
 		console.log("Websocket now open!");
 		console.log(ws);
+		flushQueueToSocket();
 	};
 	
 });
@@ -73,36 +76,23 @@ $(document).ready(function() {
 
 
 ////FUNCTION DEFINITIONS FOLLOW
-
-function waitForSocketConnection(socket, callback) {
-	console.log("Wait for socket Connection!");
-	if (socket.readyState === 1) {
-		callback();
+function flushQueueToSocket() {
+	if (!ws || ws.readyState !== 1)  {
+		return(false);
 	}
-	while (socket.readyState !== 1) {
-		console.log("Socket not yet ready..");
-		timer = setTimeout(function() {
-			console.log("Waiting for socket connection");
-			console.log(callback);
-			
-			if (socket.readyState === 1) {
-				if (callback != null) {
-					callback();
-				}
-				return;
-				}
-		}, 125); // wait 10ms for the connection...
-	}
+	var msg = socketMessageQueue.shift();
+	wsSendMsg(msg);
+}
+function queueSocketMsg(msg) {
+	socketMessageQueue.push(msg);
 }
 
 function wsSendMsg(msg) {
-	console.log("Entering wsSendMsg");
-	while (!ws) {
-		setTimeout(function() {
-			waitForWebSocket();
-		}, 125);
+	console.log("Entering wsSendMsg and refusing to send a message");
+	if (!ws || ws.readyState !== 1) {
+		queueSocketMsg(msg);
+		return(false);
 	}
-	waitForSocketConnection(ws, function() {
 		var nopush = false;
 		console.log("Sent msg to server over websocket: " + msg);
 		try {
@@ -116,18 +106,8 @@ function wsSendMsg(msg) {
 			addMessageQueue(jmsg['hash'], jmsg, true);
 		}
 		ws.send(msg);
-	});
 }
 
-function waitForWebSocket() {
-	while (!ws) {
-		setTimeout(function() {
-			while (true) {
-				
-			}
-		}, 100);
-	}
-}
 
 function getAceEditorByName(name) {
 	var aceEditors = $('.ace_editor');

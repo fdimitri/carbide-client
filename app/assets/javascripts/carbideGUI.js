@@ -113,30 +113,14 @@ $(document).ready(function() {
 
 	createNewPane();
 	resetSizes();
-	$("#toolBarSide").resizable({
-		resize: function() {
-			//THIS IS WHERE WE SHOULD RESIZE #rightWindow
-		},
-		handles: 'e'
-	});
-
-
-	$("#toolBarSide").tabs({
-		activate: function(event, ui) {
-			var active = $('#tabs').tabs('option', 'active');
-		}
-	});
+	
 
 	$(document).on('resize', function() {
 		
 		//console.log($(document).height());
 	});
 	
-	$(window).trigger('resize'); //trigger resize event
 	
-	$(window).resize(function() { //on resize event reset all sizes
-		resetSizes();
-	});
 	
 	$( "#userBar" ).sortable({
 			//put sortable options here

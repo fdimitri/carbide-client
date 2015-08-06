@@ -1,3 +1,1 @@
-
 //= require contextMenu
-//= require carbideGUI
