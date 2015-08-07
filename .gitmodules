@@ -1,0 +1,3 @@
+[submodule "app/assets/javascripts/flow"]
+	path = app/assets/javascripts/flow
+	url = https://github.com/flowjs/flow.js.git
