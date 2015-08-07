@@ -1,3 +1,9 @@
 [submodule "app/assets/javascripts/flow"]
 	path = app/assets/javascripts/flow
 	url = https://github.com/flowjs/flow.js.git
+[submodule "app/assets/javascripts/jstree"]
+	path = app/assets/javascripts/jstree
+	url = https://github.com/vakata/jstree.git
+[submodule "app/assets/javascripts/jsplumb"]
+	path = app/assets/javascripts/jsplumb
+	url = https://github.com/sporritt/jsPlumb.git
