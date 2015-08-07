@@ -12,7 +12,6 @@
 //
 //= require jquery2
 //= require jquery_ujs
-//= require turbolinks
 //= require jquery-ui
 //= require ./quartzmenu/script
 //= require jquery.ui-contextmenu
@@ -45,7 +44,8 @@ $('form .new_projects_user').on('ajax:error', function(xhr, status, error) {
 
 $(document).ready(function() {
     $(".menu_userDashboard").click(function() {
-		var host = "http://"+window.location.hostname;
-        window.location.href = host + '/user';
+// 		var host = "http://"+window.location.hostname;
+//         window.location.href = host + '/user';
+        
     });
 });

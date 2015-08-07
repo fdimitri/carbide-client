@@ -52,7 +52,7 @@ class ProjectsController < ApplicationController
         format.json { render :show, status: :created, location: @project }
       else
         format.html { render :new }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        format.json { render json: [@project.errors, @project_profile.errors], status: :unprocessable_entity }
       end
     end
   end

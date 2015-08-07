@@ -1,5 +1,18 @@
 <!-- This should show a user's profile NYI !-->
-User profile:
+<% if (defined?(request) && request.referrer && '_/user/\d+_'.match(URI(request.referrer).path)) %>
+<%= link_to 'Back to my dashboard', user_index_path, {:class => 'userLink'} %>
+<% end %>
+<h1>CarbIDE Profile</h1>
 
-Logged in as: <%= @user.name %> and reachable through <%= @user.email %>
-Connection is coming from global IP space <%= @user.current_sign_in_ip %>
+<table id="userUserInfo">
+<tr><td><strong>Name:</strong></td><td><%= @user.name %></td></tr>
+<tr><td><strong>Email:</strong></td><td><%=
+if (@user.unconfirmed_email && @user.unconfirmed_email.length)
+  email = @user.unconfirmed_email  + " (Unconfirmed)"
+else
+  email = @user.email
+end
+mail_to email
+%></td></tr>
+<tr><td><strong>IP Address:</strong></td><td><%= @user.current_sign_in_ip %></td></tr>
+</table>

@@ -6,7 +6,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.serve_static_files = true
-
+  config.turbolinks.auto_include = false
   # config.action_mailer.default_url_options = { host: 'frank-d.info' }
   # config.action_mailer.smtp_settings = {
   #   address: 'smtp.zoho.com',

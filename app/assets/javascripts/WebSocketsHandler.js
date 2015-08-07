@@ -80,32 +80,37 @@ function flushQueueToSocket() {
 	if (!ws || ws.readyState !== 1)  {
 		return(false);
 	}
-	var msg = socketMessageQueue.shift();
-	wsSendMsg(msg);
+	while (ws && ws.readyState == 1 && socketMessageQueue.length) {
+		console.log("flushQueueToSocket(): Shifting queue.. Queue size is " + socketMessageQueue.length);
+		var msg = socketMessageQueue.shift();
+		wsSendMsg(msg);
+	}
 }
 function queueSocketMsg(msg) {
 	socketMessageQueue.push(msg);
 }
 
 function wsSendMsg(msg) {
-	console.log("Entering wsSendMsg and refusing to send a message");
+	console.log("Entering wsSendMsg");
 	if (!ws || ws.readyState !== 1) {
+		console.log("Queuing message..")
 		queueSocketMsg(msg);
 		return(false);
 	}
-		var nopush = false;
-		console.log("Sent msg to server over websocket: " + msg);
-		try {
-			var jmsg = $.parseJSON(msg);
-		}
-		catch (e) {
-			console.log('Outgoing message is NOT JSON');
-			nopush = true;
-		}
-		if (!nopush && jmsg['hash']) {
-			addMessageQueue(jmsg['hash'], jmsg, true);
-		}
-		ws.send(msg);
+	console.log(msg);
+	var nopush = false;
+	console.log("Sent msg to server over websocket: " + msg);
+	try {
+		var jmsg = $.parseJSON(msg);
+	}
+	catch (e) {
+		console.log('Outgoing message is NOT JSON');
+		nopush = true;
+	}
+	if (!nopush && jmsg['hash']) {
+		addMessageQueue(jmsg['hash'], jmsg, true);
+	}
+	ws.send(msg);
 }
 
 

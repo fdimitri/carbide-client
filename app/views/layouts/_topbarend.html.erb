@@ -4,7 +4,7 @@
 						<% if current_user %>
 						<li class='has-sub'><a href='#'><span style="font-weight:800;color:#fff;">Logged in as: <%= current_user.name %></span></a>
 							<ul>
-										<li class="menu_userDashboard"><a href='#'><span>Go to Dashboard</span></a>
+										<li class="menu_userDashboard"><%= link_to raw('<span>Go to Dashboard</span>'), user_index_path %>
 										</li>
 							</ul>
 						</li>

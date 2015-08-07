@@ -2,13 +2,42 @@ var currentlyRenaming = 0; //shows whether someone is renaming a file, for use w
 var typedRename = "";
 
 $(document).ready(function() { 
-    $("#jsTreeChat").click(function(e) { //deselect terminal nodes if chat node is clicked
+	initFlowchartTree();
+	initScrumTree();
+	
+    $("#jsTreeChat").click(function(e) { //deselect terminal nodes, flowchart nodes, scrum nodes if chat node is clicked
     	var ref = $('#jsTreeTerminal').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeFlowchart').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeScrum').jstree(true);
     	ref.deselect_all(true);
     	
     });
-    $("#jsTreeTerminal").click(function(e) { //deselect chat nodes if terminal node is clicked
+    $("#jsTreeTerminal").click(function(e) { //deselect chat nodes, flowchart nodes, scrum nodes if terminal node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeFlowchart').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeScrum').jstree(true);
+    	ref.deselect_all(true);
+    	
+    });
+     $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, scrum nodes if flowchart node is clicked
+    	var ref = $('#jsTreeChat').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeTerminal').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeScrum').jstree(true);
+    	ref.deselect_all(true);
+    	
+    });
+    $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, flowchart nodes if scrum node is clicked
+    	var ref = $('#jsTreeChat').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeTerminal').jstree(true);
+    	ref.deselect_all(true);
+    	ref = $('#jsTreeFlowchart').jstree(true);
     	ref.deselect_all(true);
     	
     });
@@ -293,13 +322,32 @@ $('#jsTreeFile').keydown(function(e) {
 						}   
 							
 					}
+					else if (draggedItem.hasClass("jsTreeFlowchart")) {
+						console.log("Has class jsTreeFlowchart");
+						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
+						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
+							console.log("Tab already exists, not adding -- but setting active");
+							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
+							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the flowchart they dragged in
+						}
+						else {
+							console.log(data);
+							console.log($("#" + data.data.obj[0].id));
+							console.log($("#" + data.data.obj[0].id).closest('li'));
+							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
+							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'flowchart', '');
+							var tabItem = $("#tabs-" + tabCounter);
+							var itemParent = tabItem.closest('div').attr('id');
+						}
+					}
 					
 				}
 			}
 			else {
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot")) {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot") || $(data.data.obj[0]).hasClass("jsTreeFlowchart")) {
 					
-					//We do nothing if they try to move a Chat or Terminal or Root
+					//We do nothing if they try to move a Chat or Terminal or Root or flowchart
 				}
 				else {
 				
@@ -998,6 +1046,164 @@ function initTermTree(data) {
 	    }, {});
 	};
 
+}
+function initFlowchartTree(data) {
+	if (!data) {
+		console.log("Asked to init with no data, using built-ins")
+		data = [{
+			"id": "flowchartroot",
+			"parent": "#",
+			"text": "Flowcharts",
+			"type": "root",
+			"li_attr": {
+				"class": "jsTreeRoot"
+			}
+		}, ]
+	}
+	console.log("Calling jstree() on");
+	console.log($('#jsTreeFlowchart'));
+	$('#jsTreeFlowchart').jstree({
+		"core": {
+			// so that create works
+			'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation == 'move_node') {
+                        	return(false); //no moving flowcharts
+                        }
+			},
+			'data': data,
+		},
+		"dnd": {
+			is_draggable: function(node) {
+
+				return true;
+			}
+		},
+
+		"types": {
+
+			"root": {
+				"icon": "jstree-folder",
+				"valid_children": ["chat"]
+			},
+			"flowchart": {
+				"icon": "jstree-file",
+				"valid_children": []
+			}
+		},
+		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		 contextmenu: {
+		 	items: fileTreeMenu,
+		 },
+
+
+	});	
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for flowchart
+		var instance = $.jstree.reference(this),
+			node = instance.get_node(this);
+
+		if (node.type == "flowchart") {
+
+
+			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
+			if ($(".windowPane").length == 0) {
+				createNewPane();
+				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
+				
+
+			}
+			else {
+				prepareActivePane();
+			 	var interval_id = setInterval(function(){ //wait for active pane before calling new tab
+					    
+				     if ($(".activePane").length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				      }
+				}, 10);
+				//	   	console.log(node);
+			}
+		}
+	});
+}
+
+function initScrumTree(data) {
+	if (!data) {
+		console.log("Asked to init with no data, using built-ins")
+		data = [{
+			"id": "scrumroot",
+			"parent": "#",
+			"text": "Task Boards",
+			"type": "root",
+			"li_attr": {
+				"class": "jsTreeRoot"
+			}
+		}, ]
+	}
+	console.log("Calling jstree() on");
+	console.log($('#jsTreeScrum'));
+	$('#jsTreeScrum').jstree({
+		"core": {
+			// so that create works
+			'check_callback': function(operation, node, node_parent, node_position, more) {
+                        if (operation == 'move_node') {
+                        	return(false); //no moving scrum boards
+                        }
+			},
+			'data': data,
+		},
+		"dnd": {
+			is_draggable: function(node) {
+
+				return true;
+			}
+		},
+
+		"types": {
+			"root": {
+				"icon": "jstree-folder",
+				"valid_children": ["chat"]
+			},
+			"scrum": {
+				"icon": "jstree-file",
+				"valid_children": []
+			}
+		},
+		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		 contextmenu: {
+		 	items: fileTreeMenu,
+		 },
+
+
+	});	
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for scrum
+		var instance = $.jstree.reference(this),
+			node = instance.get_node(this);
+
+		if (node.type == "scrum") {
+
+
+			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
+			if ($(".windowPane").length == 0) {
+				createNewPane();
+				 waitForNewWindow(1, newTab, node.text, node.id, node.type, node.li_attr.srcPath);
+				
+
+			}
+			else {
+				prepareActivePane();
+			 	var interval_id = setInterval(function(){ //wait for active pane before calling new tab
+					    
+				     if ($(".activePane").length != 0){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				      }
+				}, 10);
+				//	   	console.log(node);
+			}
+		}
+	});
 }
 
 function duplicateFile() {

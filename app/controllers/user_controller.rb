@@ -4,6 +4,7 @@ class UserController < ApplicationController
   # GET /users/:id.:format
 
   def show
+    render :layout => !request.xhr?
 
     #authorize! :read, @user
   end
@@ -68,7 +69,9 @@ class UserController < ApplicationController
         puts "----Setting to current_user for user"
         @user = current_user
       end
-      @myProjects = @user.OwnedProjects
+      if (@user) 
+        @myProjects = @user.OwnedProjects
+      end
     end
 
     def user_params

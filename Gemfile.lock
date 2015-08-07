@@ -243,6 +243,7 @@ DEPENDENCIES
   omniauth-linkedin
   omniauth-openid!
   omniauth-twitter
+  rack
   rails (= 4.2.3)
   rails-erd
   ruby-termios

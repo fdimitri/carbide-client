@@ -5,6 +5,85 @@ class CreateGuiContentController < ApplicationController
     puts "setHeaders()"
     response.headers["Content-Type"] = "text/html"
   end
+
+
+  def createUserSidebarContentProjectTree
+    @customData['projects'] = Hash.new
+    @user.Projects.each do |p|
+      if (p.Owner.id == @user.id)
+        pName = "[O] " + p.name
+      else
+        pName = p.name
+      end
+      projData =  [
+        'id' => "Project" + p.id.to_s,
+        'parent' => "#",
+        'text' => p.name,
+        'type' => 'jsTreeProject',
+        'li_attr' => {
+          'class' => 'jsTreeProject',
+        }
+      ]
+
+      p.Users.each do |u|
+        if (u.id != @user.id)
+          projData <<  [
+            'id' => p.id.to_s + "_" + u.id.to_s,
+            'parent' => "Project" + p.id.to_s,
+            'text' => u.name,
+            'type' => 'jsTreeUser',
+            'li_attr' => {
+              "class" => "jsTreeUser",
+            }
+            
+          ]
+        end
+        @customData['projects'][pName] = {
+          'treeData' => projData.flatten,
+          'ownerId' => p.Owner.id, 
+          'ownerName' => p.Owner.name
+        }
+      end
+    end
+    treeData = []
+    @customData['projects'].each do |k,v|
+      v['treeData'].each do |tv|
+        treeData << tv
+      end
+    end
+    @customData['treeData'] = treeData.flatten
+  end
+  
+
+  def createUserSidebarContent
+    setVarsUserSidebarContent(params)
+    #@myHtml = render_to_string(:partial => "/create_gui_content/createUserSidebarContent#{@tabType}", :layout => false, :formats => [:erb, :html])
+    @myScript = render_to_string(:partial => "/create_gui_content/createUserSidebarContent#{@tabType}", :layout => false, :formats => [:js, :erb])
+    if (!defined? @user) 
+      @user = current_user
+    end
+    @customData = Hash.new
+    if (self.respond_to?("createUserSidebarContent#{@tabType}"))  
+      self.send("createUserSidebarContent#{@tabType}")
+    end
+    
+    @jsonString = {
+      'reply' => {
+        'success' => true,
+        'returnType' => "/create_gui_content/createContent#{@tabType}",
+        # 'html' => @myHtml,
+        'script' => @myScript,
+        'jsonData' => @customData,
+        'calledWith' => @data,
+      },
+    }
+    respond_to do |format|
+      format.html { render :createContent }
+      format.json { render :json => JSON.pretty_generate(@jsonString).html_safe }
+    end
+  end
+  
+
   def createPane
     setVarsPane(params)
     @myHtml = render_to_string(:partial => "/create_gui_content/createPane", :layout => false, :formats => [:erb, :html])
@@ -26,6 +105,7 @@ class CreateGuiContentController < ApplicationController
       format.json { render :json => JSON.pretty_generate(@jsonString).html_safe }
     end
   end
+
   def setVarsPane(params)
     @data = params
     @paneCounter = "%.2d" % params['paneCounter']
@@ -35,12 +115,15 @@ class CreateGuiContentController < ApplicationController
     @tabBar = "#tabBar" + @paneCounter
     @paneX = "pane" + @paneCounter
     @paneTitle = "Pane " + (@paneCounter.to_i - @delPanes.to_i).to_s
-# <!--$newScript = preg_replace('/%pane%/', sprintf("#pane%02d", $paneCounter), $oldScript);-->
-# <!--$newScript = preg_replace('/%tabBar%/', sprintf("#tabBar%02d", $paneCounter), $newScript);-->
-# <!--$newScript = preg_replace('/%paneX%>/', sprintf("pane%02d", $paneCounter), $newScript);-->
-# <!--$newScript = preg_replace('/%@paneTitle%>/', sprintf("Pane %02d", ($paneCounter - $delPanes)), $newScript);-->
-
   end
+
+  def setVarsUserSidebarContent(params)
+        @data = params
+
+    @tabType = params['tabType']
+  end
+  
+
   def createContent
     setVarsContent(params)
     @myHtml = render_to_string(:partial => "/create_gui_content/createContent#{@tabType}", :layout => false, :formats => [:erb, :html])
@@ -62,7 +145,6 @@ class CreateGuiContentController < ApplicationController
 
   def createContentChat
     setVarsContent(params)
-
   end
   
   def createContentFile

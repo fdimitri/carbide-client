@@ -1,13 +1,14 @@
 /*global module:false, require:false, __dirname:false*/
 
 module.exports = function(grunt) {
+  grunt.util.linefeed = "\n";
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options : {
-        separator : '\n'
+        separator : "\n"
       },
       dist: {
         src: ['src/<%= pkg.name %>.js', 'src/<%= pkg.name %>.*.js', 'src/vakata-jstree.js'],
@@ -126,7 +127,7 @@ module.exports = function(grunt) {
       options: {
         screenshotRoot: 'test/visual/screenshots/',
         url: 'http://127.0.0.1/jstree/test/visual/',
-        gm: true
+        gm: false
       },
       desktop: {
         options: {
@@ -230,6 +231,8 @@ module.exports = function(grunt) {
     });
   });
 
+  grunt.util.linefeed = "\n";
+  
   // Default task.
   grunt.registerTask('default', ['jshint:beforeconcat','concat','amd','jshint:afterconcat','copy:libs','uglify','less','imagemin','replace','copy:docs','qunit','resemble','dox']);
   grunt.registerTask('js', ['concat','amd','uglify']);

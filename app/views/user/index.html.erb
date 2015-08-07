@@ -1,20 +1,18 @@
 <p id="notice"><%= notice %></p>
-
-Logged in as: <%= link_to @user.name, @user %> and reachable through <%=
+<div id="projectSpace">
+<table id="userUserInfo">
+<tr><td><strong>Name:</strong></td><td><%= link_to @user.name, @user %></td></tr>
+<tr><td><strong>Email:</strong></td><td><%=
 if (@user.unconfirmed_email && @user.unconfirmed_email.length)
   email = @user.unconfirmed_email  + "(Unconfirmed)"
 else
   email = @user.email
 end
 email
-%>
+%></td></tr>
+<tr><td><strong>IP Address:</strong></td><td><%= @user.current_sign_in_ip %></td></tr>
+</table>
 
-
-<div>
-Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
-</div>
-
-<div>
   <h2>Projects you own: (<%= @myProjects.count.to_s %>)</h2>
     <table id="userProjectsOwned">
       <thead>
@@ -30,7 +28,7 @@ Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
           <td><%= link_to proj.name, proj %></td>
           <td>(<%= proj.Users.count.to_s %>): 
             <% proj.Users.each do |user| %>
-            <%= link_to user.name, user %>
+            <%= link_to user.name, user, {:class => 'userLink'} %>
             <% end %>
           </td>
           <td>
@@ -42,31 +40,31 @@ Connection is coming from global IP space <%= @user.current_sign_in_ip %><br/>
   <% end %>
       </tbody>
     </table>
-</div>
   
 
 
-<div>
-  <h2>Projects you're engaged in: (<%= @user.Projects.count.to_s %>)</h2>
-  <table id="userProjectsEngaged">
-      <thead>
-        <tr>
-          <td>Name</td>
-          <td>Users</td>
-          <td>Actions</td>
-        </tr>
-      </thead>
-      <tbody>
-  <% @user.Projects.each do |proj| %>
-  <tr><td><%= link_to proj.name, proj %></td>
-    <td>(<%= proj.Users.count.to_s %>):
-      <% proj.Users.each do |user| %>
-      <%= link_to user.name, user %>
+    <div>
+      <h2>Projects you're engaged in: (<%= @user.Projects.count.to_s %>)</h2>
+      <table id="userProjectsEngaged">
+          <thead>
+            <tr>
+              <td>Name</td>
+              <td>Users</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+      <% @user.Projects.each do |proj| %>
+      <tr><td><%= link_to proj.name, proj %></td>
+        <td>(<%= proj.Users.count.to_s %>):
+          <% proj.Users.each do |user| %>
+          <%= link_to user.name, user %>
+          <% end %>
+        </td>
+        <td>
+                Leave Project
+        </td>
+      </tr>
       <% end %>
-    </td>
-    <td>
-            Leave Project
-    </td>
-  </tr>
-  <% end %>
+    </div>
 </div>
