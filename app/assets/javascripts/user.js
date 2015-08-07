@@ -2,13 +2,43 @@
 //= require layoutGUI
 //= require ./jstree/jstree
 //= require userTree
-
 $(document).ready(function() {
+
+function getAllEvents(element) {
+    var result = [];
+    for (var key in element) {
+        if (key.indexOf('on') === 0) {
+            result.push(key.slice(2));
+        }
+    }
+    return result.join(' ');
+}
+    var el = $('table tbody tr td');
+    el.bind(getAllEvents(el[0]), function(e) {
+        // if (e.type.match(/key/)) {
+        //     if (e.toElement.tagName != "TBODY" && e.toElement.tagName != 'TR' && e.toElement.tagName != 'TD') {
+        //         return(true);
+        //     }
+        // }
+        // if (e.toElement && (e.type == "click" || e.type == "mouseup")) {
+        //     if (e.toElement.tagName != "TBODY" && e.toElement.tagName != 'TR' && e.toElement.tagName != 'TD') {
+        //         return(true);
+        //     }
+        //     console.log(e);
+        //     console.log(e.toElement.tagName);
+        // }
+        // console.log(e);
+        // return(true);
+    });
+
     $(document).on("click", '.userLink', function(e) { 
         e.preventDefault();
         e.stopPropagation();
+        $('#windows').hide();
         $('#windows').load($(this).attr('href'), function() {
-            $('#windows').children().fadeIn();
+            $('#windows').fadeIn( "slow" );
+            $('#windows').trigger('resize');
+            $('#windows').find().trigger('resize');
         });
     });
     $.ajax({

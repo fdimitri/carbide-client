@@ -24,20 +24,21 @@ class CreateGuiContentController < ApplicationController
           'class' => 'jsTreeProject',
         }
       ]
-
+      # ascon = CarbideServerConnector.new({:rawProject => p})
       p.Users.each do |u|
-        if (u.id != @user.id)
-          projData <<  [
-            'id' => p.id.to_s + "_" + u.id.to_s,
-            'parent' => "Project" + p.id.to_s,
-            'text' => u.name,
-            'type' => 'jsTreeUser',
-            'li_attr' => {
-              "class" => "jsTreeUser",
-            }
-            
-          ]
-        end
+        next if (u.id == @user.id)
+        # rval = ascon.queryUserStatus({:rawUser => u, :request => ["jsTreeType"]})
+        # type = rval['jsTreeType']
+        projData <<  [
+          'id' => p.id.to_s + "_" + u.id.to_s,
+          'parent' => "Project" + p.id.to_s,
+          'text' => u.name,
+          'type' => 'jsTreeUser',
+          'li_attr' => {
+            "class" => "jsTreeUser",
+          }
+          
+        ]
         @customData['projects'][pName] = {
           'treeData' => projData.flatten,
           'ownerId' => p.Owner.id, 

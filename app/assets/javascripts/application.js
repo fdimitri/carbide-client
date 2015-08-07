@@ -16,6 +16,13 @@
 //= require ./quartzmenu/script
 //= require jquery.ui-contextmenu
 //= require menu
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+  },
+  cache: false,
+});	
+
 $('document').on('ajax:success', function (e, d, s, xhr) {
    console.log("Ajax success!");
    console.log(e);

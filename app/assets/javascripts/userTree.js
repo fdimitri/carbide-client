@@ -26,17 +26,17 @@ function initProjectTree(data) {
 		"dnd": {
 			is_draggable: function(node) {
 
-				return true;
+				return false;
 			}
 		},
 
 		"types": {
 
-			"projecttree": {
+			"jsTreeProject": {
 				"icon": "jstree-folder",
-				"valid_children": ["projectowner", "projectmember"]
+				"valid_children": ["jsTreeUser", "projectmember"]
 			},
-			"projectowner": {
+			"jsTreeUser": {
 				"icon": "jstree-file",
 				"valid_children": []
 			},
@@ -45,11 +45,13 @@ function initProjectTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["dnd", "crrm", "types", "sort"],
+		"plugins": ["crrm", "types", "sort"],
 		
 
 
 	});	
+	
+
 	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for user tree
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);

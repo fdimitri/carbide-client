@@ -58,7 +58,7 @@ email
       <tr><td><%= link_to proj.name, proj %></td>
         <td>(<%= proj.Users.count.to_s %>):
           <% proj.Users.each do |user| %>
-          <%= link_to user.name, user %>
+          <%= link_to user.name, user, {:class => 'userLink'} %>
           <% end %>
         </td>
         <td>

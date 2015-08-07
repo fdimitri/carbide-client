@@ -1,6 +1,10 @@
 class UserController < ApplicationController
-  before_action :set_user #, only: [:show, :edit, :update, :destroy, :finish_signup]
+  before_action :set_user #, only: [:show, :edit, :update, :destroy, :finish_signup, :index]
 
+
+  def index
+    render :layout => !request.xhr?
+  end
   # GET /users/:id.:format
 
   def show

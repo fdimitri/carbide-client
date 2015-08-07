@@ -9,11 +9,6 @@ var paneCounter = 0;
 ////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
-$.ajaxSetup({
-  headers: {
-    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-  }
-});	
 
 	$(document).on('keydown', function(e) {
 	
