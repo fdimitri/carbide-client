@@ -7,6 +7,10 @@
 
 .taskTable {
     border-collapse: separate;
+    width:100%;
+    border-style:solid;
+    border-width:2px;
+    border-color:#000000;
  
 }
 .taskTable tr {
@@ -19,8 +23,7 @@
 .taskTable td, .taskTable th {
     display:table-cell;
     height:100%;
-    padding-left:10px;
-    padding-right:10px;
+    padding:10px;
  
 }
 .placeholder { 
@@ -35,8 +38,7 @@
     display:inline-block;
     border-width:2px;
     border-style:solid;
-    padding-left:5px;
-    padding-right:5px;
+    padding:5px;
 }
 .taskGreen {
     border-color:rgba(0,200,0,1.0);
@@ -46,4 +48,11 @@
 }
 .taskRed {
     border-color:rgba(255,0,0,1.0);
+}
+.taskItem {
+    border-style:solid;
+    border-width:1px;
+    border-color:rgba(0,0,0,1.0);
+    padding: 6px;
+    margin:7px;
 }

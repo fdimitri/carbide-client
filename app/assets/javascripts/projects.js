@@ -17,3 +17,4 @@
 //= require uploadFiles
 
 //= require WebSocketsHandler
+//= require task

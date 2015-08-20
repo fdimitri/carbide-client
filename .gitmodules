@@ -7,3 +7,6 @@
 [submodule "app/assets/javascripts/jsplumb"]
 	path = app/assets/javascripts/jsplumb
 	url = https://github.com/sporritt/jsPlumb.git
+[submodule "app/assets/javascripts/sorttable"]
+	path = app/assets/javascripts/sorttable
+	url = https://github.com/dbrink/sorttable.git
