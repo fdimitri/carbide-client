@@ -789,3 +789,8 @@ margin-left: 20px;
 	font-size:30pt;
 	color:rgba(0,0,0,1.0);
 }
+.jstree-rename-input {
+	height:24px !important;
+	padding:0 !important;
+	line-height: 24px !important;
+}

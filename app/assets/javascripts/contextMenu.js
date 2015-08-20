@@ -21,6 +21,12 @@ $(function() {
                 	else if (ui.item.data().type == "terminal") {
                 		node = $('#jsTreeTerminal').jstree(true).get_selected(true);
                 	}
+                	else if (ui.item.data().type == "scrum") {
+                		node = $('#jsTreeScrum').jstree(true).get_selected(true);
+                	}
+                	else if (ui.item.data().type == "flowchart") {
+                		node = $('#jsTreeFlowchart').jstree(true).get_selected(true);
+                	}
 					var nodeLength = node.length;
 					for (var i = 0; i < nodeLength; i++) {
 					    newTab(node[i].text, ui.item.data().tabbarid, node[i].id, node[i].type, node[i].li_attr.srcPath);
@@ -64,6 +70,33 @@ $(function() {
                 else if (ui.cmd == "duplicateFile") {
                 	duplicateFile();
                 }
+                 else if (ui.cmd == "createFile") {
+                 	var ref = $('#jsTreeFile').jstree(true);
+                 	var selectedNodes = ref.get_selected();
+                 	if (selectedNodes.length > 1) { //WE CAN ONLY HAVE 1 NODE SELECTED AS THE LOCATION FOR THE NEW FILE SO GO WITH THE FIRST SELECTED NODE
+                 		selectedNodes = selectedNodes[0];
+                 	}
+                 	else if(selectedNodes.length == 0) { //IF NO NODE IS SELECTED WE WILL SELECT THE ROOT
+                 		$("#jsTreeFile").jstree('select_node', "ftroot0");
+                 		ref = $('#jsTreeFile').jstree(true);
+                 		selectedNodes = ref.get_selected();
+                 	}
+                 	//IF THERE IS NO SELECTED NODE WE WILL USE THE ROOT DIRECTORY
+					var fileAndPath = ref.get_path(selectedNodes,"/");
+					//var path = fileAndPath.substring(0,fileAndPath.lastIndexOf("/"));
+					var realPath = '/';
+					if (fileAndPath.indexOf("/") > -1) { //if there is a slash then it isn't the root
+						realPath = fileAndPath.substring(fileAndPath.indexOf("/"),fileAndPath.length);
+					}
+					var nodeType = ref.get_type(selectedNodes);
+					if (nodeType == "file") {
+						realPath = realPath.substring(0,realPath.lastIndexOf("/"));
+					}
+					if (realPath == '') { //if the file was in the root add a preceding slash
+						realPath = '/';
+					}
+                	createFile(realPath);
+                }
                 else if (ui.cmd == "createChat") {
                 	$('#newChatOpen').attr('checked', false);
 				    $("#newChatTarget").remove();
@@ -76,6 +109,14 @@ $(function() {
 				    $("#dialog-newterminal").dialog("open");
                 	
                 }
+        //         else if (ui.cmd == "createFlowchart") {
+        //         	$('#newChatOpen').attr('checked', false);
+				    // $("#newChatTarget").remove();
+				    // $("#dialog-newchat").dialog("open");
+        //         }
+        		else if (ui.cmd == "createScrum") {
+        			newTab("TestScrum", $(".activePane .tabBar").attr('id'), "", "scrum", "Scrum/new");
+        		}
                 else if (ui.cmd == "deleteChat") {
                 	var thisDialog = "dialog-info";
 					changeDialogTitle(thisDialog,"Delete Chatroom?");
@@ -204,6 +245,20 @@ $(function() {
                     
                     ]);
 				}
+				else if (clickedElement == "jsTreeScrumRoot") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-calendar", cmd: "createScrum"},
+                    
+                    ]);
+				}
+				else if (clickedElement == "jsTreeFlowchartRoot") {
+
+					 $("#toolBarSide").contextmenu("replaceMenu", [
+                		{title: '<span class="contextMenuItem">Create New Flowchart</span>', uiIcon: "	ui-icon-clipboard", cmd: "createFlowchart"},
+                    
+                    ]);
+				}
 				else if (clickedElement == "jsTreeChat") {
 					var node = $('#jsTreeChat').jstree(true).get_selected(true);
 					node = node[0];
@@ -268,6 +323,37 @@ $(function() {
                     
                     ]);
 				}
+				else if (clickedElement == "jsTreeScrum") {
+					var node = $('#jsTreeScrum').jstree(true).get_selected(true);
+					node = node[0];
+					var menuPanes = [];
+					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
+						$(".windowPane").each(function() {
+							var paneNumber = $(this).find(".paneTitle").text().match(/\d+/);
+	
+					
+							var windowPane = this;
+								 
+								var nodeData = {tabbarid: $(windowPane).find(".tabBar").attr('id'), type: node.type}; //this is the window pane they selected to open it in and the type
+					
+							var tempPane = {title: '<span class="contextMenuItem">Open in Pane ' + paneNumber + '</span>', cmd:'openInPane',data: nodeData	}
+							menuPanes.push(tempPane);
+						});
+					}
+					else { //no window pane is open, give them the choice to open the file in a new window pane
+						menuPanes[0] = {title: '<span class="contextMenuItem">Open in New Window Pane</span>', cmd:'openInPane', uiIcon: "ui-icon-plus", data: {tabbarid: "new"}	}
+					}
+
+					$("#toolBarSide").contextmenu("replaceMenu", [
+							{title: '<span class="contextMenuItem">Open in...</span>', uiIcon: "ui-icon-arrowthick-1-e", children: 
+								menuPanes
+							},
+						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteChat"},
+						{title: '---'},
+						{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-comment", cmd: "createScrum"},
+                    
+                    ]);
+				}
 				else if (clickedElement == "tree1") {
 					 $("#toolBarSide").contextmenu("replaceMenu", [
                         {title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
@@ -298,8 +384,67 @@ $(function() {
             }
         
     });
+	$("#rightBar").contextmenu({
+            //delegate: ".ui-tabs-panel",
+            menu: [
+                  
+                ],
+            
+            select: function(event, ui) {
+            	if (ui.cmd == "trackInPane") {
+            		var userId = ui.item.data().user;
+            		var userName = $('.projectUserBox[uid=' + userId + ']').find('.projectUserName').text();
+            		var tabbarId = ui.item.data().tabbarid;
+			
+            		console.log("tracking user ID: " + userId + " name: " + userName + " in tabbar " + tabbarId);
+            		if ($('#' + tabbarId).closest(".windowPane").find("[role='tab']").length > 1) { //if there are tabs in this pane we must warn them that they'll be closed
+            			console.log("TABS FOUND IN PANE! ISSUING WARNING!");
+            			
+            		}
+            		else if ($('#' + tabbarId).closest(".windowPane").find("[role='tab']").length == 1) { //if there is 1 tab we need to check if it's the add tab button
+            			if ($('#' + tabbarId).closest(".windowPane").find('.addNewTab').length > 0) { //the only tab is an addnewtab button
+            				console.log("NO TABS FOUND IN THE SELECTED PANE! WE'RE ALL GOOD!");
+            			}
+            			else { //it's a real tab, we have to warn them that it will be lost
+            				console.log("TABS FOUND IN PANE! ISSUING WARNING!");
+            			}
+            		}
+            		else { //it is an empty window so we can proceed
+            			console.log("NO TABS FOUND IN THE SELECTED PANE! WE'RE ALL GOOD!");
+            		}
+            	}
+            },
+            beforeOpen: function(event, ui) {
+            	if (clickedElement == "rightBar") { //this is the empty right bar, away from any user box.
+            		return(false);
+            	}
+				else if (clickedElement == "projectUserBox") { //project user box context menu
+					var userId = clickedUser;
+					var menuPanes = [];
+					menuPanes[0] = {title: '<span class="contextMenuItem">in New Window Pane</span>', cmd:'trackInPane', uiIcon: "ui-icon-plus", data: {tabbarid: "new", user: userId}	}
+					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
+						$(".windowPane").each(function() {
+							var paneNumber = $(this).find(".paneTitle").text().match(/\d+/);
+							var windowPane = this;
+							var userData = {tabbarid: $(windowPane).find(".tabBar").attr('id'), user: userId}; //this is the window pane they selected to open it in and the username
+							var tempPane = {title: '<span class="contextMenuItem">in Pane ' + paneNumber + '</span>', cmd:'trackInPane',data: userData	}
+							menuPanes.push(tempPane);
+						});
+					}
+					else { //no window pane is open, but we already added the option for a new window pane so do nothing for now
+					}
 
-	
+					$("#rightBar").contextmenu("replaceMenu", [
+							{title: '<span class="contextMenuItem">Track User...</span>', uiIcon: "ui-icon-person", children: 
+								menuPanes
+							},
+						
+                    ]);
+			
+				}
+
+            },
+	});
 });
 
 
@@ -341,7 +486,6 @@ function fileTreeMenu(node) {
 	    
 
 	    if ($(node).attr("id") == "fileroot") {
-	    	console.log("HELLO")
 	    	var items = {
     		    newFile: { // create a new file
     				label: "Create New File",

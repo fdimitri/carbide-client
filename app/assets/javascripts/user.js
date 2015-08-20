@@ -1,3 +1,4 @@
+//= require preferences
 //= require contextMenu
 //= require layoutGUI
 //= require ./jstree/jstree

@@ -5,6 +5,7 @@
 //= require ./flow/flow
 //= require md5
 
+//= require preferences
 //= require contextMenu
 //= require carbideGUI
 //= require layoutGUI

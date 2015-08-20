@@ -139,11 +139,15 @@ class CreateGuiContentController < ApplicationController
       },
     }
     respond_to do |format|
-      format.html { render :createContent }
+      format.html { render :json => '<pre>' + ERB::Util::html_escape(JSON.pretty_generate(@jsonString)) + '</pre>' }
       format.json { render :json => JSON.pretty_generate(@jsonString).html_safe }
     end
   end
-
+  
+  def createContentTask
+    setVarsContent(params)
+  end
+  
   def createContentChat
     setVarsContent(params)
   end
@@ -169,6 +173,8 @@ class CreateGuiContentController < ApplicationController
     @terminalContainerId = @containerId
     @terminalId = @tabName
     @terminalName = @chatTarget
+    #Task-only params
+    @taskName = @srcPath
 
   end
 

@@ -7,38 +7,62 @@ $(document).ready(function() {
 	
     $("#jsTreeChat").click(function(e) { //deselect terminal nodes, flowchart nodes, scrum nodes if chat node is clicked
     	var ref = $('#jsTreeTerminal').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeFlowchart').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeScrum').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	
     });
     $("#jsTreeTerminal").click(function(e) { //deselect chat nodes, flowchart nodes, scrum nodes if terminal node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeFlowchart').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeScrum').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	
     });
      $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, scrum nodes if flowchart node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) {
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeTerminal').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) {
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeScrum').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	
     });
-    $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, flowchart nodes if scrum node is clicked
+    $("#jsTreeScrum").click(function(e) { //deselect chat nodes, terminal nodes, flowchart nodes if scrum node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeTerminal').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	ref = $('#jsTreeFlowchart').jstree(true);
-    	ref.deselect_all(true);
+    	if (ref) { 
+    		ref.deselect_all(true);
+    	}
     	
     });
     
@@ -194,7 +218,7 @@ $('#jsTreeFile').keydown(function(e) {
 				//if (t.closest('.menuList').length) {
 				if (t.closest('.windowPane').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal")) {	
+					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal") || dragItem.hasClass("jsTreeFlowchart") || dragItem.hasClass("jsTreeScrum")) {	
 					
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
 						// data.helper.find('.jstree-icon').css("width", "500px");
@@ -214,8 +238,8 @@ $('#jsTreeFile').keydown(function(e) {
 				}
 			}
 			else { //give them a check box if they're above the file tree
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal")) {
-					//This is a chat or terminal. don't give them the checkbox because they can't move it to another folder.
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeScrum")) {
+					//This is a chat or terminal or flowchart or task board. don't give them the checkbox because they can't move it to another folder.
 					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
 //					data.helper.find('.jstree-icon').css("background-position", "-36px -68px");
 				}
@@ -341,13 +365,32 @@ $('#jsTreeFile').keydown(function(e) {
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
+					else if (draggedItem.hasClass("jsTreeScrum")) {
+						console.log("Has class jsTreeScrum");
+						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
+						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
+							console.log("Tab already exists, not adding -- but setting active");
+							var listItem = $("#" + thisParent).find('li.' + data.data.obj[0].id);
+							$("#" + thisParent).tabs("option", "active", listItem.index()); //set the active tab to the task board they dragged in
+						}
+						else {
+							console.log(data);
+							console.log($("#" + data.data.obj[0].id));
+							console.log($("#" + data.data.obj[0].id).closest('li'));
+							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
+							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'scrum', '');
+							var tabItem = $("#tabs-" + tabCounter);
+							var itemParent = tabItem.closest('div').attr('id');
+						}
+					}
 					
 				}
 			}
 			else {
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot") || $(data.data.obj[0]).hasClass("jsTreeFlowchart")) {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeScrum")) {
 					
-					//We do nothing if they try to move a Chat or Terminal or Root or flowchart
+					//We do nothing if they try to move a Chat or Terminal or Root or flowchart or task board
 				}
 				else {
 				
@@ -700,28 +743,67 @@ function renameFile (newName) {
 				
 }
 
+function cbCreateFile(hashKey, event, message) {
+	// message.status = true || false
+	
+	// if (message.status == true) you have set:
+	// message.createFile.srcPath -- fileName
+	// message.createFile.fileTreeHash -- "ID" 
+	// message.createFile.fileTreeOwnerHash -- "Owner ID"
+	node = message.createFile.node;
+	console.log("cbCreateFile() called with:");
+	console.log(hashKey); console.log(event); console.log(message);
+	console.log("cbCreateFile() end params");
+	$("#jsTreeFile").jstree('create_node', node.parent, node, 'last');
+	//create_node params = parentid,node,position
+	
+	//deselect all nodes
+	$("#jsTreeFile").jstree("deselect_all");
+	
+	//open the folder that has the new node in it
+	 console.log("WE ARE LOOKING FOR A PLACE IN THE DIRECTORY TREE WITH ID = " + node.parent );
+	 var nodeRef = $('#jsTreeFile').jstree(true);
+	 var thisNode = nodeRef.get_node(node.parent);
+	 nodeRef.open_node(thisNode);
+			 
+			 
+	var interval_id = setInterval(function(){
+		if($("#"+node.id).length > 0){
+			 // "exit" the interval loop with clearInterval command
+			clearInterval(interval_id);
+			console.log("selecting node " + node.id);
+			 
+			 
+			
+			 
+			//select and scroll to the new node
+			$("#jsTreeFile").jstree('select_node', node.id);
+			setTimeout(function(){ 
+				var thisElement = document.getElementById(node.id);
+				
+				$('#tabs-1').scrollTop( thisElement.offsetTop - 20 );
+
+				renameFile();
+			}, 400);
+		}
+	}, 10);
+}
+
 function createFile(fileDirectory) {
 	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
 	var statusJSON = {
-			"commandSet": "base",
-			"command": "createFile",
-			"key" : randomKey,
-			"directory" : fileDirectory,
-		};
-		wsSendMsg(JSON.stringify(statusJSON));
+		"commandSet": "FileTree",
+		"command": "createFile",
+		"hash" : randomKey,
+		"createFile" : {
+			"srcPath" : fileDirectory,
+		},
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	wsRegisterCallbackForHash(randomKey, cbCreateFile);
 	
-		while (!getMsg(randomKey)) {
-			setTimeout(function() { console.log('Waiting for reply')}, 100); // wait 10ms for the connection...
-	    }	
-		var result = getMsg(randomKey);
-		if (result['status'] == true) {
-			// Successful file creation
-			// Add the new file
-		}
-		else {
-			//file creation denied. Display dialog with error message.
-		}
 }
+
 function deleteFile(fileName) {
 	var ref = $('#jsTreeFile').jstree(true),
 		sel = ref.get_selected();

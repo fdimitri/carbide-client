@@ -28,6 +28,7 @@ $(document).ready(function() {
 		console.log(jObj);
 		if (jObj['hash']) {
 			addMessageQueue(jObj['hash'], jObj, false);
+			wsSendEventToCallback(jObj['hash'], 'recv', jObj);
 		}
 		if (!jObj.commandSet) {
 			console.log("Missing commandSet  -- this will break file editing");
@@ -45,6 +46,12 @@ $(document).ready(function() {
 		}
 		else if (jObj.commandSet == "term") {
 			cliMsgProcTerminal(jObj);
+		}
+		else if (jObj.commandSet == "flowchart") {
+			cliMsgProcFlowchart(jObj);
+		}
+		else if (jObj.commandSet == "scrum") {
+			cliMsgProcScrum(jObj);
 		}
 		else {
 			console.log("Received non-chat command: " + jObj.commandSet);
@@ -475,6 +482,19 @@ function cliMsgProcTerminal(jObj) {
 
 }
 
+function cliMsgProcFlowchart(jObj) {
+	console.log("Entered cliMsgProcFlowchart");
+	console.log(jObj);
+	
+	
+}
+
+function cliMsgProcScrum(jObj) {
+	console.log("Entered cliMsgProcScrum");
+	console.log(jObj);
+
+}
+
 
 
 
@@ -526,7 +546,7 @@ function addMessageQueue(hash, newData, sendData) {
 	var d = new Date();
 	var timeStamp = d.getTime();
 
-	key = 'recv';
+	var key = 'recv';
 	if (sendData) {
 		key = 'send';
 	}
@@ -542,6 +562,29 @@ function addMessageQueue(hash, newData, sendData) {
 	}
 
 	messageQueue[hash][key][timeStamp] = newData;
+}
+
+function wsRegisterCallbackForHash(hashKey, functionPtr) {
+	if (!messageQueue[hashKey]) {
+		console.log("Asked to register function for hashkey " + hashKey + " but it was !messageQueue[hashKey] TRUE");
+		return(false);
+	}
+	messageQueue[hashKey]['callBack'] = functionPtr;
+	console.log("Successfully registered function for hashKey: " + hashKey)
+	return(true);
+}
+
+function wsSendEventToCallback(hashKey, event, msg) {
+	console.log("wsSendEventToCallback called for " + hashKey + " on event: " + event);
+	console.log(msg);
+	var myObj = getMessageQueue(hashKey);
+	console.log(myObj);
+	if (myObj && myObj.callBack) {
+		console.log("myObj.callBack exists, call it");
+		return(myObj.callBack(hashKey, event, msg));
+	}
+	console.log("myObj.callBack does not exist");
+	return(false); // There is no callback registered for this hash
 }
 
 function removeMessageQueue(hash, options) {
@@ -592,9 +635,8 @@ function getMessagesByHash(hash, options) {
 		}
 	}
 	return (false);
-
-
 }
+
 
 function getMessagesFromHashByTime(hash, options) {
 	var returnObject = {

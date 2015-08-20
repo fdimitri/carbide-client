@@ -1,0 +1,58 @@
+.taskBoard {
+    border-width:2px;
+    border-style:solid;
+    border-color:#000000;
+    display:inline-block;
+}
+
+.taskTable {
+    border-collapse: separate;
+    width:100%;
+    border-style:solid;
+    border-width:2px;
+    border-color:#000000;
+ 
+}
+.taskTable tr {
+    border-width:1px;
+    border-style:solid;
+    border-color:#0000FF;
+    height:100%;
+ 
+}
+.taskTable td, .taskTable th {
+    display:table-cell;
+    height:100%;
+    padding:10px;
+ 
+}
+.placeholder { 
+            -moz-box-shadow: 4px 5px 4px #C6C6C6 inset;
+            -webkit-box-shadow: 4px 5px 4px #C6C6C6 inset;
+            box-shadow: 4px 5px 4px #C6C6C6 inset;
+            background: #EFEFEF !important; 
+}
+.taskCell {
+    height:100%;
+    width:100%;
+    display:inline-block;
+    border-width:2px;
+    border-style:solid;
+    padding:5px;
+}
+.taskGreen {
+    border-color:rgba(0,200,0,1.0);
+}
+.taskYellow {
+    border-color:rgba(255,255,0,1.0);
+}
+.taskRed {
+    border-color:rgba(255,0,0,1.0);
+}
+.taskItem {
+    border-style:solid;
+    border-width:1px;
+    border-color:rgba(0,0,0,1.0);
+    padding: 6px;
+    margin:7px;
+}

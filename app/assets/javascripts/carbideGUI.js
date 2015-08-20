@@ -2,8 +2,8 @@ var activeTabs = [];
 var activePanes = [];
 var deletedPanes = 0;
 var clickedElement = "";
+var clickedUser = "";
 var lastFocusedPane = "";
-var currentTheme = "ace/theme/vibrant_ink";
 var paneCounter = 0;
 
 ////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ $(document).ready(function() {
 			var options = [];
 			var testVar = Math.floor((Math.random() * 1000) + 1);
 			var test2 = Math.floor((Math.random() * 10) + 11);
-			addConnectedUser(testVar, 'Dummy' + testVar, 'test.js', '/test.js', 'file', test2);
+			addConnectedUser(testVar, 'Dummy' + testVar, 'test.js', '/test.js', 'file', test2, {showLines: false});
 		}
 		if (e.altKey && (String.fromCharCode(e.which) === 'n' || String.fromCharCode(e.which) === 'N')) { //ALT keypress
 			console.log("keydown acknowledged");
@@ -178,6 +178,23 @@ $(document).ready(function() {
 			else if ($(event.target).is("#terminalroot_anchor")) {
 				clickedElement = "jsTreeTerminalRoot";
 			}
+			else if ($(event.target).is("#scrumroot_anchor")) {
+				clickedElement = "jsTreeScrumRoot";
+			}
+			else if ($(event.target).is("#flowchartroot_anchor")) {
+				clickedElement = "jsTreeFlowchartRoot";
+			}
+			
+			else if ($(event.target).closest("#rightBar").length) {
+				if ($(event.target).closest(".projectUserBox").length) {
+					clickedElement = "projectUserBox";
+					clickedUser = $(event.target).closest(".projectUserBox").attr("uid");
+				}
+				else {
+					clickedElement = "rightBar";
+				}
+
+			}
 			
 			
 			else if ($(event.target).is(".jstree-anchor")) {
@@ -186,6 +203,12 @@ $(document).ready(function() {
 				}
 				else if ($(event.target).closest(".jsTreeChat").length) {
 					clickedElement = "jsTreeChat";
+				}
+				else if ($(event.target).closest(".jsTreeScrum").length) {
+					clickedElement = "jsTreeScrum";
+				}
+				else if ($(event.target).closest(".jsTreeFlowchart").length) {
+					clickedElement = "jsTreeFlowchart";
 				}
 				else if ($(event.target).closest(".jsTreeFile").length) {
 					clickedElement = "jsTreeFile";
@@ -1182,7 +1205,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 	}
-	else if (tabType == "Terminal") {//a duplicate terminal is considered to be any terminal by this name active within any pane
+	else if (tabType == "terminal") {//a duplicate terminal is considered to be any terminal by this name active within any pane
 		var foundFile = $('li[filename="' + filename + '"]');
 		if (foundFile.length) {
 			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing terminal
@@ -1192,6 +1215,15 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			return;
 		}
 		
+	}
+	else if (tabType == "flowchart") { //a duplicate flowchart is considered to be any flowchart by this name active within any pane
+		var foundFile = $('li[filename="' + filename + '"]');
+		if (foundFile.length) {
+			focusPane(foundFile.closest(".windowPane").attr("id")); //focus the location of the already existing flowchart
+			foundFile.closest(".tabBar").tabs().tabs("refresh");
+			foundFile.closest(".tabBar").tabs().tabs("option", "active", foundFile.index()).tabs("refresh");
+			return;
+		}
 	}
 	removeAddTabButton(tabBarId);
 	
@@ -1204,17 +1236,17 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	$("#" + tabBarId).tabs().append("<div class='AriaTab' id='" + tabName + "'></div>");
 	var MyObject = {
 	};
-	console.log("AJAX POST gto createConte with srcPath = " + srcPath);
+	console.log("AJAX POST got createContent with srcPath = " + srcPath);
 	$.ajax({
 		url: "/create_gui_content/createContent.json",
 		type: 'post',
 		data: {
-		'tabName': tabName,
-		'tabType': tabTypeU,
-		'paneId': tabBarId,
-		'originId': originId,
-		'chatTarget': filename,
-		'srcPath': srcPath,
+			'tabName': tabName,
+			'tabType': tabTypeU,
+			'paneId': tabBarId,
+			'originId': originId,
+			'chatTarget': filename,
+			'srcPath': srcPath,
 		},
 		datatype: 'json',
 		success: function(data) {
@@ -1269,6 +1301,30 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				};
 				var rval = wsSendMsg(JSON.stringify(statusJSON));
 
+			}
+			else if (tabType == 'flowchart') {
+				var statusJSON = {
+					"commandSet": "flowchart",
+					"flowchartCommand": "openFlowchart",
+					"flowchartTarget": filename,
+				};
+				var rval = wsSendMsg(JSON.stringify(statusJSON));
+				console.log("Informing server we are opening a flowchart !!! Return val from ws was: " + rval);
+				console.log(statusJSON);
+				console.log(ws);
+				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
+			}
+			else if (tabType == 'scrum') {
+				var statusJSON = {
+					"commandSet": "scrum",
+					"scrumCommand": "openScrum",
+					"scrumTarget": filename,
+				};
+				var rval = wsSendMsg(JSON.stringify(statusJSON));
+				console.log("Informing server we are opening a Scrum Board !!! Return val from ws was: " + rval);
+				console.log(statusJSON);
+				console.log(ws);
+				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
 			}
 			var statusJSON = {
 				"commandSet": "client",

@@ -106,7 +106,7 @@
                 //     cssClass: "aLabel"
                 // }]
             ],
-            Container: "flowchart-demo"
+            Container: "flowchart-space"
         }); 
         
         
@@ -705,7 +705,7 @@
 
 
           console.log("MOUSE DOWN DETECTED IN ");
-          if (e.target.id != "flowchart-demo") {
+          if (e.target.id != "flowchart-space") {
               activeContainerId = $(e.target).closest(".form-outer-box").attr("id");
           }
           else {
@@ -778,13 +778,13 @@
                 activeContainerShape = "activeLabel";
                 activeContainerId = $(e.target).closest("._jsPlumb_overlay").attr("id");
                 setTimeout(function() {
-                 $(".flowchart-boundbox").contextmenu("open", $(".flowchart-demo"));
+                 $(".flowchart-boundbox").contextmenu("open", $(".flowchart-space"));
               }, 50); // open on delay to avoid triggering close
             }
             else if ($(e.target).closest("._jsPlumb_connector").length) { //this is a connection between 2 elements
               activeContainerShape = "activeConnector";
               setTimeout(function() {
-                 $(".flowchart-boundbox").contextmenu("open", $(".flowchart-demo"));
+                 $(".flowchart-boundbox").contextmenu("open", $(".flowchart-space"));
               }, 50); // open on delay to avoid triggering close
             }
             
@@ -804,7 +804,7 @@
             position: function(event, ui){
                 return(currentMousePos);
             },
-            delegate: ".flowchart-demo",
+            delegate: ".flowchart-space",
             menu: [
                  //this will be replaced below
                 ],
@@ -1358,7 +1358,7 @@ jsPlumb.ready(function () {
          updateDraggable();
         
 
-       /* instance.draggable($(".flowchart-demo .window"), {
+       /* instance.draggable($(".flowchart-space .window"), {
             grid: [20, 20],
           containment:"parent"
         });*/
@@ -1405,7 +1405,7 @@ jsPlumb.ready(function () {
 
 
     // $(document).ready(function() {
-    //     $('#flowchart-demo').dblclick(function(e) {
+    //     $('#flowchart-space').dblclick(function(e) {
     //         /*jsPlumb.repaintEverything();
     //         console.log("DBL");
     //         $("#flowchartWindow1").parent().css({position: 'relative'});
@@ -1572,7 +1572,7 @@ if (e.altKey && (String.fromCharCode(e.which) === 'h' || String.fromCharCode(e.w
 	    var currentObj = {};
 	    for (var i = 0; i < savedElements.length; i++) {
 	        currentObj = savedElements[i];
-	        addObject("flowchart-demo",currentObj.id,currentObj.type,currentObj.x,currentObj.y,currentObj.width,currentObj.height,currentObj.color,currentObj.text);
+	        addObject("flowchart-space",currentObj.id,currentObj.type,currentObj.x,currentObj.y,currentObj.width,currentObj.height,currentObj.color,currentObj.text);
 	    }
         
 	    for (i = 0; i < savedConnections.length; i++) {

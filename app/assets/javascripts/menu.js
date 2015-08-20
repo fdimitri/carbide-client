@@ -473,10 +473,17 @@ function arrangePanes(paneFormat) {
 	
 	//now set the attributes for restoration of panes
 	$(".windowPane").each(function() {
-			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
-			$(this).attr("oldy", $(this).position().top);
-			$(this).attr("oldheight", $(this).height());
-			$(this).attr("oldwidth", $(this).width());
+			if ($(this).hasClass('maximizedPane')) {
+				//we don't need to adjust a maximized pane's attributes
+			} 
+			else {
+			
+				$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
+				$(this).attr("oldy", $(this).position().top);
+				$(this).attr("oldheight", $(this).height());
+				$(this).attr("oldwidth", $(this).width());
+			}
+
 	});
 }
     

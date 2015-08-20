@@ -303,6 +303,7 @@ $(function() {
 		},
 		stop: function(event, ui) {
 			windowLastWidth = 0;
+			
 			$(this).attr("oldx", $(this).position().left); //these attributes are used if a pane is restored
 			$(this).attr("oldy", $(this).position().top);
 			$(this).attr("oldheight", $(this).height());
