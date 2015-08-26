@@ -14,14 +14,19 @@ var userDefaultOptions = {
 var connectionStatus = false; //disconnected at start (to server)
 
 var ws = false;
-	
 
+function initWebSocket() {
+	if (ws.readyState === 0 || ws.readyState === 1) {
+		return;
+	}
+	ws = new WebSocket("ws://frank-d.info:8080/");
+	if (ws.readyState > 1) {
+		console.log("Unable to reconnect, trying again in 5 seconds..");
+		setTimeout(function() {
+			initWebSocket();
+		}, 5000);
 
-
-
-$(document).ready(function() {
-	console.log("WebSocketsHandler getting ready!");
- 	ws = new WebSocket("ws://frank-d.info:8080/");
+	}
 	ws.onmessage = function(evt) {
 		console.log("onmessage fired: " + evt);
 		var jObj = $.parseJSON(evt.data);
@@ -62,12 +67,32 @@ $(document).ready(function() {
 		console.log(error);
 	};
 
-	ws.onclose = function() {
+	ws.onclose = function(event) {
+		var code = event.code;
+		var reason = event.reason;
+		var wasClean = event.wasClean;
+		console.log("Websocket closed, code: " + code + ", reason: " + reason + " wasClean?: " + wasClean);
+		console.log(event);
+
 		var connOpts = [];
 		connOpts['speed'] = 0;
 		updateConnectionStatus(connOpts); //update connection status to disconnected
 		console.log("Websocket was closed..");
 		console.log(ws);
+		messageQueue = {};
+		socketMessageQueue = [];
+
+
+		for (var i = 0; i < terminalArray.length; i++) {
+			terminalArray[i].term.destroy();
+		}
+		terminalArray = [];
+		$('.windowPane').each(function() {
+			closePane($(this).attr("id"));
+		});
+		paneCounter = 0;
+		initWebSocket();
+		createNewPane();
 	};
 	ws.onopen = function() {
 		var connOpts = [];
@@ -77,15 +102,22 @@ $(document).ready(function() {
 		console.log(ws);
 		flushQueueToSocket();
 	};
-	
+}
+
+
+
+
+$(document).ready(function() {
+	console.log("WebSocketsHandler getting ready!");
+	initWebSocket();
 });
 
 
 
 ////FUNCTION DEFINITIONS FOLLOW
 function flushQueueToSocket() {
-	if (!ws || ws.readyState !== 1)  {
-		return(false);
+	if (!ws || ws.readyState !== 1) {
+		return (false);
 	}
 	while (ws && ws.readyState == 1 && socketMessageQueue.length) {
 		console.log("flushQueueToSocket(): Shifting queue.. Queue size is " + socketMessageQueue.length);
@@ -93,6 +125,7 @@ function flushQueueToSocket() {
 		wsSendMsg(msg);
 	}
 }
+
 function queueSocketMsg(msg) {
 	socketMessageQueue.push(msg);
 }
@@ -102,7 +135,7 @@ function wsSendMsg(msg) {
 	if (!ws || ws.readyState !== 1) {
 		console.log("Queuing message..")
 		queueSocketMsg(msg);
-		return(false);
+		return (false);
 	}
 	console.log(msg);
 	var nopush = false;
@@ -485,8 +518,8 @@ function cliMsgProcTerminal(jObj) {
 function cliMsgProcFlowchart(jObj) {
 	console.log("Entered cliMsgProcFlowchart");
 	console.log(jObj);
-	
-	
+
+
 }
 
 function cliMsgProcScrum(jObj) {
@@ -567,11 +600,11 @@ function addMessageQueue(hash, newData, sendData) {
 function wsRegisterCallbackForHash(hashKey, functionPtr) {
 	if (!messageQueue[hashKey]) {
 		console.log("Asked to register function for hashkey " + hashKey + " but it was !messageQueue[hashKey] TRUE");
-		return(false);
+		return (false);
 	}
 	messageQueue[hashKey]['callBack'] = functionPtr;
 	console.log("Successfully registered function for hashKey: " + hashKey)
-	return(true);
+	return (true);
 }
 
 function wsSendEventToCallback(hashKey, event, msg) {
@@ -581,10 +614,10 @@ function wsSendEventToCallback(hashKey, event, msg) {
 	console.log(myObj);
 	if (myObj && myObj.callBack) {
 		console.log("myObj.callBack exists, call it");
-		return(myObj.callBack(hashKey, event, msg));
+		return (myObj.callBack(hashKey, event, msg));
 	}
 	console.log("myObj.callBack does not exist");
-	return(false); // There is no callback registered for this hash
+	return (false); // There is no callback registered for this hash
 }
 
 function removeMessageQueue(hash, options) {
@@ -681,7 +714,7 @@ function updateConnectionStatus(options) { //options['speed'] is between 0 and 1
 			if (options['reconnect'] == 0) {
 				connectionMsg = connectionMsg + '...';
 			}
- 			else if (options['reconnect'] == 1) {
+			else if (options['reconnect'] == 1) {
 				connectionMsg = connectionMsg + ' in ' + options['reconnect'];
 				connectionMsg = connectionMsg + ' Second.</div>';
 			}
@@ -713,26 +746,27 @@ function disableScreen() {
 		editorSelector = $(this).attr("id");
 		editor = ace.edit(editorSelector);
 		editor.setOptions({
-	    readOnly: true,
-	    highlightActiveLine: false,
-	    highlightGutterLine: false
+			readOnly: true,
+			highlightActiveLine: false,
+			highlightGutterLine: false
 		})
-		editor.renderer.$cursorLayer.element.style.opacity=0;
+		editor.renderer.$cursorLayer.element.style.opacity = 0;
 	});
 }
+
 function enableScreen() {
 	$('.disconnectBlock').remove();
 	var editorSelector;
 	$('.ace_editor').css('background:rgba(200,200,200,0.0)');
-	$('.ace_editor').each (function() {
+	$('.ace_editor').each(function() {
 		editorSelector = $(this).attr("id");
 		editor = ace.edit(editorSelector);
 		editor.setOptions({
-	    readOnly: false,
-	    highlightActiveLine: true,
-	    highlightGutterLine: true
+			readOnly: false,
+			highlightActiveLine: true,
+			highlightGutterLine: true
 		})
-		editor.renderer.$cursorLayer.element.style.opacity=1;
+		editor.renderer.$cursorLayer.element.style.opacity = 1;
 	})
 }
 
@@ -772,11 +806,11 @@ function enableScreen() {
 // }
 
 function addConnectedUser(userId, userName, fileName, fileSrcPath, fileType, currentLine, options) { //filetype is file, terminal, chat
-																									//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
+	//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
 	if (typeof options === 'undefined') {
 		var options = userDefaultOptions;
 	}
-	if (!fileName) { 
+	if (!fileName) {
 		var fileName = 'None';
 	}
 	if (!fileSrcPath) {
@@ -790,13 +824,13 @@ function addConnectedUser(userId, userName, fileName, fileSrcPath, fileType, cur
 	}
 	var userHtml = '<div class="projectUserBox" uid="' + userId + '"><div class="projectUserName"><strong>' + userName + '</strong></div>';
 	userHtml = userHtml + '<div class="projectUserStats"><ul><li class="userFileLi"><strong>File:</strong> ';
-	
+
 	userHtml = userHtml + '<span class="userFileLink" srcpath="' + fileSrcPath + '" srctype="' + fileType + '" linenumber="' + currentLine + '">';
-	
+
 	userHtml = userHtml + fileName;
 
 	userHtml = userHtml + '</span>';
-	
+
 	userHtml = userHtml + '</li>';
 	if (currentLine >= 0) {
 		userHtml = userHtml + '<li class="userCurrentLine"><strong>Line:</strong> ' + currentLine + '</li>';
@@ -822,7 +856,7 @@ function removeConnectedUser(userId) {
 }
 
 function updateConnectedUser(userId, userName, fileName, fileSrcPath, fileType, currentLine, options) { //filetype is file, terminal, chat
-																									//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
+	//options["showLines"] (true|false), options["linesHour"], options["linesDay"], options["linesProj"]
 	var thisUser = $('[uid="' + userId + '"]');
 	var userHtml = '';
 	if (!fileSrcPath) {
@@ -843,13 +877,13 @@ function updateConnectedUser(userId, userName, fileName, fileSrcPath, fileType, 
 			userHtml = userHtml + '<span class="userFileLink" srcpath="' + fileSrcPath + '" srctype="' + fileType + '" linenumber="' + currentLine + '">';
 		}
 		userHtml = userHtml + fileName;
-	
+
 		userHtml = userHtml + '</span>';
 		thisUser.find('.userFileLi').html(userHtml);
 	}
-	
+
 	if (typeof currentLine !== 'undefined') {
-		
+
 		if (currentLine >= 0) {
 			thisUser.find('.userCurrentLine').html('<strong>Line:</strong> ' + currentLine);
 		}
