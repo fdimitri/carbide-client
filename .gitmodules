@@ -10,3 +10,6 @@
 [submodule "app/assets/javascripts/sorttable"]
 	path = app/assets/javascripts/sorttable
 	url = https://github.com/dbrink/sorttable.git
+[submodule "app/assets/javascripts/tinymce"]
+	path = app/assets/javascripts/tinymce
+	url = https://github.com/tinymce/tinymce.git
