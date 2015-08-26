@@ -794,3 +794,8 @@ margin-left: 20px;
 	padding:0 !important;
 	line-height: 24px !important;
 }
+.wysiwyg {
+	position:absolute;
+	float:left;
+	
+}

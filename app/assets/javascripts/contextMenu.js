@@ -109,13 +109,14 @@ $(function() {
 				    $("#dialog-newterminal").dialog("open");
                 	
                 }
-        //         else if (ui.cmd == "createFlowchart") {
+                else if (ui.cmd == "createFlowchart") {
         //         	$('#newChatOpen').attr('checked', false);
 				    // $("#newChatTarget").remove();
 				    // $("#dialog-newchat").dialog("open");
-        //         }
+				    newTab("TestFlow", $(".activePane .tabBar").attr('id'), "", "flowchart", "Flowchart_new");
+                }
         		else if (ui.cmd == "createScrum") {
-        			newTab("TestScrum", $(".activePane .tabBar").attr('id'), "", "scrum", "Scrum/new");
+        			newTab("TestScrum", $(".activePane .tabBar").attr('id'), "", "scrum", "Scrum_new");
         		}
                 else if (ui.cmd == "deleteChat") {
                 	var thisDialog = "dialog-info";
@@ -172,6 +173,40 @@ $(function() {
 						}
 					});
                 }
+                else if ((ui.cmd == "uploadFile") || (ui.cmd == "uploadTarball")){ //upload
+        			console.log("UPLOAD FILE!! LINE 177 OF CONTEXTMENU.JS!!!!!");
+        			var ref = $('#jsTreeFile').jstree(true);
+                 	var selectedNodes = ref.get_selected();
+                 	if (selectedNodes.length > 1) { //WE CAN ONLY HAVE 1 NODE SELECTED AS THE LOCATION FOR THE NEW FILE SO GO WITH THE FIRST SELECTED NODE
+                 		selectedNodes = selectedNodes[0];
+                 	}
+                 	else if(selectedNodes.length == 0) { //IF NO NODE IS SELECTED WE WILL SELECT THE ROOT
+                 		$("#jsTreeFile").jstree('select_node', "ftroot0");
+                 		ref = $('#jsTreeFile').jstree(true);
+                 		selectedNodes = ref.get_selected();
+                 	}
+                 	//IF THERE IS NO SELECTED NODE WE WILL USE THE ROOT DIRECTORY
+					var fileAndPath = ref.get_path(selectedNodes,"/");
+					//var path = fileAndPath.substring(0,fileAndPath.lastIndexOf("/"));
+					var realPath = '/';
+					if (fileAndPath.indexOf("/") > -1) { //if there is a slash then it isn't the root
+						realPath = fileAndPath.substring(fileAndPath.indexOf("/"),fileAndPath.length);
+					}
+					var nodeType = ref.get_type(selectedNodes);
+					if (nodeType == "file") {
+						realPath = realPath.substring(0,realPath.lastIndexOf("/"));
+					}
+					if (realPath == '') { //if the file was in the root add a preceding slash
+						realPath = '/';
+					}
+                	console.log("THE UPLOAD WILL GO TO PATH: " + realPath + " which is varname 'realPath' (Line 202 CONTEXTMENU.JS)");
+                	if (ui.cmd == "uploadFile") {
+                		console.log("THE UPLOAD IS A FILE (Line 204 CONTEXTMENU.JS)");
+                	}
+                	else if (ui.cmd == "uploadTarball") {
+                		console.log("THE UPLOAD IS A Tarball (Line 207 CONTEXTMENU.JS)");
+                	}
+                }
                 
                   
             },
@@ -184,6 +219,9 @@ $(function() {
 					 $("#toolBarSide").contextmenu("replaceMenu", [
                 		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                		{title: '---'},
+                		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
+                		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     
                     ]);
 				}
@@ -192,6 +230,9 @@ $(function() {
 					 $("#toolBarSide").contextmenu("replaceMenu", [
                 		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "	ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                		{title: '---'},
+                		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
+                		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     
                     ]);
 				}
@@ -228,6 +269,9 @@ $(function() {
 						{title: '---'},
 						{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                		{title: '---'},
+                		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
+                		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     
                     ]);
 				}
@@ -358,6 +402,9 @@ $(function() {
 					 $("#toolBarSide").contextmenu("replaceMenu", [
                         {title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
+                		{title: '---'},
+                		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
+                		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     
                     ]);
 				}

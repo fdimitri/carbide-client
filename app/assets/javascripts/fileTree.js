@@ -92,7 +92,7 @@ $('#jsTreeFile').keydown(function(e) {
 	  				var statusJSON = {
 					"commandSet": "base",
 					"command": "checkFileName",
-					"key" : randomKey,
+					"hash" : randomKey,
 					"filename" : e.keyCode,
 					
 					};
@@ -157,7 +157,7 @@ $('#jsTreeFile').keydown(function(e) {
     	var statusJSON = {
 			"commandSet": "FileTree",
 			"command": "renameEntry",
-			"key" : randomKey,
+			"hash" : randomKey,
 			"renameEntry" : {
 				"srcPath" : srcPath,
 				"newName" : newName,
@@ -823,7 +823,7 @@ function deleteFile(fileName) {
 	var statusJSON = {
 		"commandSet": "FileTree",
 		"command": "deleteEntry",
-		"key": randomKey,
+		"hash": randomKey,
 		"deleteEntry": {
 //			"srcPath": fileAndPath,
 			"srcPath": srcPath,
@@ -873,7 +873,7 @@ function deleteChat(fileName) {
 		var statusJSON = {
 			"commandSet": "base",
 			"command": "deleteChat",
-			"key" : randomKey,
+			"hash" : randomKey,
 			"chatname" : fileName,
 		};
 		wsSendMsg(JSON.stringify(statusJSON));
@@ -917,7 +917,7 @@ function deleteTerminal(fileName) {
 		var statusJSON = {
 			"commandSet": "base",
 			"command": "deleteTerm",
-			"key" : randomKey,
+			"hash" : randomKey,
 			"termname" : fileName,
 		};
 		wsSendMsg(JSON.stringify(statusJSON));
