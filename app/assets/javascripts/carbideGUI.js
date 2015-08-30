@@ -129,22 +129,6 @@ $(document).ready(function() {
 	// });
 
 	
-	var statusJSON = {
-		"commandSet": "FileTree",
-		"command": "getFileTreeJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
-	var statusJSON = {
-		"commandSet": "base",
-		"command": "getChatListJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
-
-	var statusJSON = {
-		"commandSet": "base",
-		"command": "getTermListJSON",
-	};
-	wsSendMsg(JSON.stringify(statusJSON));
 
 	// var statusJSON = {
 	// 	"commandSet": "base",
@@ -565,6 +549,12 @@ function maximizePane(paneId) {
 	// This is the html for a Maximize button: <span class="paneMaximize ui-icon ui-icon-extlink">
 
 	var thisPane = $("div #" + paneId);
+	
+	//take a recording from any task boards
+	var labelWidths = [];
+	thisPane.find('.taskTable').each(function() {
+		labelWidths.push($(this).find("th").eq(0).width());
+	});
 
 	//these lines prevent jquery shenanigans (resizing the parent window)
 	/*	thisPane.parent("div").css({position: 'relative'});
@@ -615,8 +605,15 @@ function maximizePane(paneId) {
         		console.log(editor);
         		editor[0].resize(true);
     });
+    
 	focusPane(paneId);
 	checkTerminalSizes(paneId);
+	setTimeout(function(){ 
+		thisPane.find('.taskTable').each(function() { //fix task board widths
+			$(this).find("th").eq(0).width(labelWidths.shift());
+			fixTaskWidth($(this).attr("id"));
+	    });
+	}, 300);
 }
 
 
@@ -688,8 +685,14 @@ function restorePane(paneId) {
         		console.log(editor);
         		editor[0].resize(true);
     });
+    
 	focusPane(paneId);
 	checkTerminalSizes(paneId);
+	setTimeout(function(){ 
+		thisPane.find('.taskTable').each(function() { //fix task board widths
+			fixTaskWidth($(this).attr("id"));
+	    });
+	}, 300);
 }
 
 function minimizePane(paneId) {

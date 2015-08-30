@@ -1,7 +1,11 @@
 
 $(function() {
+	
 
-
+	$("#selectFile").change(function(){
+    	console.log('They have chosen to upload file: ' + $("#selectFile").val());
+	});
+  
 	$("#toolBarSide").contextmenu({
             delegate: ".ui-tabs-panel",
             menu: [
@@ -118,6 +122,33 @@ $(function() {
         		else if (ui.cmd == "createScrum") {
         			newTab("TestScrum", $(".activePane .tabBar").attr('id'), "", "scrum", "Scrum_new");
         		}
+        		else if (ui.cmd == "createFolder") {
+        			var ref = $('#jsTreeFile').jstree(true);
+                 	var selectedNodes = ref.get_selected();
+                 	if (selectedNodes.length > 1) { //WE CAN ONLY HAVE 1 NODE SELECTED AS THE LOCATION FOR THE NEW FILE SO GO WITH THE FIRST SELECTED NODE
+                 		selectedNodes = selectedNodes[0];
+                 	}
+                 	else if(selectedNodes.length == 0) { //IF NO NODE IS SELECTED WE WILL SELECT THE ROOT
+                 		$("#jsTreeFile").jstree('select_node', "ftroot0");
+                 		ref = $('#jsTreeFile').jstree(true);
+                 		selectedNodes = ref.get_selected();
+                 	}
+                 	//IF THERE IS NO SELECTED NODE WE WILL USE THE ROOT DIRECTORY
+					var fileAndPath = ref.get_path(selectedNodes,"/");
+					//var path = fileAndPath.substring(0,fileAndPath.lastIndexOf("/"));
+					var realPath = '/';
+					if (fileAndPath.indexOf("/") > -1) { //if there is a slash then it isn't the root
+						realPath = fileAndPath.substring(fileAndPath.indexOf("/"),fileAndPath.length);
+					}
+					var nodeType = ref.get_type(selectedNodes);
+					if (nodeType == "file") {
+						realPath = realPath.substring(0,realPath.lastIndexOf("/"));
+					}
+					if (realPath == '') { //if the file was in the root add a preceding slash
+						realPath = '/';
+					}
+                	createFolder(realPath);
+        		}
                 else if (ui.cmd == "deleteChat") {
                 	var thisDialog = "dialog-info";
 					changeDialogTitle(thisDialog,"Delete Chatroom?");
@@ -202,9 +233,13 @@ $(function() {
                 	console.log("THE UPLOAD WILL GO TO PATH: " + realPath + " which is varname 'realPath' (Line 202 CONTEXTMENU.JS)");
                 	if (ui.cmd == "uploadFile") {
                 		console.log("THE UPLOAD IS A FILE (Line 204 CONTEXTMENU.JS)");
+                		$("#selectFile").removeAttr("accept");
+                		$("#selectFile").trigger("click");
                 	}
                 	else if (ui.cmd == "uploadTarball") {
                 		console.log("THE UPLOAD IS A Tarball (Line 207 CONTEXTMENU.JS)");
+                		$("#selectFile").attr("accept", ".tar,.tar.gz,.tgz,.gz");
+                		$("#selectFile").trigger("click");
                 	}
                 }
                 
@@ -835,7 +870,7 @@ function removeDialogIcon (dialogId) {
 	$("#" + dialogId).find(".dialogIcon").remove();	
 }
 function addDialogInfo (dialogId, dialogMsg) {
-	var dialogInfo = '<p class="dialogInfo">' + dialogMsg + '</p><div class="dialogClear" style="clear:both;"></div>';
+	var dialogInfo = '<div class="dialogInfo">' + dialogMsg + '</div><div class="dialogClear" style="clear:both;"></div>';
 	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
 }
 function removeDialogInfo (dialogId) {
@@ -855,7 +890,7 @@ function removeDialogQuestion (dialogId) {
 	$("#" + dialogId).find(".dialogQuestion").remove();	
 }
 function addDialogColorPicker (dialogId, textLabel, colorId, colorName, defaultColor) {
-	var dialogInfo = '<div class="dialogColorPicker"><label>' + textLabel + ' </label><input type="color" name="' + colorName + '" id="' + colorId + '" value="' + defaultColor + '"></input></div>';
+	var dialogInfo = '<div class="dialogColorPicker"><label>' + textLabel + ' </label><input type="color" name="' + colorName + '" id="' + colorId + '" value="' + defaultColor + '" class="colorPickerBox"></input></div>';
 	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
 }
 function removeDialogColorPicker (dialogId) {

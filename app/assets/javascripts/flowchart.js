@@ -7,6 +7,8 @@
     var numDbElements = 0;
     var resizing = 0;
     var dragInProgress = 0;
+    var contextX = 0;
+    var contextY = 0;
     var lastColor = '#FFFFFF';
     var currentMousePos = {};
     var activeConnection = '';
@@ -57,10 +59,10 @@
             isTarget: true,
             maxConnections: 1,
             connector: ["Flowchart", {
-                stub: [40, 60],
+                stub: [40, 40],
                 gap: 10,
                 cornerRadius: 5,
-                alwaysRespectStubs: true
+                alwaysRespectStubs: true,
             }],
             connectorStyle: connectorPaintStyle,
             hoverPaintStyle: endpointHoverStyle,
@@ -219,10 +221,10 @@
                         uuids: savedConnections[i].uuids,
                         paintStyle: connectorPaintStyle,
                         connector: ["Flowchart", {
-                            stub: [40, 60],
+                            stub: [40, 40],
                             gap: 10,
                             cornerRadius: 5,
-                            alwaysRespectStubs: true
+                            alwaysRespectStubs: true,
                         }],
                     });
                     var newId = savedConnections[i].id;
@@ -713,7 +715,7 @@
                 position: 'absolute'
             });
 
-            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "Top", "Bottom"]);
+            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "Top", "Bottom", "BottomRight", "BottomLeft", "TopLeft"]);
         }
         else if (shape == "folder") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
@@ -731,7 +733,7 @@
                 position: 'absolute'
             });
 
-            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "BottomLeft", "BottomRight", "Bottom"]);
+            addNewEndpoints('Element' + numElements, ["TopLeft", "RightMiddle", "LeftMiddle", "BottomLeft", "BottomRight", "Bottom"]);
         }
         else if (shape == "document") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
@@ -947,7 +949,7 @@
                 position: 'absolute'
             });
 
-            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "BottomLeft", "TopRight", "Top"]);
+            addNewEndpoints('Element' + numElements, ["RightMiddle", "LeftMiddle", "BottomLeft", "TopRight", "Top", "TopLeft"]);
         }
         else if (shape == "manualoperation") {
             console.log("creating new " + shape + " at " + x + ", " + y + " in box " + boxId);
@@ -976,7 +978,7 @@
 				         // "exit" the interval loop with clearInterval command
 				         clearInterval(interval_id);
 				         
-				         resizeObject("flowchartElement" + numElements, $("#flowchartElement" + numElements).eq(0).position().x, $("#flowchartElement" + numElements).eq(0).position().y, ($("#flowchartElement" + numElements).eq(0).parent().width() / 4), ($("#flowchartElement" + numElements).eq(0).parent().height() / 3));
+				         resizeObject("flowchartElement" + numElements, $("#flowchartElement" + numElements).eq(0).position().x, $("#flowchartElement" + numElements).eq(0).position().y, ($("#flowchartElement" + numElements).eq(0).parent().width() / 6), ($("#flowchartElement" + numElements).eq(0).parent().height() / 4));
         
                         updateDraggable();
                 
@@ -1300,10 +1302,10 @@
             anchors: anchorsList,
             paintStyle: paintStyle,
             connector: ["Flowchart", {
-                stub: [40, 60],
+                stub: [40, 40],
                 gap: 10,
                 cornerRadius: 5,
-                alwaysRespectStubs: true
+                alwaysRespectStubs: true,
             }],
 
         });
@@ -1324,121 +1326,127 @@
 
             position: function(event, ui) {
                 return (currentMousePos);
+                
             },
             // delegate: ".flowchart-space",
             menu: [
                 //this will be replaced below
             ],
+            open: function(event) {
+                contextX = event.pageX;
+                contextY = event.pageY;
+                console.log("opened a context menu at " + contextX + ", " + contextY);
+            },
             select: function(event, ui) {
                 if (ui.cmd == "createCircle") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("circle", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new circle
                 }
                 else if (ui.cmd == "createNote") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("note", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new note
                 }
                 else if (ui.cmd == "createFolder") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("folder", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new folder
                 }
                 else if (ui.cmd == "createDocument") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("document", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new document
                 }
                 else if (ui.cmd == "createDecision") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("decision", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new decision
                 }
                 else if (ui.cmd == "createIo") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("io", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new IO
                 }
                 else if (ui.cmd == "createAction") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("action", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new action
                 }
                 else if (ui.cmd == "createStartEnd") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("startend", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new start/end
                 }
                 else if (ui.cmd == "createMerge") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("merge", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new merge
                 }
                 else if (ui.cmd == "createExtract") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("extract", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new extract
                 }
                 else if (ui.cmd == "createPreparation") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("preparation", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new preparation
                 }
                 else if (ui.cmd == "createManualInput") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("manualinput", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new manual input
                 }
                 else if (ui.cmd == "createInternalStorage") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("internalstorage", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new internal storage
                 }
                 else if (ui.cmd == "createSubroutine") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("subroutine", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new subroutine
                 }
                 else if (ui.cmd == "createMultiDocument") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("multidocument", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new multidocument
                 }
                 else if (ui.cmd == "createManualOperation") {
                     var parentOffset = $(this).parent().offset();
-                    var xLocation = (event.pageX - parentOffset.left);
-                    var yLocation = (event.pageY - parentOffset.top);
+                    var xLocation = (contextX - parentOffset.left);
+                    var yLocation = (contextY - parentOffset.top);
 
                     requestNewElement("manualoperation", activeContainerId, xLocation, yLocation); //create dialogs to start process of creating a new manual operation
                 }
@@ -1471,6 +1479,16 @@
                             }
                         }
                     });
+                    $( ".colorPickerBox").change(function() {
+                	  console.log("CHANGE IN VALUE TO: ");
+                	  console.log($(this).val())
+                	  var theButton = $(this);
+                	  setTimeout(function(){
+
+                	    theButton.closest('.ui-dialog').find('.ui-button').eq(1).click();
+                	  }, 100);
+                	});
+
 
                 }
                 else if (ui.cmd == "editText") {

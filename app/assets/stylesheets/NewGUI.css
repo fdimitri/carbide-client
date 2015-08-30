@@ -1,3 +1,10 @@
+body {
+	position:relative;
+}
+.dialogContainer {
+	position:absolute;
+	display:none;
+}
 #cssmenu ul {
   list-style: none;
   padding: 0;
@@ -756,6 +763,8 @@ margin-left: 20px;
 	font-weight:bold;
 	height:42px;
 	margin-top:2px;
+	z-index:9999;
+	position:absolute;
 }
 #connectionBox .reconnect {
 	font-size:12pt;
@@ -780,6 +789,18 @@ margin-left: 20px;
 }
 .disconnectBlock {
 	text-align:center;
+}
+.disconnectInfo {
+	background-color:rgba(255,255,255,1.0);
+	border-style:solid;
+	border-color:rgba(0,0,0,1.0);
+	border-width:5px;
+	padding:50px;
+	width:auto;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:200px;
+	display:inline-block;
 }
 .disconnectBlock h1 {
 	font-size:40pt;

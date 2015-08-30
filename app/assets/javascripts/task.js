@@ -1,58 +1,37 @@
-var numtaskBoards = 1;
-var taskCount = 1; //use for numbering ids of task items
-var taskCellCount = 1; //use for number ids of task cells (tds)
+var numtaskBoards = 2;
+var taskCount = 0; //use for numbering ids of task items
+var taskCellCount = 2; //use for number ids of task cells (tds)
 
 $(document).ready(function() {
     
     initializeTaskContextMenu();
     
-    $(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 'w' || String.fromCharCode(e.which) === 'W')) { //ALT w keypress
-    			console.log("keydown acknowledged");
-    			createtaskColumn('Scrum_new_TaskSpace');
-    		}
-    });
-    $(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 'q' || String.fromCharCode(e.which) === 'Q')) { //ALT q keypress
-    			console.log("keydown acknowledged");
-    			createtaskRow('Scrum_new_TaskSpace');
-    		}
-    });
-    $(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 'a' || String.fromCharCode(e.which) === 'A')) { //ALT q keypress
-    			console.log("keydown acknowledged");
-    			console.log("length " + $('#taskSpace th').length);
-    			for (var i=0; i < $('#taskSpace th').length; i++) {
-    			    console.log($('#taskSpace th').eq(i).html());
-    			}
-    		}
-    });
-	$(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 't' || String.fromCharCode(e.which) === 'T')) { //ALT t keypress
-    			console.log("keydown acknowledged");
-    			moveTask("task5", "cell1", 0);
-    		}
-    });	
-    $(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 'y' || String.fromCharCode(e.which) === 'Y')) { //ALT y keypress
-    			console.log("keydown acknowledged");
-    			moveTask("task6", "cell2", 1);
-    		}
-    });	
-    $(document).on('keydown', function(e) {   
-        if (e.altKey && (String.fromCharCode(e.which) === 'h' || String.fromCharCode(e.which) === 'H')) { //ALT h keypress
-    			console.log("keydown acknowledged");
-    			moveColumn("taskSpace",3,1);
-    		}
-    });	
     
     
+    $(document).on('click', '.taskEditButton', function() { 
+        editTask(clickedElementId, clickedElement);
+    });
     
    
   //$('.taskHeader').editable('http://www.bogusurlthatdoesntreallyexist/save.php');
  
+    //open the edit task dialog off the side of the screen and let it load the WYSIWYG editor, so it doesn't have to load when someone is trying to use it
+    editTask(1,1);
+    $('.ui-dialog[aria-describedby="wysiwyg"]').css("position","absolute");
+    $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index","-1");
+    $('.ui-dialog[aria-describedby="wysiwyg"]').css("left","-1000");
+    
+    setTimeout(function(){ 
+        $('#wysiwyg').dialog("close");
+        $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index","700");
+        $('.ui-dialog[aria-describedby="wysiwyg"]').css("left","50");
+    }, 6000);
+    ///the dialog should now be loaded properly and no one is the wiser///////////////////////////////////////////////////////////////////////////////////
     
     
+    $('.taskItemContainer').click(function() {
+        
+    });
     initializeEditable();
     refreshSortable();
     
@@ -96,8 +75,24 @@ function createtaskRow(tableId) {
 
 function createTask(tableId, cellId, taskContent) {
     taskCount ++;
-    var task = '<div class="taskItem" id="task' + taskCount +'"><div class="taskItemContainer"><div class="taskItemContent">' + taskContent + '</div></div></div>';
+    var taskId = "task" + taskCount;
+    var task = '<div class="taskItem" id="' + taskId +'"><div class="taskItemContainer"><div class="taskEditButton"></div><div class="taskItemTitle"></div><div class="taskItemContent">' + taskContent + '</div></div></div>';
      $('#' + tableId).find('#' + cellId).append(task);
+     var loopCop = 0;
+     var interval_id = setInterval(function(){ //wait for creation of the new task
+						    
+    	if ($('#' + taskId).length != 0){
+    		 // "exit" the interval loop with clearInterval command
+    		clearInterval(interval_id);
+    		editTask(tableId,taskId);
+    		initializeEditable();
+         }
+         loopCop ++;
+         if (loopCop > 1000) { //to prevent an infinite loop we bail after 20,000 milliseconds
+             clearInterval(interval_id);
+         }
+	}, 20);
+     
 }
 function refreshSortable() {
     //  $('#taskSpace').sortable({ 
@@ -437,16 +432,26 @@ function initializeEditable() {
 
          return(value);
       }, {
-         type    : 'textarea',
+        //  type    : 'textarea',
          submit  : 'OK',
+         tooltip   : 'Click to edit...',
      });
      $('.taskRowHeader').editable(function(value, settings) {
 
          return(value);
       }, {
-         type    : 'textarea',
+        //  type    : 'textarea',
          submit  : 'OK',
+         tooltip   : 'Click to edit...',
      });
+    //  $('.taskItemContent').editable(function(value, settings) {
+
+    //      return(value);
+    //   }, {
+    //      type    : 'textarea',
+    //      submit  : 'OK',
+    //      tooltip   : 'Click to edit...',
+    //  });
 }
 
 function fixTaskWidth(tableId) { //we have to manually set the width of the table cells because sorttable breaks the width of new cells
@@ -458,7 +463,6 @@ function fixTaskWidth(tableId) { //we have to manually set the width of the tabl
     var tableWidth = $('#' + tableId).width() - labelColumnWidth;
     var cellWidth = Math.floor(tableWidth / numCells);
     cellWidth = cellWidth - bordersWidth; //subtract border size from each cell if they have borders
-    
     $('#' + tableId).find('th:not(.nosort)').each(function () {
         var cell = $(this);
         cell.width(cellWidth);
@@ -513,16 +517,30 @@ function editTask (tableId, taskId) {
     
     var thisDialog = "wysiwyg";
             $("#" + thisDialog).dialog({
-                height: 410,
+                height: 470,
                 width: 495,
                 modal: false,
                 open: function() {
+                    changeDialogTitle(thisDialog, "Please Enter Your Task Information");
+                    addDialogQuestion (thisDialog, "<br/>Task Title (Optional):", "taskTitle", "taskTitle");
+                    addDialogInfo (thisDialog, "<p>Task Content:</p> ");
+                    $('#taskTitle').focus();
                     taskLoadText(tableId, taskId);
+                },
+                beforeClose: function( event, ui ) {
+                        removeDialogQuestion(thisDialog);
+                        removeDialogInfo(thisDialog);
                 },
 
                 buttons: {
-                    "Add Text": function() {
-                        console.log($('#wysiwygText').val());
+                    "Submit Task": function() {
+                        if ($('#wysiwyg').find('#taskTitle').val()){
+                            taskAddTitle(tableId, taskId, $('#wysiwyg').find('#taskTitle').val());
+                        }
+                        else {
+                            
+                            taskRemoveTitle(tableId,taskId);
+                        }
                         taskAddText(tableId, taskId, $('#wysiwygText').val());
                         $(this).dialog("close");
 
@@ -530,9 +548,12 @@ function editTask (tableId, taskId) {
                     },
                     Cancel: function() {
                         $(this).dialog("close");
+                        removeDialogQuestion(thisDialog);
+                        removeDialogInfo(thisDialog);
 
 
-                    }
+                    },
+                    
                 }
             });
             $('#wysiwygText').tinymce({
@@ -543,18 +564,30 @@ function editTask (tableId, taskId) {
                 ],
                 menubar: false,
                 toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | code",
-            });
+             });
 }
 
 function taskLoadText(tableId, taskId) {
     var insideHtml = $('#' + tableId).find('#' + taskId).find('.taskItemContent').html();
     $('#wysiwygText').val(insideHtml);
+    var insideText = $('#' + tableId).find('#' + taskId).find('.taskItemTitle').text();
+    console.log("attempting to add " + insideText + " to an element:");
+    console.log($('#wysiwyg').find('#taskTitle'))
+    $('#wysiwyg').find('#taskTitle').val(insideText);
 }
 
 function taskAddText(tableId, taskId, addText) {
     $('#' + tableId).find('#' + taskId).find('.taskItemContent').html(addText);
 }
 
+function taskAddTitle(tableId, taskId, addTitle) {
+    var thisTitle = "<strong>" + addTitle + "</strong><hr/>";
+    $('#' + tableId).find('#' + taskId).find('.taskItemTitle').html(thisTitle);
+}
+
+function taskRemoveTitle(tableId, taskId) {
+    $('#' + tableId).find('#' + taskId).find('.taskItemTitle').empty();
+}
 function deleteTaskRow(tableId, cellId) {
     if (cellId === parseInt(cellId, 10)) { //if cell is an integer it is the index of the row (skipping the header row)
         $('#' + tableId).find('tr').eq(cellId + 1).remove();

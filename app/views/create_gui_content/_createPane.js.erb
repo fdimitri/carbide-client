@@ -276,6 +276,9 @@ $(function() {
 
 			}
 			//else { console.log("there is no chat window."); }
+			$(this).find('.taskTable').each(function() {
+				fixTaskWidth($(this).attr("id"));
+			});
 			
 			checkTerminalSizes($(this).attr("id"));
 		

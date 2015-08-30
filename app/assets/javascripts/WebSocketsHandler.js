@@ -76,7 +76,9 @@ function initWebSocket() {
 
 		var connOpts = [];
 		connOpts['speed'] = 0;
+		connOpts['reconnect'] = 0;
 		updateConnectionStatus(connOpts); //update connection status to disconnected
+		disableScreen(); //disable the screen
 		console.log("Websocket was closed..");
 		console.log(ws);
 		messageQueue = {};
@@ -90,11 +92,20 @@ function initWebSocket() {
 		$('.windowPane').each(function() {
 			closePane($(this).attr("id"));
 		});
-		paneCounter = 0;
 		initWebSocket();
 		createNewPane();
+		
+		//destroy file trees
+		var tmp = $('#jsTreeFile').jstree(true); 
+		if (tmp) { tmp.destroy(); }
+		tmp = $('#jsTreeTerminal').jstree(true); 
+		if (tmp) { tmp.destroy(); }
+		tmp = $('#jsTreeChat').jstree(true); 
+		if (tmp) { tmp.destroy(); }
+		
 	};
 	ws.onopen = function() {
+		getFileTrees();
 		var connOpts = [];
 		connOpts['speed'] = 1;
 		updateConnectionStatus(connOpts); //update connection status to show fully connected
@@ -739,7 +750,7 @@ function updateConnectionStatus(options) { //options['speed'] is between 0 and 1
 }
 
 function disableScreen() {
-	var greyDiv = '<div class="disconnectBlock" style="width:100%; height:100%; position:absolute; background-color:rgba(200,200,200,0.7); z-index:9999;"><h1>Disconnected!</h1><h2>Please wait while the server is contacted.</h2></div>';
+	var greyDiv = '<div class="disconnectBlock" style="width:100%; height:100%; position:absolute; left:0; top:0; background-color:rgba(225,225,225,0.75); z-index:9998;"><div class="disconnectInfo"><h1>Disconnected!</h1><h2>Please wait while the server is contacted.</h2></div></div>';
 	$('#editorContainer').prepend(greyDiv);
 	var editorSelector;
 	$('.ace_editor').each(function() {
@@ -933,3 +944,22 @@ function updateConnectedUser(userId, userName, fileName, fileSrcPath, fileType, 
 // 	//getMessageQueue('', arrayTest);
 // 	console.log(getMessageQueue('First', arrayTest));
 // });
+
+function getFileTrees() {
+		var statusJSON = {
+		"commandSet": "FileTree",
+		"command": "getFileTreeJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getChatListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+
+	var statusJSON = {
+		"commandSet": "base",
+		"command": "getTermListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+}

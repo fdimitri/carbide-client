@@ -788,6 +788,50 @@ function cbCreateFile(hashKey, event, message) {
 		}
 	}, 10);
 }
+function cbCreateFolder(hashKey, event, message) {
+	// message.status = true || false
+	
+	// if (message.status == true) you have set:
+	// message.createFile.srcPath -- fileName
+	// message.createFile.fileTreeHash -- "ID" 
+	// message.createFile.fileTreeOwnerHash -- "Owner ID"
+	node = message.createDirectory.node;
+	console.log("cbCreateFile() called with:");
+	console.log(hashKey); console.log(event); console.log(message);
+	console.log("cbCreateFile() end params");
+	$("#jsTreeFile").jstree('create_node', node.parent, node, 'last');
+	//create_node params = parentid,node,position
+	
+	//deselect all nodes
+	$("#jsTreeFile").jstree("deselect_all");
+	
+	//open the folder that has the new node in it
+	 var nodeRef = $('#jsTreeFile').jstree(true);
+	 var thisNode = nodeRef.get_node(node.parent);
+	 nodeRef.open_node(thisNode);
+			 
+			 
+	var interval_id = setInterval(function(){
+		if($("#"+node.id).length > 0){
+			 // "exit" the interval loop with clearInterval command
+			clearInterval(interval_id);
+			console.log("selecting node " + node.id);
+			 
+			 
+			
+			 
+			//select and scroll to the new node
+			$("#jsTreeFile").jstree('select_node', node.id);
+			setTimeout(function(){ 
+				var thisElement = document.getElementById(node.id);
+				
+				$('#tabs-1').scrollTop( thisElement.offsetTop - 20 );
+
+				renameFile();
+			}, 400);
+		}
+	}, 10);
+}
 
 function createFile(fileDirectory) {
 	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
@@ -801,6 +845,20 @@ function createFile(fileDirectory) {
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
 	wsRegisterCallbackForHash(randomKey, cbCreateFile);
+	
+}
+function createFolder(fileDirectory) {
+	var randomKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileDirectory); 
+	var statusJSON = {
+		"commandSet": "FileTree",
+		"command": "createDirectory",
+		"hash" : randomKey,
+		"createDirectory" : {
+			"srcPath" : fileDirectory,
+		},
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	wsRegisterCallbackForHash(randomKey, cbCreateFolder);
 	
 }
 

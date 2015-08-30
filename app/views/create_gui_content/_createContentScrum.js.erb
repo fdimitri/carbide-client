@@ -18,3 +18,8 @@
     refreshSortable();
     initializeEditable();
     initializeTaskContextMenu();
+    var cells = $("#task_<%= @taskName %>").find('th');
+    cells.eq(0).width(120);
+    console.log(cells.eq(0));
+    fixTaskWidth("task_<%= @taskName %>");
+    cells.eq(0).width("auto");
