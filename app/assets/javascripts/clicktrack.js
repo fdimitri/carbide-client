@@ -2,6 +2,7 @@ var clickedElement = "";
 var clickedElementId = "";
 var clickedUser = "";
 var clickedTarget = "";
+var clickedSubElement = "";
 
 $(document).ready(function() {
     
@@ -134,7 +135,10 @@ $(document).ready(function() {
 	            clickedTarget = $(event.target).closest('td').find('.taskCell').attr("id");
 	            if ($(event.target).closest('.taskItem').length) { //this is a particular task item
 	                clickedElement = $(event.target).closest('.taskItem').attr("id");
-	                console.log("attempting to set clicked element to " + clickedElement)
+					
+					if ($(event.target).closest('.taskNotes').length) { //this is a task note on a particular task item
+						clickedSubElement = $(event.target).closest('.taskNotes').index();
+					}
 	            }
 	        }
 	        

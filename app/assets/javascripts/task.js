@@ -1,8 +1,44 @@
-var numtaskBoards = 2;
+var taskColumnCount = 2;
 var taskCount = 0; //use for numbering ids of task items
 var taskCellCount = 2; //use for number ids of task cells (tds)
+var taskRowCount = 0;
+var taskTableInfo = {};
+var defaultTimeZone = "America/New_York";
 
 $(document).ready(function() {
+
+$('.taskEditButton').tooltip();
+$('.taskNoteButton').tooltip();
+
+//test functions
+  var xdc = 0;
+    $(document).on('keydown', function(e) {
+	
+	
+		if (e.altKey && (String.fromCharCode(e.which) === 'w' || String.fromCharCode(e.which) === 'W')) { //ALT keypress
+			console.log("keydown acknowledged");
+			if (xdc == 0) {
+			    moveTaskColumn($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceCol_0',2);
+			    moveTaskRow($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceRow_0',1);
+			}
+			if (xdc ==1) {
+			    moveTaskColumn($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceCol_0',3);
+			    moveTaskRow($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceRow_0',3);
+			}
+			if (xdc ==2) {
+			    moveTaskColumn($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceCol_0',1);
+			    moveTaskRow($(document).find('.taskTable').eq(0).attr("id"),'Scrum_new_TaskSpaceRow_0',1);
+			}
+			xdc ++;
+		}
+		
+    });
+
+///////////////////////////////////////*END OF TEST FUNCTIONS*///////////////////////////////////
+
+
+
+
 
     initializeTaskContextMenu();
 
@@ -11,6 +47,22 @@ $(document).ready(function() {
     $(document).on('click', '.taskEditButton', function() {
         editTask(clickedElementId, clickedElement);
     });
+    $(document).on('click', '.taskNoteButton', function() {
+        if ($(this).closest('.taskItem').find('.taskNoteItem').length == 0) { //there are no task notes. Add one!
+            addTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+        }
+        else if ($(this).hasClass("addTaskNoteButton")) { //this is a special button to add a new task note
+            addTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+        }
+        else if ($(this).closest('.taskItem').find('.taskNotes').is(":visible")) { //if it's visible hide it
+            hideTaskNotes($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+        }
+        else { //if it's hidden show it
+            expandTaskNotes($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+            
+        }
+    });
+    
 
 
     //$('.taskHeader').editable('http://www.bogusurlthatdoesntreallyexist/save.php');
@@ -40,12 +92,12 @@ $(document).ready(function() {
 
 function createtaskColumn(tableId) {
     fixTaskWidth(tableId);
-    numtaskBoards = numtaskBoards + 1;
     $('#' + tableId).find('tr').each(function() {
-        $(this).find('td').eq(-1).after('<td><div class="taskCell taskCellBlack" id="cell' + taskCellCount + '"></div></td>');
-        $(this).find('th').eq(-1).after('<th><div class="taskHeaderContainer"><div class="taskHeader">Task Header ' + numtaskBoards + '</div></div></th>');
-        taskCellCount++;
+        $(this).find('td').eq(-1).after('<td><div class="taskCell taskCellBlack" id="cell' + taskTableInfo[tableId].taskCellCount + '"></div></td>');
+        $(this).find('th').eq(-1).after('<th id="'+ tableId +'Col_' + taskTableInfo[tableId].taskColumnCount + '"><div class="taskHeaderContainer"><div class="taskHeader">Task Header ' + (taskTableInfo[tableId].taskColumnCount + 1) + '</div></div></th>');
+        taskTableInfo[tableId].taskCellCount ++;
     });
+    taskTableInfo[tableId].taskColumnCount ++;
 
 
     refreshSortable();
@@ -56,6 +108,7 @@ function createtaskColumn(tableId) {
 }
 
 function createtaskRow(tableId) {
+
     var numColumns = $('#' + tableId).find('th').length;
     var toAppend = '';
     for (var i = 0; i < numColumns; i++) {
@@ -64,20 +117,20 @@ function createtaskRow(tableId) {
             toAppend = '<td class="taskRowLabel"><div class="taskRowHeader">Row ' + rows + ' Label</div></td>';
         }
         else {
-            toAppend = toAppend + '<td><div class="taskCell taskCellBlack" id="cell' + taskCellCount + '"></div></td>';
-            taskCellCount++;
+            toAppend = toAppend + '<td><div class="taskCell taskCellBlack" id="cell' + taskTableInfo[tableId].taskCellCount + '"></div></td>';
+            taskTableInfo[tableId].taskCellCount ++;
         }
     }
-    $('#' + tableId).find('tbody').append('<tr>' + toAppend + '</tr>');
+    $('#' + tableId).find('tbody').append('<tr id="' + tableId + 'Row_' + taskTableInfo[tableId].taskRowCount + '">' + toAppend + '</tr>');
+    taskTableInfo[tableId].taskRowCount ++;
     refreshSortable();
     initializeEditable();
     initializeTaskContextMenu();
 }
 
 function createTask(tableId, cellId, taskContent) {
-    taskCount++;
-    var taskId = "task" + taskCount;
-    var task = '<div class="taskItem" id="' + taskId + '"><div class="taskItemContainer"><div class="taskEditButton"></div><div class="taskItemTitle"></div><div class="taskItemContent">' + taskContent + '</div></div></div>';
+    var taskId = "task" + taskTableInfo[tableId].taskCount;
+    var task = '<div class="taskItem taskNone" id="' + taskId + '"><div class="taskEditButton" title="Edit this task"></div><div class="taskItemContainer"><div class="taskItemTitle"></div><div class="taskItemContent">' + taskContent + '</div><div class="taskNoteButton firstTaskNoteButton"><div class="taskNoteNumber" title="Add a note to this task"></div></div></div><div class="taskNotes"></div></div>';
     $('#' + tableId).find('#' + cellId).append(task);
     var loopCop = 0;
     var interval_id = setInterval(function() { //wait for creation of the new task
@@ -93,35 +146,76 @@ function createTask(tableId, cellId, taskContent) {
             clearInterval(interval_id);
         }
     }, 20);
+    taskTableInfo[tableId].taskCount ++;
 
 }
 
 function refreshSortable() {
-    //  $('#taskSpace').sortable({ 
-    //      axis: 'x',
-    //     cancel: ".task",
 
-    //  });
     $('.taskTable').sorttable({
         placeholder: 'placeholder',
         helperCells: null,
         items: '>:not(.nosort)',
+        start: function(event, ui) {
+            $(event.target).closest('.taskTable').find('.taskEditButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.addTaskNoteButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
+
+        },
         update: function(event, ui) {
-            console.log(event);
-            console.log(ui);
-            console.log(ui.item);
-            console.log(ui.sender);
+
+            var itemId = ui.item.attr("id");
+            var newPosition = $(event.target).closest('.taskTable').find('#' + ui.item.attr("id")).index()
+
         },
     });
 
+    $(".taskTable").children('tbody').sortable({
+        items: "tr",
+        cursor: 'move',
+        opacity: 0.6,
+        start: function(event, ui) {
+            $(event.target).closest('.taskTable').find('.taskEditButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.addTaskNoteButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
 
+
+        },
+        update: function(event, ui) {
+            console.log("update success");
+            console.log(event);
+            console.log(ui);
+            // var order = $(".taskTable").children('tbody').sortable("serialize");
+            // console.log(order)
+            var itemId = ui.item.attr("id");
+            var newPosition = $(event.target).closest('.taskTable').find('#' + itemId).index();
+            console.log("We have moved item " + itemId + " to position " + newPosition );
+            
+            //testing
+            // event.preventDefault();
+            // setTimeout(function(){ 
+            //     moveTaskRow($(event.target).closest('.taskTable').attr("id"),itemId,newPosition);
+            // }, 2000);
+            
+        }
+    });
+    
     $('.taskCell').sortable({
         connectWith: ".taskCell",
+        start: function(event, ui) {
+            $(event.target).closest('.taskTable').find('.taskEditButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.addTaskNoteButton').css("visibility", "hidden");
+            $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
+
+            taskTableInfo[$(event.target).closest('.taskTable').attr("id")].taskMoveInProgress = true;
+
+        },
         receive: function(event, ui) {
             // console.log(event);
             // console.log(ui);
             // console.log(ui.item);
             //  console.log(ui.sender);
+            taskTableInfo[$(event.target).closest('.taskTable').attr("id")].taskMoveInProgress = false;
             if (ui.sender) {
                 console.log("you have moved " + ui.item.attr("id") + " from cell " + ui.sender.eq(0).attr("id") + " to cell " + event.target.id);
                 console.log("New position of item " + ui.item.attr("id") + ":");
@@ -139,6 +233,7 @@ function refreshSortable() {
 
         },
         stop: function(event, ui) {
+            taskTableInfo[$(event.target).closest('.taskTable').attr("id")].taskMoveInProgress = false;
             if (event.target.id == ui.item.context.parentNode.id) {
                 console.log("you have moved something within cell " + event.target.id);
                 console.log("New position of item " + ui.item.attr("id") + ":");
@@ -156,6 +251,22 @@ function refreshSortable() {
             fixTaskWidth($('#' + event.target.id).closest('.taskTable').attr('id'));
         },
     });
+    ///update task cell hover graphic for edit
+    $(".taskCell")
+        .mouseover(function() {
+            if (taskTableInfo[$(this).closest('.taskTable').attr("id")].taskMoveInProgress == false) { //only show edit button if a task isn't being moved
+                $(this).find('.taskEditButton').css("visibility", "visible");
+                $(this).find('.addTaskNoteButton').css("visibility", "visible");
+                $(this).find('.firstTaskNoteButton').css("visibility", "visible");
+
+            }
+        })
+        .mouseout(function() {
+            $(this).find('.taskEditButton').css("visibility", "hidden");
+            $(this).find('.addTaskNoteButton').css("visibility", "hidden");
+            $(this).find('.firstTaskNoteButton').css("visibility", "hidden");
+        });
+        
 }
 
 function moveTask(taskId, cellId, cellPosition) {
@@ -169,12 +280,41 @@ function moveTask(taskId, cellId, cellPosition) {
 }
 
 
-function moveColumn(tableId, columnFrom, columnTo) {
+function moveTaskColumn(tableId, columnFrom, columnTo) {
+    if (columnFrom !== parseInt(columnFrom, 10)) { //column from needs to be converted to an index number if it's a header ID
+        columnFrom = $('#' + tableId).find('#' + columnFrom).index();
+    }
+    console.log("Moving position " + columnFrom + " to position  " + columnTo)
     $('#' + tableId).find('tr').each(function() {
         console.log("tr found")
-        $(this).children(":eq(" + (columnTo - 1) + ")").after($(this).children(":eq(" + columnFrom + ")"));
-    });
+        console.log("there are " + $(this).children().length + " children on this row")
+        console.log("first child type is " + $(this).children().eq(0).prop("tagName"))
+        console.log("the item we are moving is " + $(this).children(":eq(" + columnFrom + ")").attr("id"))
+        console.log("inner html " + $(this).children(":eq(" + columnFrom + ")").html())
+        if (columnFrom < columnTo) { //if we're moving to the right we move to columnTo
+            $(this).children('th, td').eq(columnFrom).insertAfter($(this).children('th, td').eq(columnTo));
+        }
+        else { //otherwise we move to columnTo-1
+            $(this).children('th, td').eq(columnFrom).insertAfter($(this).children('th, td').eq(columnTo-1));
+        }
+        //$(this).children(":eq(" + (columnTo - 1) + ")").after($(this).children(":eq(" + columnFrom + ")"));
 
+    });
+    refreshSortable();
+
+}
+function moveTaskRow(tableId, rowFrom, rowTo) {
+    var positionFrom = $('#' + tableId).children('tbody').find('#' + rowFrom).index();
+    if (rowTo == 0) {
+        $('#' + tableId).children('tbody').find('#' + rowFrom).insertBefore($('#' + tableId).children('tbody').find('tr').eq(0));
+    }
+    else if (positionFrom > rowTo) { //if it's moving left we move it after 1 before the destination
+        $('#' + tableId).children('tbody').find('#' + rowFrom).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowTo - 1));
+    }
+    else { //if it's moving right we move it to the spot after the destination
+        $('#' + tableId).children('tbody').find('#' + rowFrom).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowTo));
+    }
+    refreshSortable();
 }
 
 function initializeTaskContextMenu() {
@@ -318,17 +458,28 @@ function initializeTaskContextMenu() {
             else if (ui.cmd == "deleteTaskColumn") {
                 deleteTaskColumn(clickedElementId, clickedTarget);
             }
+            else if (ui.cmd == "addTaskNote") {
+                addTaskNote(clickedElementId, clickedElement);
+            }
         },
         beforeOpen: function(event, ui) {
 
-            $(".taskCell").closest('td').contextmenu("replaceMenu", [{
+            $(".taskCell").closest('td').contextmenu("replaceMenu", [
+                {
                     title: '<span class="contextMenuItem">Edit Task</span>',
                     uiIcon: "ui-icon-pencil",
                     cmd: "editTaskItem",
 
-                }, {
-                    title: '<span class="contextMenuItem">Create New Task</span>',
+                },
+                {
+                    title: '<span class="contextMenuItem">Add Note to Task</span>',
                     uiIcon: "ui-icon-clipboard",
+                    cmd: "addTaskNote",
+
+                },
+                {
+                    title: '<span class="contextMenuItem">Create New Task</span>',
+                    uiIcon: "ui-icon-document",
                     cmd: "createTaskItem",
 
                 }, {
@@ -426,10 +577,12 @@ function initializeTaskContextMenu() {
             $(".taskCell").closest('td').contextmenu("showEntry", "editTaskItem", false);
             $(".taskCell").closest('td').contextmenu("showEntry", "noCmd", false);
             $(".taskCell").closest('td').contextmenu("showEntry", "changeTaskBG", false);
+            $(".taskCell").closest('td').contextmenu("showEntry", "addTaskNote", false);
             if (clickedElement != "taskCell") { //this means there's a specific task selected
                 $(".taskCell").closest('td').contextmenu("showEntry", "editTaskItem", true);
                 $(".taskCell").closest('td').contextmenu("showEntry", "noCmd", true);
                 $(".taskCell").closest('td').contextmenu("showEntry", "changeTaskBG", true);
+                $(".taskCell").closest('td').contextmenu("showEntry", "addTaskNote", true);
             }
 
 
@@ -533,7 +686,7 @@ function editTask(tableId, taskId) {
         width: 495,
         modal: false,
         open: function() {
-            changeDialogTitle(thisDialog, "Please Enter Your Task Information");
+            changeDialogTitle(thisDialog, "Create/Edit Task");
             addDialogQuestion(thisDialog, "<br/>Task Title (Optional):", "taskTitle", "taskTitle");
             addDialogInfo(thisDialog, "<p>Task Content:</p> ");
             $('#taskTitle').focus();
@@ -631,4 +784,100 @@ function deleteTaskColumn(tableId, cellId) {
     fixTaskWidth(tableId);
     $('#' + tableId).find("th").eq(0).removeAttr('width');
     $('#' + tableId).find("th").eq(0).width("auto");
+}
+
+function editTaskNote(tableId, taskId, noteIndex) {
+    var thisDialog = "wysiwyg";
+    $("#" + thisDialog).dialog({
+        height: 470,
+        width: 495,
+        modal: false,
+        open: function() {
+            changeDialogTitle(thisDialog, "New Task Note");
+            addDialogInfo(thisDialog, "<p>Task Note:</p> ");
+            taskLoadNote(tableId, taskId, noteIndex);
+            setTimeout(function(){  //bring focus to the text editor
+                tinyMCE.activeEditor.focus();
+            }, 300);
+        },
+        beforeClose: function(event, ui) {
+            removeDialogInfo(thisDialog);
+        },
+
+        buttons: {
+            "Submit Note": function() {
+               
+                taskNoteUpdate(tableId, taskId, noteIndex, $('#wysiwygText').val());
+                $(this).dialog("close");
+
+
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+                removeDialogInfo(thisDialog);
+                deleteTaskNote(tableId,taskId,noteIndex);
+
+
+            },
+
+        }
+    });
+    $('#wysiwygText').tinymce({
+        plugins: [
+            "code",
+            "link",
+            "textcolor",
+        ],
+        menubar: false,
+        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | code",
+    });
+}
+function taskLoadNote(tableId, taskId, noteIndex) {
+    var insideHtml = $('#' + tableId).find('#' + taskId).find('.taskNoteItem').eq(noteIndex).find('.taskNoteText').html();
+    $('#wysiwygText').val(insideHtml);
+}
+function taskNoteUpdate(tableId, taskId, noteIndex, noteContent) {
+    console.log("updating note index " + noteIndex + " with " + noteContent)
+    $('#' + tableId).find('#' + taskId).find('.taskNoteItem').eq(noteIndex).find('.taskNoteText').html(noteContent);
+    
+    //if this is the first task note we will also insert an add task button
+    if ($('#' + tableId).find('#' + taskId).find('.taskNoteItem').length == 1) {
+        var taskAddButton = '<div class="taskNoteButton addTaskNoteButton"><div class="taskNoteNumber" title="Add a new note to this task"></div></div>';
+         $('#' + tableId).find('#' + taskId).find('.taskNotes').append(taskAddButton);
+    }
+}
+function addTaskNote(tableId,taskId) {
+    var thisDate = new Date();
+    var dateOptions = {
+        timeZone: defaultTimeZone, weekday: "long", year: "numeric", month: "short",
+        day: "numeric", hour: "2-digit", minute: "2-digit"
+    };
+    var formatDate = thisDate.toLocaleTimeString("en-us", dateOptions);
+    var userName = "George W. Bush";
+    $('#' + tableId).find('#' + taskId).find('.taskNotes').append('<div class="taskNoteItem"><div class="taskNoteHeader"><div class="taskNoteDate">' + formatDate + '</div><div class="taskNoteUser">' + userName + '</div></div><div class="taskNoteBody"><div class="taskNoteText"></div></div></div>');
+    var noteCount = $('#' + tableId).find('#' + taskId).find('.taskNoteItem').length;
+    $('#' + tableId).find('#' + taskId).find('.taskNoteNumber').eq(0).text(noteCount);
+    $('#' + tableId).find('#' + taskId).find('.taskNoteButton').eq(0).removeClass("firstTaskNoteButton");
+    editTaskNote(tableId,taskId,noteCount - 1);
+    expandTaskNotes(tableId,taskId);
+}
+function deleteTaskNote(tableId,taskId,noteIndex){
+    $('#' + tableId).find('#' + taskId).find('.taskNoteItem').eq(noteIndex).remove();
+}
+function expandTaskNotes(tableId,taskId) {
+    console.log("expansion");
+    $('#' + tableId).find('#' + taskId).find('.taskNotes').css('display', 'block');
+    $('#' + tableId).find('#' + taskId).find('.taskNoteNumber').eq(0).attr('title', 'Hide this task\'s notes');
+    $('#' + tableId).find('#' + taskId).find('.taskNoteNumber').eq(0).text('-');
+    $('#' + tableId).find('#' + taskId).find('.taskNoteButton').eq(0).css("visibility", "visible");
+
+}
+function hideTaskNotes(tableId,taskId) {
+    console.log("subtraction")
+    $('#' + tableId).find('#' + taskId).find('.taskNotes').css('display', 'none');
+    $('#' + tableId).find('#' + taskId).find('.taskNoteNumber').eq(0).attr('title', 'Show this task\'s notes');
+    var noteCount = $('#' + tableId).find('#' + taskId).find('.taskNoteItem').length;
+    $('#' + tableId).find('#' + taskId).find('.taskNoteNumber').eq(0).text(noteCount);
+    $('#' + tableId).find('#' + taskId).find('.taskNoteButton').eq(0).css("visibility", "visible");
+
 }

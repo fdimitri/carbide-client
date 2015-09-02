@@ -106,6 +106,7 @@ function initWebSocket() {
 	};
 	ws.onopen = function() {
 		getFileTrees();
+		enableScreen();
 		var connOpts = [];
 		connOpts['speed'] = 1;
 		updateConnectionStatus(connOpts); //update connection status to show fully connected

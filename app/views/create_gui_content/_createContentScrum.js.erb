@@ -18,8 +18,12 @@
     refreshSortable();
     initializeEditable();
     initializeTaskContextMenu();
-    var cells = $("#task_<%= @taskName %>").find('th');
+    var thisTableId = "<%= @taskName %>_TaskSpace";
+    var cells = $('#' + thisTableId).find('th');
     cells.eq(0).width(120);
     console.log(cells.eq(0));
-    fixTaskWidth("task_<%= @taskName %>");
+    fixTaskWidth(thisTableId);
     cells.eq(0).width("auto");
+    taskTableInfo[thisTableId] = {taskColumnCount: 2, taskRowCount: 1, taskCellCount: 2, taskCount: 0, taskMoveInProgress: false, taskRowMoveInProgress: false, taskColumnMoveInProgress: false};
+
+
