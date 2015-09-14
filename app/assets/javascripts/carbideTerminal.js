@@ -230,3 +230,110 @@ function checkTerminalSizes (paneId) {
     	}
     //}, 100); 
 }
+
+
+function sendTerminalRequest(requestCommand, serverData, callBack) {
+var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
+var eMsg = {
+	"commandSet": "term",
+	"termCommand": requestCommand,
+	"hash": hashKey,
+    requestCommand : serverData,
+};
+wsSendMsg(JSON.stringify(eMsg));
+wsRegisterCallbackForHash(hashKey, callBack)
+}
+function createTerminal(hashKey, msg, event) { //once the server has created a terminal we will process it in the file tree and open it if requested
+    if (event == 'send') {
+        return;
+    }
+    var createTerminal = msg['createTerminal'];
+    var terminalName = createTerminal['terminalName'];
+    var windowPane = createTerminal['windowPane'];
+   
+    if ((windowPane) && (typeof windowPane !== 'undefined'))   { //there is a window pane request
+        
+        var tabBarId =  $('#' + windowPane).find(".tabBar").attr("id");
+        
+        var fileName = terminalName;
+        var tabBarId = tabBarId;
+        var originId = 'unknown';
+        var srcPath = terminalName;
+		newTab(fileName, tabBarId, originId, 'term', srcPath);
+        
+    }
+    
+    
+     //open the chat branch of the jstree
+		var nodeRef = $('#jsTreeTerminal').jstree(true);
+		nodeRef.deselect_all(true); //deselect nodes
+		var thisNode = nodeRef.get_node('terminalroot');
+
+		nodeRef.open_node(thisNode);
+	//select the new node
+		var interval_id = setInterval(function(){
+		     // $("li#"+id).length will be zero until the node is loaded
+		     if($("li#"+terminalName).length != 0){
+		         // "exit" the interval loop with clearInterval command
+		         clearInterval(interval_id);
+		         var thisNode = nodeRef.get_node(terminalName);
+				nodeRef.select_node(thisNode);
+				var thisElement = document.getElementById(terminalName);
+				$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
+		      }
+		}, 10);
+}
+function sendTerminalRequest(requestCommand, serverData, callBack) {
+    var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
+    var eMsg = {
+		"commandSet": "term",
+		"termCommand": requestCommand,
+		"hash": hashKey,
+	    requestCommand : serverData,
+	};
+	if (requestCommand == "createTerminal") {
+		eMsg.commandSet = "base";
+	}
+	wsSendMsg(JSON.stringify(eMsg));
+	wsRegisterCallbackForHash(hashKey, callBack)
+}
+function createTerminal(hashKey, msg, event) { //once the server has created a terminal we will process it in the file tree and open it if requested
+        if (event == 'send') {
+            return;
+        }
+        var createTerminal = msg['createTerminal'];
+        var terminalName = createTerminal['terminalName'];
+        var windowPane = createTerminal['windowPane'];
+       
+        if ((windowPane) && (typeof windowPane !== 'undefined'))   { //there is a window pane request
+            
+            var tabBarId =  $('#' + windowPane).find(".tabBar").attr("id");
+            
+            var fileName = terminalName;
+            var tabBarId = tabBarId;
+            var originId = 'unknown';
+            var srcPath = terminalName;
+			newTab(fileName, tabBarId, originId, 'term', srcPath);
+            
+        }
+        
+        
+         //open the terminal branch of the jstree
+			var nodeRef = $('#jsTreeTerminal').jstree(true);
+			nodeRef.deselect_all(true); //deselect nodes
+			var thisNode = nodeRef.get_node('terminalroot');
+
+			nodeRef.open_node(thisNode);
+		//select the new node
+			var interval_id = setInterval(function(){
+			     // $("li#"+id).length will be zero until the node is loaded
+			     if($("li#"+terminalName).length != 0){
+			         // "exit" the interval loop with clearInterval command
+			         clearInterval(interval_id);
+			         var thisNode = nodeRef.get_node(terminalName);
+					nodeRef.select_node(thisNode);
+					var thisElement = document.getElementById(terminalName);
+					$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
+			      }
+			}, 10);
+}

@@ -55,8 +55,8 @@ function initWebSocket() {
 		else if (jObj.commandSet == "flowchart") {
 			cliMsgProcFlowchart(jObj);
 		}
-		else if (jObj.commandSet == "scrum") {
-			cliMsgProcScrum(jObj);
+		else if (jObj.commandSet == "taskBoard") {
+			cliMsgProcTaskBoard(jObj);
 		}
 		else {
 			console.log("Received non-chat command: " + jObj.commandSet);
@@ -534,8 +534,8 @@ function cliMsgProcFlowchart(jObj) {
 
 }
 
-function cliMsgProcScrum(jObj) {
-	console.log("Entered cliMsgProcScrum");
+function cliMsgProcTaskBoard(jObj) {
+	console.log("Entered cliMsgProcTaskBoard");
 	console.log(jObj);
 
 }

@@ -1,4 +1,16 @@
 
+
+$(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
+	$('.dialog-window').bind('dialogclose', function(event) {
+		 dialogId = $(this).attr('id');
+		 removeDialogIcon(dialogId);
+		 removeDialogInfo(dialogId);
+		 changeDialogTitle(dialogId,"Information Dialog");
+		 removeDialogColorPicker (dialogId);
+		 removeDialogFileTree (dialogId);
+ 	});
+});
+
 $(function() {
 	
 
@@ -25,8 +37,8 @@ $(function() {
                 	else if (ui.item.data().type == "terminal") {
                 		node = $('#jsTreeTerminal').jstree(true).get_selected(true);
                 	}
-                	else if (ui.item.data().type == "scrum") {
-                		node = $('#jsTreeScrum').jstree(true).get_selected(true);
+                	else if (ui.item.data().type == "taskBoard") {
+                		node = $('#jsTreeTaskBoard').jstree(true).get_selected(true);
                 	}
                 	else if (ui.item.data().type == "flowchart") {
                 		node = $('#jsTreeFlowchart').jstree(true).get_selected(true);
@@ -102,9 +114,10 @@ $(function() {
                 	createFile(realPath);
                 }
                 else if (ui.cmd == "createChat") {
-                	$('#newChatOpen').attr('checked', false);
-				    $("#newChatTarget").remove();
-				    $("#dialog-newchat").dialog("open");
+        //         	$('#newChatOpen').attr('checked', false);
+				    // $("#newChatTarget").remove();
+				    // $("#dialog-newchat").dialog("open");
+				    initializeDialogCreateChatRoom();
                 }
                 else if (ui.cmd == "createTerminal") {
                 	
@@ -119,8 +132,10 @@ $(function() {
 				    // $("#dialog-newchat").dialog("open");
 				    newTab("TestFlow", $(".activePane .tabBar").attr('id'), "", "flowchart", "Flowchart_new");
                 }
-        		else if (ui.cmd == "createScrum") {
-        			newTab("TestScrum", $(".activePane .tabBar").attr('id'), "", "scrum", "Scrum_new");
+        		else if (ui.cmd == "createTaskBoard") {
+					  
+					initializeDialogCreateTaskBoard();   			
+        			//newTab("TestTaskBoard", $(".activePane .tabBar").attr('id'), "", "taskBoard", "TaskBoard_new");
         		}
         		else if (ui.cmd == "createFolder") {
         			var ref = $('#jsTreeFile').jstree(true);
@@ -324,10 +339,10 @@ $(function() {
                     
                     ]);
 				}
-				else if (clickedElement == "jsTreeScrumRoot") {
+				else if (clickedElement == "jsTreeTaskBoardRoot") {
 
 					 $("#toolBarSide").contextmenu("replaceMenu", [
-                		{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-calendar", cmd: "createScrum"},
+                		{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-calendar", cmd: "createTaskBoard"},
                     
                     ]);
 				}
@@ -402,8 +417,8 @@ $(function() {
                     
                     ]);
 				}
-				else if (clickedElement == "jsTreeScrum") {
-					var node = $('#jsTreeScrum').jstree(true).get_selected(true);
+				else if (clickedElement == "jsTreeTaskBoard") {
+					var node = $('#jsTreeTaskBoard').jstree(true).get_selected(true);
 					node = node[0];
 					var menuPanes = [];
 					if ($(".windowPane").length) { //if a window pane is open, loop through all the window panes and add them as choices to the context menu
@@ -429,7 +444,7 @@ $(function() {
 							},
 						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteChat"},
 						{title: '---'},
-						{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-comment", cmd: "createScrum"},
+						{title: '<span class="contextMenuItem">Create New Task Board</span>', uiIcon: "ui-icon-comment", cmd: "createTaskBoard"},
                     
                     ]);
 				}
@@ -889,6 +904,44 @@ function addDialogQuestion (dialogId, textLabel, textId, textName) { //add a tex
 function removeDialogQuestion (dialogId) {
 	$("#" + dialogId).find(".dialogQuestion").remove();	
 }
+function addDialogCheckBox (dialogId, textLabel, checkBoxId, checkBoxName, changeFunction) {
+	var dialogInfo = '<div class="dialogCheckBox"><p>' + textLabel + ' <input type="checkbox" id="' + checkBoxId + '" name="' + checkBoxName + '"/></p>';
+	
+	dialogInfo = dialogInfo + '<div id="dialogCheckBoxDropDownBox"></div></div>';
+	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
+	$('#' + checkBoxId).change(function() {
+		changeFunction(checkBoxId);
+	});
+}
+function dialogCheckBoxChanged(checkBoxId) {
+    
+    if($('#' + checkBoxId).is(":checked"))   {
+        var selectOutput = '<select name="dialogselect" id="newDialogTarget">';
+        $(".windowPane").each(function() {
+    		//var paneNumber = $(this).attr('id').match(/\d+/);
+    		var paneId = $(this).attr('id');
+    		var paneName = $(this).find('.paneTitle').text();
+    
+    		selectOutput = selectOutput + '<option value="' + paneId + '">' + paneName + '</option>';
+    	});
+    	selectOutput = selectOutput + '</select>';
+    	$("#dialogCheckBoxDropDownBox").append(selectOutput);
+    }
+    else {
+       $("#newDialogTarget").remove();
+    }
+        
+}
+function removeDialogCheckBox (dialogId) {
+	$("#" + dialogId).find(".dialogCheckBox").remove();	
+}
+function addDialogError(dialogId,errorMsg) {
+	var dialogInfo = '<div class="dialogError"><p>' + errorMsg + '</p></div>'
+	$("#" + dialogId).find(".dialog-info-space").prepend(dialogInfo);
+}
+function removeDialogError(dialogId) {
+	$("#" + dialogId).find(".dialogError").remove();	
+}
 function addDialogColorPicker (dialogId, textLabel, colorId, colorName, defaultColor) {
 	var dialogInfo = '<div class="dialogColorPicker"><label>' + textLabel + ' </label><input type="color" name="' + colorName + '" id="' + colorId + '" value="' + defaultColor + '" class="colorPickerBox"></input></div>';
 	$("#" + dialogId).find(".dialog-info-space").append(dialogInfo);
@@ -922,13 +975,176 @@ function addDialogFileTree (dialogId) {
 function removeDialogFileTree (dialogId) {
 	$("#" + dialogId).find(".dialogFileTree").remove();	
 }
-$(document).ready(function() { //ADD a BINDING FOR EACH DIALOG THAT CLEANS IT UP
-	$('.dialog-window').bind('dialogclose', function(event) {
-		 dialogId = $(this).attr('id');
-		 removeDialogIcon(dialogId);
-		 removeDialogInfo(dialogId);
-		 changeDialogTitle(dialogId,"Information Dialog");
-		 removeDialogColorPicker (dialogId);
-		 removeDialogFileTree (dialogId);
- 	});
-});
+
+function displayServerError(failedProcess,errorReason) {
+	console.log("This function should open a dialog. but for now it just displays to the console");
+	console.log("error executing command " + failedProcess + ": " + errorReason);
+}
+
+function initializeDialogCreateTaskBoard() {
+	var thisDialog = "dialog-info";
+	changeDialogTitle(thisDialog,"Create New Task Board");
+	//addDialogIcon (thisDialog, "ui-icon-clipboard");
+	var ref = $('#jsTreeTaskBoard').jstree(true);
+	var selectedNodes = ref.get_selected();
+	var fileName = ref.get_selected(true)[0].text;
+	addDialogError(thisDialog,'&nbsp;');
+	//addDialogInfo (thisDialog, "Please name your task board.");
+	addDialogQuestion (thisDialog, 'New Task Board Name:', 'newTaskBoardName', 'Name');
+	addDialogCheckBox(thisDialog,'Open in Window Pane:', 'taskCheckBox', 'Open',dialogCheckBoxChanged);
+	$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 320,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Create Task Board": function(e) {
+								if (!$('#newTaskBoardName').val()) {
+									removeDialogError(thisDialog);
+									addDialogError(thisDialog,"* Enter a Task Board Name to Continue!");
+									e.preventDefault();
+								}
+								else {
+									//createNewTaskBoard($('#newTaskBoardName').val(), $("#newDialogTarget").val());
+									sendTaskRequest('createTaskBoard', {'taskBoardName': $('#newTaskBoardName').val(), 'windowPane': $("#newDialogTarget").val()}, createTaskBoard);
+									removeDialogInfo(thisDialog);
+									removeDialogQuestion(thisDialog);
+									removeDialogCheckBox(thisDialog);
+									removeDialogError(thisDialog);
+									$(this).dialog("close");
+								}
+
+							},
+							Cancel: function() {
+								removeDialogInfo(thisDialog);
+								removeDialogQuestion(thisDialog);
+								removeDialogCheckBox(thisDialog);
+								removeDialogError(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+
+}
+function initializeDialogCreateChatRoom() {
+	var thisDialog = "dialog-info";
+	changeDialogTitle(thisDialog,"Create New Chat Room");
+	var ref = $('#jsTreeChat').jstree(true);
+	var selectedNodes = ref.get_selected();
+	var fileName = ref.get_selected(true)[0].text;
+	addDialogError(thisDialog,'&nbsp;');
+	addDialogQuestion (thisDialog, 'New Chat Room Name:', 'newChatRoomName', 'Name');
+	addDialogCheckBox(thisDialog,'Open in Window Pane:', 'chatCheckBox', 'Open',dialogCheckBoxChanged);
+	$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 320,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Create Chat Room": function(e) {
+								if (!$('#newChatRoomName').val()) {
+									removeDialogError(thisDialog);
+									addDialogError(thisDialog,"* Enter a Chat Room Name to Continue!");
+									e.preventDefault();
+								}
+								else {
+									//createNewChatRoom($('#newChatRoomName').val(), $("#newDialogTarget").val());
+									sendChatRequest('createChatRoom', {'chatRoomName': $('#newChatRoomName').val(), 'windowPane': $("#newDialogTarget").val()}, createChatRoom);
+									removeDialogQuestion(thisDialog);
+									removeDialogCheckBox(thisDialog);
+									removeDialogError(thisDialog);
+									$(this).dialog("close");
+								}
+
+							},
+							Cancel: function() {
+								removeDialogQuestion(thisDialog);
+								removeDialogCheckBox(thisDialog);
+								removeDialogError(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+}
+function initializeDialogCreateTerminal() {
+	var thisDialog = "dialog-info";
+	changeDialogTitle(thisDialog,"Create New Terminal");
+	var ref = $('#jsTreeTerminal').jstree(true);
+	var selectedNodes = ref.get_selected();
+	var fileName = ref.get_selected(true)[0].text;
+	addDialogError(thisDialog,'&nbsp;');
+	addDialogQuestion (thisDialog, 'New Terminal Name:', 'newTerminalName', 'Name');
+	addDialogCheckBox(thisDialog,'Open in Window Pane:', 'terminalCheckBox', 'Open',dialogCheckBoxChanged);
+	$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 320,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Create Terminal": function(e) {
+								if (!$('#newTerminalName').val()) {
+									removeDialogError(thisDialog);
+									addDialogError(thisDialog,"* Enter a Terminal Name to Continue!");
+									e.preventDefault();
+								}
+								else {
+									sendTerminalRequest('createTerminal', {'terminalName': $('#newTerminalName').val(), 'windowPane': $("#newDialogTarget").val()}, createTerminal);
+									removeDialogQuestion(thisDialog);
+									removeDialogCheckBox(thisDialog);
+									removeDialogError(thisDialog);
+									$(this).dialog("close");
+								}
+
+							},
+							Cancel: function() {
+								removeDialogQuestion(thisDialog);
+								removeDialogCheckBox(thisDialog);
+								removeDialogError(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+}
+function initializeDialogCreateFlowchart() {
+	var thisDialog = "dialog-info";
+	changeDialogTitle(thisDialog,"Create New Flowchart");
+	var ref = $('#jsTreeFlowchart').jstree(true);
+	var selectedNodes = ref.get_selected();
+	var fileName = ref.get_selected(true)[0].text;
+	addDialogError(thisDialog,'&nbsp;');
+	addDialogQuestion (thisDialog, 'New Flowchart Name:', 'newFlowchartName', 'Name');
+	addDialogCheckBox(thisDialog,'Open in Window Pane:', 'flowchartCheckBox', 'Open', dialogCheckBoxChanged);
+	$("#" + thisDialog).dialog({
+						resizable: false,
+						height: 320,
+						width: 375,
+						modal: true,
+						buttons: {
+							"Create Flowchart": function(e) {
+								if (!$('#newFlowchartName').val()) {
+									removeDialogError(thisDialog);
+									addDialogError(thisDialog,"* Enter a Flowchart Name to Continue!");
+									e.preventDefault();
+								}
+								else {
+									sendTerminalRequest('createFlowchart', {'flowchartName': $('#newFlowchartName').val(), 'windowPane': $("#newDialogTarget").val()}, createFlowchart);
+									removeDialogQuestion(thisDialog);
+									removeDialogCheckBox(thisDialog);
+									removeDialogError(thisDialog);
+									$(this).dialog("close");
+								}
+
+							},
+							Cancel: function() {
+								removeDialogQuestion(thisDialog);
+								removeDialogCheckBox(thisDialog);
+								removeDialogError(thisDialog);
+								$(this).dialog("close");
+				
+							}
+						}
+					});
+}

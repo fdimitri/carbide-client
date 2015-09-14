@@ -20,10 +20,12 @@
     initializeTaskContextMenu();
     var thisTableId = "<%= @taskName %>_TaskSpace";
     var cells = $('#' + thisTableId).find('th');
+    var tdCells = $('#' + thisTableId).find('.taskCell');
     cells.eq(0).width(120);
     console.log(cells.eq(0));
     fixTaskWidth(thisTableId);
     cells.eq(0).width("auto");
     taskTableInfo[thisTableId] = {taskColumnCount: 2, taskRowCount: 1, taskCellCount: 2, taskCount: 0, taskMoveInProgress: false, taskRowMoveInProgress: false, taskColumnMoveInProgress: false};
-
-
+    var newTaskButton = getCreateTaskButton;
+    tdCells.append(newTaskButton);
+    refreshSortable();

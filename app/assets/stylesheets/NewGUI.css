@@ -1,5 +1,6 @@
 body {
 	position:relative;
+	overflow:hidden;
 }
 .dialogContainer {
 	position:absolute;
@@ -819,4 +820,13 @@ margin-left: 20px;
 	position:absolute;
 	float:left;
 	
+}
+
+.dialogError {
+	color:#FF0000;
+	font-weight:bold;
+	font-size:12px;
+}
+.dialogQuestion input {
+width:100%;
 }

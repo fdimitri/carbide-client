@@ -65,8 +65,8 @@ $(document).ready(function() {
 			else if ($(event.target).is("#terminalroot_anchor")) {
 				clickedElement = "jsTreeTerminalRoot";
 			}
-			else if ($(event.target).is("#scrumroot_anchor")) {
-				clickedElement = "jsTreeScrumRoot";
+			else if ($(event.target).is("#taskboardroot_anchor")) {
+				clickedElement = "jsTreeTaskBoardRoot";
 			}
 			else if ($(event.target).is("#flowchartroot_anchor")) {
 				clickedElement = "jsTreeFlowchartRoot";
@@ -78,8 +78,8 @@ $(document).ready(function() {
 				else if ($(event.target).closest(".jsTreeChat").length) {
 					clickedElement = "jsTreeChat";
 				}
-				else if ($(event.target).closest(".jsTreeScrum").length) {
-					clickedElement = "jsTreeScrum";
+				else if ($(event.target).closest(".jsTreeTaskBoard").length) {
+					clickedElement = "jsTreeTaskBoard";
 				}
 				else if ($(event.target).closest(".jsTreeFlowchart").length) {
 					clickedElement = "jsTreeFlowchart";
@@ -128,6 +128,11 @@ $(document).ready(function() {
 	            var theseHeaders = $(event.target).closest(".taskTable").find('.taskHeader');
 	            var thisHeader = $(event.target).closest("th").find('.taskHeader');
 	            clickedTarget = theseHeaders.index(thisHeader);
+	        }
+	        else if ($(event.target).closest('.taskNoSort').length) { //top left of task table
+	           
+	            clickedElementId = $(event.target).closest(".taskTable").attr("id");
+	           
 	        }
 	        else if ($(event.target).closest("td").find('.taskCell').length) { //task Cell
 	            clickedElement = "taskCell";
@@ -246,6 +251,7 @@ $(document).ready(function() {
 			      height: 510,
 			      open: function() {
 				      $(this).parents('.ui-dialog-buttonpane button:eq(0)').focus(); 
+				      console.log("FOCUS!!!");
 				  },
 			      buttons: {
 			        Ok: function() {
@@ -269,7 +275,10 @@ $(document).ready(function() {
 			    });
 			}
 			if ($(event.target).closest('#dialog-info').length > 0) { //if there is a dialog open, focus on the ok button whenever they click on the dialog
-				$(event.target).closest('.ui-dialog').find('.ui-dialog-buttonpane button:eq(0)').focus(); 
+				//unless they are clicking on an input field
+				if (($(event.target).closest('input').length == 0) && ($(event.target).closest('textarea').length == 0) && ($(event.target).closest('select').length == 0)) {
+					$(event.target).closest('.ui-dialog').find('.ui-dialog-buttonpane button:eq(0)').focus(); 
+				}
 			}
 
 

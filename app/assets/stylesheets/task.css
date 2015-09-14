@@ -46,13 +46,15 @@
 }
 .taskCell {
     height:100%;
-    min-height:40px;
     width:calc(100% - 10px);
     display:inline-block;
-    border-width:4px;
+    border-width:5px;
     border-style:solid;
     padding:5px;
     background-color:rgba(100,100,100,1.0);
+    position:relative;
+    min-height:50px;
+    min-width:158px;
 }
 .taskCellBlack {
     border-color:rgba(0,0,0,1.0);
@@ -87,6 +89,7 @@
     text-align:center;
     position:relative;
     min-height:50px;
+    background-color:#FFFFFF;
 }
 .taskHeader {
     display:inline-block;
@@ -221,4 +224,59 @@
     font-size:12px;
     padding:5px;
     font-weight:bold;
+}
+.taskNewButton {
+    padding:12px;
+    background-color:rgba(255,255,255,1.0);
+    border-color:rgba(0,0,0,1.0);
+    border-width:3px;
+    border-style:solid;
+    text-align: left;
+    width:150px;
+    height:30px;
+    margin: auto;
+    cursor:pointer;
+    visibility:hidden;
+    position:absolute;
+    left: calc(50% - 90px);
+    bottom: calc(50% - 30px);
+}
+.taskNewButtonText {
+    float:left;
+    padding-top:7px;
+}
+.taskNewButtonIcon {
+    float:right;
+}
+.clearAll {
+    clear:both;
+}
+.taskAddRowButton {
+    display:inline-block;
+    border-color:rgba(0,0,0,1.0);
+    border-style:solid;
+    border-width:2px;
+    cursor:pointer;
+    width:40px;
+    height:40px;
+    background-image:url("/assets/addrow40.gif");
+    margin-left:5px;
+    margin-right:5px;
+    
+}
+.taskAddColumnButton {
+    display:inline-block;
+    border-color:rgba(0,0,0,1.0);
+    border-style:solid;
+    border-width:2px;
+    cursor:pointer;
+    width:40px;
+    height:40px;
+    background-image:url("/assets/addcolumn40.gif");
+    margin-left:5px;
+    margin-right:5px;
+    
+}
+.taskInsertButtons {
+    margin:auto;
 }
