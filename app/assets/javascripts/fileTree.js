@@ -3,9 +3,9 @@ var typedRename = "";
 
 $(document).ready(function() { 
 	initFlowchartTree();
-	initScrumTree();
+	initTaskBoardTree();
 	
-    $("#jsTreeChat").click(function(e) { //deselect terminal nodes, flowchart nodes, scrum nodes if chat node is clicked
+    $("#jsTreeChat").click(function(e) { //deselect terminal nodes, flowchart nodes, taskBoard nodes if chat node is clicked
     	var ref = $('#jsTreeTerminal').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
@@ -14,13 +14,13 @@ $(document).ready(function() {
     	if (ref) { 
     		ref.deselect_all(true);
     	}
-    	ref = $('#jsTreeScrum').jstree(true);
+    	ref = $('#jsTreeTaskBoard').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
     	}
     	
     });
-    $("#jsTreeTerminal").click(function(e) { //deselect chat nodes, flowchart nodes, scrum nodes if terminal node is clicked
+    $("#jsTreeTerminal").click(function(e) { //deselect chat nodes, flowchart nodes, taskBoard nodes if terminal node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
@@ -29,13 +29,13 @@ $(document).ready(function() {
     	if (ref) { 
     		ref.deselect_all(true);
     	}
-    	ref = $('#jsTreeScrum').jstree(true);
+    	ref = $('#jsTreeTaskBoard').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
     	}
     	
     });
-     $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, scrum nodes if flowchart node is clicked
+     $("#jsTreeFlowchart").click(function(e) { //deselect chat nodes, terminal nodes, taskBoard nodes if flowchart node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
     	if (ref) {
     		ref.deselect_all(true);
@@ -44,13 +44,13 @@ $(document).ready(function() {
     	if (ref) {
     		ref.deselect_all(true);
     	}
-    	ref = $('#jsTreeScrum').jstree(true);
+    	ref = $('#jsTreeTaskBoard').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
     	}
     	
     });
-    $("#jsTreeScrum").click(function(e) { //deselect chat nodes, terminal nodes, flowchart nodes if scrum node is clicked
+    $("#jsTreeTaskBoard").click(function(e) { //deselect chat nodes, terminal nodes, flowchart nodes if taskBoard node is clicked
     	var ref = $('#jsTreeChat').jstree(true);
     	if (ref) { 
     		ref.deselect_all(true);
@@ -218,7 +218,7 @@ $('#jsTreeFile').keydown(function(e) {
 				//if (t.closest('.menuList').length) {
 				if (t.closest('.windowPane').length) {
 					var dragItem = $("#" + data.data.obj[0].id);
-					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal") || dragItem.hasClass("jsTreeFlowchart") || dragItem.hasClass("jsTreeScrum")) {	
+					if (dragItem.hasClass("jsTreeFile") || dragItem.hasClass("jsTreeChat") || dragItem.hasClass("jsTreeTerminal") || dragItem.hasClass("jsTreeFlowchart") || dragItem.hasClass("jsTreeTaskBoard")) {	
 					
 						data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok'); //give them a checkbox above the tab-bar of a pane
 						// data.helper.find('.jstree-icon').css("width", "500px");
@@ -238,7 +238,7 @@ $('#jsTreeFile').keydown(function(e) {
 				}
 			}
 			else { //give them a check box if they're above the file tree
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeScrum")) {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeTaskBoard")) {
 					//This is a chat or terminal or flowchart or task board. don't give them the checkbox because they can't move it to another folder.
 					data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
 //					data.helper.find('.jstree-icon').css("background-position", "-36px -68px");
@@ -365,8 +365,8 @@ $('#jsTreeFile').keydown(function(e) {
 							var itemParent = tabItem.closest('div').attr('id');
 						}
 					}
-					else if (draggedItem.hasClass("jsTreeScrum")) {
-						console.log("Has class jsTreeScrum");
+					else if (draggedItem.hasClass("jsTreeTaskBoard")) {
+						console.log("Has class jsTreeTaskBoard");
 						var thisParent = $(data.event.target).closest('.windowPane').attr('id');
 						if ($("#" + thisParent).find('li.' + data.data.obj[0].id).length) { //the tab already exists 
 							console.log("Tab already exists, not adding -- but setting active");
@@ -379,7 +379,7 @@ $('#jsTreeFile').keydown(function(e) {
 							console.log($("#" + data.data.obj[0].id).closest('li'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
 							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
-							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'scrum', '');
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'taskBoard', '');
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
 						}
@@ -388,7 +388,7 @@ $('#jsTreeFile').keydown(function(e) {
 				}
 			}
 			else {
-				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeScrum")) {
+				if ($(data.data.obj[0]).hasClass("jsTreeChat") || $(data.data.obj[0]).hasClass("jsTreeTerminal") || $(data.data.obj[0]).hasClass("jsRoot") || $(data.data.obj[0]).hasClass("jsTreeFlowchart") || $(data.data.obj[0]).hasClass("jsTreeTaskBoard")) {
 					
 					//We do nothing if they try to move a Chat or Terminal or Root or flowchart or task board
 				}
@@ -592,104 +592,7 @@ function initFileTree(data, ftid) {
 
 
 	});
-	// $('#jsTreeFile').jstree({
 
-	// 	"core": {
-	// 		// so that create works
-	// 		check_callback: true,
-	// 		'data': [{
-	// 			"id": "chatroot",
-	// 			"parent": "#",
-	// 			"text": "Chat Rooms",
-	// 			"type": "root",
-	// 			"li_attr": {
-	// 				"class": "jsRoot"
-	// 			}
-	// 		}, {
-	// 			"id": "chat1",
-	// 			"parent": "chatroot",
-	// 			"text": "StdDev",
-	// 			"type": "chat",
-	// 			"li_attr": {
-	// 				"class": "jsTreeChat"
-	// 			}
-	// 		}, {
-	// 			"id": "chat2",
-	// 			"parent": "chatroot",
-	// 			"text": "Java",
-	// 			"type": "chat",
-	// 			"li_attr": {
-	// 				"class": "jsTreeChat"
-	// 			}
-	// 		}, {
-	// 			"id": "chat3",
-	// 			"parent": "chatroot",
-	// 			"text": "Coffee",
-	// 			"type": "chat",
-	// 			"li_attr": {
-	// 				"class": "jsTreeChat"
-	// 			}
-	// 		}, {
-	// 			"id": "chat4",
-	// 			"parent": "chatroot",
-	// 			"text": "3rd_shift_rulez",
-	// 			"type": "chat",
-	// 			"li_attr": {
-	// 				"class": "jsTreeChat"
-	// 			}
-	// 		},
-	// 		{
-	// 			"id": "terminalroot",
-	// 			"parent": "#",
-	// 			"text": "Terminals",
-	// 			"type": "root",
-	// 			"li_attr": {
-	// 				"class": "jsRoot"
-	// 			}
-	// 		},
-	// 		{
-	// 			"id": "terminaldefault",
-	// 			"parent": "terminalroot",
-	// 			"text": "Default Terminal",
-	// 			"type": "terminal",
-	// 			"li_attr": {
-	// 				"class": "jsTreeTerminal"
-	// 			}
-				
-	// 		}],
-
-
-	// 	},
-	// 	"dnd": {
-	// 		is_draggable: function(node) {
-
-	// 			return true;
-	// 		}
-	// 	},
-
-	// 	"types": {
-
-	// 		"chat": {
-	// 			"icon": "jstree-chat",
-	// 			"valid_children": []
-	// 		},
-	// 		"root": {
-	// 			"icon": "jstree-folder",
-	// 			"valid_children": ["chat"]
-	// 		},
-	// 		"terminal": {
-	// 			"icon": "jstree-file",
-	// 			"valid_children": []
-	// 		}
-
-
-	// 	},
-	// 	/*THIS NEEDS TO BE FIXED TO RESTORE CONTEXT MENU*/
-	// 	"plugins": [ "contextmenu",  "dnd", "crrm", "types"] ,
-	// 		contextmenu: {
-	// 			items: fileTreeMenu
-	// 		}
-	// });
 	$('.jstree').on('dblclick', '.jstree-anchor', function(e) {
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);
@@ -788,6 +691,7 @@ function cbCreateFile(hashKey, event, message) {
 		}
 	}, 10);
 }
+
 function cbCreateFolder(hashKey, event, message) {
 	// message.status = true || false
 	
@@ -795,7 +699,7 @@ function cbCreateFolder(hashKey, event, message) {
 	// message.createFile.srcPath -- fileName
 	// message.createFile.fileTreeHash -- "ID" 
 	// message.createFile.fileTreeOwnerHash -- "Owner ID"
-	node = message.createDirectory.node;
+	var node = message.createDirectory.node;
 	console.log("cbCreateFile() called with:");
 	console.log(hashKey); console.log(event); console.log(message);
 	console.log("cbCreateFile() end params");
@@ -1267,11 +1171,11 @@ function initFlowchartTree(data) {
 	});
 }
 
-function initScrumTree(data) {
+function initTaskBoardTree(data) {
 	if (!data) {
 		console.log("Asked to init with no data, using built-ins")
 		data = [{
-			"id": "scrumroot",
+			"id": "taskboardroot",
 			"parent": "#",
 			"text": "Task Boards",
 			"type": "root",
@@ -1281,13 +1185,13 @@ function initScrumTree(data) {
 		}, ]
 	}
 	console.log("Calling jstree() on");
-	console.log($('#jsTreeScrum'));
-	$('#jsTreeScrum').jstree({
+	console.log($('#jsTreeTaskBoard'));
+	$('#jsTreeTaskBoard').jstree({
 		"core": {
 			// so that create works
 			'check_callback': function(operation, node, node_parent, node_position, more) {
                         if (operation == 'move_node') {
-                        	return(false); //no moving scrum boards
+                        	return(false); //no moving taskBoard boards
                         }
 			},
 			'data': data,
@@ -1304,7 +1208,7 @@ function initScrumTree(data) {
 				"icon": "jstree-folder",
 				"valid_children": ["chat"]
 			},
-			"scrum": {
+			"taskBoard": {
 				"icon": "jstree-file",
 				"valid_children": []
 			}
@@ -1316,11 +1220,11 @@ function initScrumTree(data) {
 
 
 	});	
-	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for scrum
+	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for taskBoard
 		var instance = $.jstree.reference(this),
 			node = instance.get_node(this);
 
-		if (node.type == "scrum") {
+		if (node.type == "taskBoard") {
 
 
 			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1

@@ -588,14 +588,14 @@
 }
 
 .flowchart-space .aLabel {
-    background-color: white;
+    background-color: rgba(255,255,255,0.6);
     padding: 0.4em;
     font: 12px sans-serif;
     color: #444;
     z-index: 21;
     border: 1px dotted gray;
-    opacity: 0.8;
-    filter: alpha(opacity=80);
+    /*opacity: 0.8;*/
+    /*filter: alpha(opacity=80);*/
     cursor: pointer;
 }
 

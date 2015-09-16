@@ -1052,7 +1052,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				var statusJSON = {
 					"commandSet": "flowchart",
 					"flowchartCommand": "openFlowchart",
-					"flowchartTarget": filename,
+					"flowchartTarget": srcPath,
 				};
 				var rval = wsSendMsg(JSON.stringify(statusJSON));
 				console.log("Informing server we are opening a flowchart !!! Return val from ws was: " + rval);
@@ -1075,14 +1075,14 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				         
 		 		}, 50);
 			}
-			else if (tabType == 'scrum') {
+			else if (tabType == 'taskBoard') {
 				var statusJSON = {
-					"commandSet": "scrum",
-					"scrumCommand": "openScrum",
-					"scrumTarget": filename,
+					"commandSet": "taskBoard",
+					"taskBoardCommand": "openTaskBoard",
+					"taskBoardTarget": srcPath,
 				};
 				var rval = wsSendMsg(JSON.stringify(statusJSON));
-				console.log("Informing server we are opening a Scrum Board !!! Return val from ws was: " + rval);
+				console.log("Informing server we are opening a TaskBoard Board !!! Return val from ws was: " + rval);
 				console.log(statusJSON);
 				console.log(ws);
 				console.log("THE CONTAINER HEIGHT IS " + $("#" + tabName).find(".cContainer").height());
