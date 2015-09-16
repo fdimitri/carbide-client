@@ -1,6 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.app_domain = 'http://http://weirdim-frankd412.c9.io/'
+  config.app_domain = 'http://frank-d.info:3000/'
   config.web_console.whitelisted_ips = '0.0.0.0/0'
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp

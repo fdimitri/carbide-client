@@ -25,3 +25,8 @@ module CARBIDEGuiTest
     config.active_record.raise_in_transactional_callbacks = true
   end
 end
+
+
+ActiveRecord::SessionStore::Session.table_name = 'sessions'
+ActiveRecord::SessionStore::Session.primary_key = 'id'
+ActiveRecord::SessionStore::Session.data_column_name = 'data'
