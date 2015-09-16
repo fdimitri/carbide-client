@@ -1,0 +1,14 @@
+<div class="taskBox" id="task_<%= @taskName %>" taskName="<%= @taskName %>">
+            <table id="<%= @taskName %>_TaskSpace" class="taskTable" taskName="<%= @taskName %>">
+                <thead>
+                    <tr><th class="taskNoSort"><div class="taskInsertButtons"><div class="taskAddRowButton" title="Add Row"></div><div class="taskAddColumnButton" title="Add Column"></div></div></th>
+                    <th id="<%= @taskName %>_TaskSpaceCol_0"><div class="taskHeaderContainer"><div class="taskHeader">Task Header 1</div></div></th>
+                    <th id="<%= @taskName %>_TaskSpaceCol_1"><div class="taskHeaderContainer"><div class="taskHeader">Task Header 2</div></div></th></tr>
+                </thead>
+                <tbody>
+                    <tr id="<%= @taskName %>_TaskSpaceRow_0"><td class="taskRowLabel"><div class="taskRowHeader">Row 1 Label</div></td>
+                    <td><div class="taskCell" id="cell0"></div></td>
+                    <td><div class="taskCell" id="cell1"></div></td></tr>
+                </tbody>
+            </table>
+</div>

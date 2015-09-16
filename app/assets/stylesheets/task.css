@@ -21,6 +21,7 @@
     /*border-color:#000000;*/
     display:table;
     background-color:rgba(255,255,255,1.0);
+    padding-right:10px;
  
 }
 .taskTable tr {
@@ -45,12 +46,15 @@
 }
 .taskCell {
     height:100%;
-    min-height:40px;
     width:calc(100% - 10px);
     display:inline-block;
-    border-width:2px;
+    border-width:5px;
     border-style:solid;
     padding:5px;
+    background-color:rgba(100,100,100,1.0);
+    position:relative;
+    min-height:50px;
+    min-width:158px;
 }
 .taskCellBlack {
     border-color:rgba(0,0,0,1.0);
@@ -74,7 +78,7 @@
     background-color:rgba(255,0,0,0.6);
 }
 .taskNone {
-    background-color:rgba(255,255,255,0.0);
+    background-color:rgba(255,255,255,1.0);
 }
 .taskItem {
     border-style:solid;
@@ -83,6 +87,9 @@
     padding: 6px;
     margin:7px;
     text-align:center;
+    position:relative;
+    min-height:50px;
+    background-color:#FFFFFF;
 }
 .taskHeader {
     display:inline-block;
@@ -108,14 +115,20 @@
     min-width:100px;
 }
 .taskItemContainer {
-    display: inline;
+    /*display: inline;*/
+    display:block;
     margin:auto;
+    position:relative;
+    width:100%;
+    height:100%;
 }
 .taskItemContent {
     display:block;
     padding-left:5px;
     padding-right:5px;
+    min-height:27px;
 }
+
 .taskItemTitle {
     display:block;
     padding-left:5px;
@@ -123,15 +136,69 @@
 }
 
 .taskRowLabel {
-    min-width:120px;
+    min-width:125px;
     width:auto;
 }
+.taskRowLabel textarea {
+    width:95% !important;
+}
+.taskRowLabel input {
+    width:95% !important;
+}
 .taskEditButton {
-    float:right;
+    position:absolute;
+    left: calc(100% - 27px);
+    top: 6px;
     height:17px;
     width:20px;
-    background-image:url("/assets/edit20.jpg");
+    background-image:url("/assets/edit20.gif");
     cursor: pointer;
+    border-color:rgba(0,0,0,0.2);
+    border-width:1px;
+    border-style:solid;
+    visibility:hidden;
+    z-index:40;
+}
+.taskNoteButton {
+    position:absolute;
+    left: calc(100% - 23px);
+    bottom: 4px;
+    height:23px;
+    width:20px;
+    background-image:url("/assets/note20.gif");
+    cursor: pointer;
+    z-index:40;
+    border-style:solid;
+    border-width:2px;
+    border-color:rgba(255,255,255,1.0);
+
+    visibility:hidden;
+}
+.firstTaskNoteButton {
+    background-image:url("/assets/addnote20.gif") !important;
+}
+.addTaskNoteButton {
+    left: calc(100% - 29px) !important;
+    background-image:url("/assets/addnote20.gif") !important;
+}
+.taskNoteNumber {
+    text-align:center;
+    font-size:10px;
+    margin-top:7px;
+    font-weight:bold;
+    color:rgba(0,0,0,1.0);
+    width:100%;
+    height:100%;
+}
+.taskNoteItem {
+    border-style:solid;
+    border-color:rgba(0,0,0,1.0);
+    border-width:1px;
+    width:70%;
+    background-color:rgba(245,245,245,1.0);
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:5px;
 }
 .taskItemContent ul, .taskItemContent li {
     text-align: left;
@@ -140,4 +207,76 @@
         display:inline-block;
         margin:auto;
 }
-
+.taskNoteHeader {
+    background-color:rgba(210,210,210,1.0);
+    border-style:solid;
+    border-bottom-width:2px;
+    border-top-width:0;
+    border-left-width:0;
+    border-right-width:0;
+    border-color:rgba(140,140,140,1.0);
+}
+.taskNoteDate {
+    font-size:10px;
+    padding:4px;
+}
+.taskNoteUser {
+    font-size:12px;
+    padding:5px;
+    font-weight:bold;
+}
+.taskNewButton {
+    padding:12px;
+    background-color:rgba(255,255,255,1.0);
+    border-color:rgba(0,0,0,1.0);
+    border-width:3px;
+    border-style:solid;
+    text-align: left;
+    width:150px;
+    height:30px;
+    margin: auto;
+    cursor:pointer;
+    visibility:hidden;
+    position:absolute;
+    left: calc(50% - 90px);
+    bottom: calc(50% - 30px);
+}
+.taskNewButtonText {
+    float:left;
+    padding-top:7px;
+}
+.taskNewButtonIcon {
+    float:right;
+}
+.clearAll {
+    clear:both;
+}
+.taskAddRowButton {
+    display:inline-block;
+    border-color:rgba(0,0,0,1.0);
+    border-style:solid;
+    border-width:2px;
+    cursor:pointer;
+    width:40px;
+    height:40px;
+    background-image:url("/assets/addrow40.gif");
+    margin-left:5px;
+    margin-right:5px;
+    
+}
+.taskAddColumnButton {
+    display:inline-block;
+    border-color:rgba(0,0,0,1.0);
+    border-style:solid;
+    border-width:2px;
+    cursor:pointer;
+    width:40px;
+    height:40px;
+    background-image:url("/assets/addcolumn40.gif");
+    margin-left:5px;
+    margin-right:5px;
+    
+}
+.taskInsertButtons {
+    margin:auto;
+}

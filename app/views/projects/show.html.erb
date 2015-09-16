@@ -102,7 +102,7 @@
 				    <div id="tabs-2">
 				        <div id="jsTreeChat"></div>
 				        <div id="jsTreeTerminal"></div>
-				        <div id="jsTreeScrum"></div>
+				        <div id="jsTreeTaskBoard"></div>
 				        <div id="jsTreeFlowchart"></div>
 				    </div>
 				    <div id="tabs-3">
@@ -137,36 +137,36 @@
 		<div id="dialog-info" class="dialog-window" title="Information Dialog" style="display:none;">
 			<div class="dialog-info-space"></div>
 		</div>
-		<div id="dialog-newfile" class="dialog-window" title="Create New File" style="display:none;">
-			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your file.</p>
-			<form action="" method="post">
-			<label>New File Name:</label>
-			<input id="newFileName" name="name" type="text"/>
-			<p>Open this file <input type="checkbox" id="newFileOpen" name="openinpane" onchange="fileCheckBoxChanged()"/></p>
-			<div id="newFileDropDownBox"></div>
-			<input id="newFileSubmit" type="submit" value="Submit">
-			</form>
-		</div>
-		<div id="dialog-newterminal" class="dialog-window" title="Create New Terminal" style="display:none;">
-			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your terminal.</p>
-			<form action="" method="post">
-			<label>New Terminal Name:</label>
-			<input id="newTerminalName" name="name" type="text"/>
-			<p>Open this terminal <input type="checkbox" id="newTerminalOpen" name="openinpane" onchange="terminalCheckBoxChanged()"/></p>
-			<div id="newTerminalDropDownBox"></div>
-			<input id="newTerminalSubmit" type="submit" value="Submit">
-			</form>
-		</div>
-		<div id="dialog-newchat" class="dialog-window" title="Create New Chat Room" style="display:none;">
-			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your Chat Room.</p>
-			<form action="" method="post">
-			<label>New Chat Room Name:</label>
-			<input id="newChatName" name="name" type="text"/>
-			<p>Open this Chat Room <input type="checkbox" id="newChatOpen" name="openinpane" onchange="chatCheckBoxChanged()"/></p>
-			<div id="newChatDropDownBox"></div>
-			<input id="newChatSubmit" type="submit" value="Submit">
-			</form>
-		</div>
+		<!--<div id="dialog-newfile" class="dialog-window" title="Create New File" style="display:none;">-->
+		<!--	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your file.</p>-->
+		<!--	<form action="" method="post">-->
+		<!--	<label>New File Name:</label>-->
+		<!--	<input id="newFileName" name="name" type="text"/>-->
+		<!--	<p>Open this file <input type="checkbox" id="newFileOpen" name="openinpane" onchange="fileCheckBoxChanged()"/></p>-->
+		<!--	<div id="newFileDropDownBox"></div>-->
+		<!--	<input id="newFileSubmit" type="submit" value="Submit">-->
+		<!--	</form>-->
+		<!--</div>-->
+		<!--<div id="dialog-newterminal" class="dialog-window" title="Create New Terminal" style="display:none;">-->
+		<!--	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your terminal.</p>-->
+		<!--	<form action="" method="post">-->
+		<!--	<label>New Terminal Name:</label>-->
+		<!--	<input id="newTerminalName" name="name" type="text"/>-->
+		<!--	<p>Open this terminal <input type="checkbox" id="newTerminalOpen" name="openinpane" onchange="terminalCheckBoxChanged()"/></p>-->
+		<!--	<div id="newTerminalDropDownBox"></div>-->
+		<!--	<input id="newTerminalSubmit" type="submit" value="Submit">-->
+		<!--	</form>-->
+		<!--</div>-->
+		<!--<div id="dialog-newchat" class="dialog-window" title="Create New Chat Room" style="display:none;">-->
+		<!--	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please name your Chat Room.</p>-->
+		<!--	<form action="" method="post">-->
+		<!--	<label>New Chat Room Name:</label>-->
+		<!--	<input id="newChatName" name="name" type="text"/>-->
+		<!--	<p>Open this Chat Room <input type="checkbox" id="newChatOpen" name="openinpane" onchange="chatCheckBoxChanged()"/></p>-->
+		<!--	<div id="newChatDropDownBox"></div>-->
+		<!--	<input id="newChatSubmit" type="submit" value="Submit">-->
+		<!--	</form>-->
+		<!--</div>-->
 	
 		  <div class="flow-error">
 	        Your browser, unfortunately, is not supported by Flow.js. The library requires support for <a href="http://www.w3.org/TR/FileAPI/">the HTML5 File API</a> along with <a href="http://www.w3.org/TR/FileAPI/#normalization-of-params">file slicing</a>.

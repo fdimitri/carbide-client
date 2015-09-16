@@ -55,8 +55,8 @@ function initWebSocket() {
 		else if (jObj.commandSet == "flowchart") {
 			cliMsgProcFlowchart(jObj);
 		}
-		else if (jObj.commandSet == "scrum") {
-			cliMsgProcScrum(jObj);
+		else if (jObj.commandSet == "taskBoard") {
+			cliMsgProcTaskBoard(jObj);
 		}
 		else {
 			console.log("Received non-chat command: " + jObj.commandSet);
@@ -106,6 +106,7 @@ function initWebSocket() {
 	};
 	ws.onopen = function() {
 		getFileTrees();
+		enableScreen();
 		var connOpts = [];
 		connOpts['speed'] = 1;
 		updateConnectionStatus(connOpts); //update connection status to show fully connected
@@ -533,10 +534,25 @@ function cliMsgProcFlowchart(jObj) {
 
 }
 
-function cliMsgProcScrum(jObj) {
-	console.log("Entered cliMsgProcScrum");
+function cliMsgProcTaskBoard(jObj) {
+	console.log("Entered cliMsgProcTaskBoard");
 	console.log(jObj);
-
+	if (jObj.command == 'addTaskBoard') {
+		var addTaskBoard = jObj.addTaskBoard;
+		var node = addTaskBoard.node;
+		$("#jsTreeTaskBoard").jstree('create_node', 'taskboardroot', node, 'last');
+	}
+	else if (jObj.command == "setTaskBoardTreeJSON") {
+		console.log("Entered command processor for setTaskBoardTreeJSON");
+		var myData = jObj.setTaskBoardTreeJSON;
+		console.log(myData.taskBoardTree);
+		
+		console.log("Mydata.taskBoardTree:");
+		console.log(myData.taskBoardTree);
+		// console.log("Mydata.termTree after JSON Decode:");
+		// console.log($.parseJSON(myData.termTree));
+		initTaskBoardTree((myData.taskBoardTree));
+	}
 }
 
 

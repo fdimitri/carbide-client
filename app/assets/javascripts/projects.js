@@ -20,7 +20,8 @@
 //= require WebSocketsHandler
 
 //= require jquery.jeditable.js
-//= require task
+//= require carbideTaskboard
+//= require carbideChatroom
 
 //= require ./sorttable/jquery.sorttable.js
 
@@ -50,4 +51,4 @@
 //= require ./tinymce/js/tinymce/jquery.tinymce.min.js
 //= require ./tinymce/js/tinymce/tinymce.min.js
         
-//= require flowchart
+//= require carbideFlowchart
