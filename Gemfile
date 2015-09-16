@@ -41,10 +41,11 @@ gem 'omniauth-google'
 gem 'omniauth-github', :github => 'intridea/omniauth-github'
 gem 'omniauth-openid', :github => 'intridea/omniauth-openid'
 gem 'omniauth-google-oauth2'
+gem 'activerecord-session_store', :github => 'rails/activerecord-session_store'
 # Use Unicorn as the app server
 # gem 'unicorn'
-
-# Use Capistrano for deployment
+#gem 'activerecord-session_store'
+	# Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'rack'
 group :development, :test do

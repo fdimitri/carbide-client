@@ -1,0 +1,2309 @@
+
+
+Started GET "/" for 192.168.100.90 at 2015-08-31 21:51:47 -0400
+
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+	bin/rake db:migrate RAILS_ENV=development
+
+):
+  activerecord (4.2.3) lib/active_record/migration.rb:392:in `check_pending!'
+  activerecord (4.2.3) lib/active_record/migration.rb:373:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.3) lib/active_support/callbacks.rb:84:in `run_callbacks'
+  actionpack (4.2.3) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (3.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (2.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (24.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (19.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (46.7ms)
+  [1m[36m (311.8ms)[0m  [1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (250.6ms)[0m  CREATE UNIQUE INDEX `unique_schema_migrations`  ON `schema_migrations` (`version`) 
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to DeviseCreateUsers (20150724233950)
+  [1m[35m (448.4ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (77.6ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (62.8ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) 
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233950')
+  [1m[36m (7.2ms)[0m  [1mCOMMIT[0m
+Migrating to AddNameToUsers (20150724233951)
+  [1m[35m (227.8ms)[0m  ALTER TABLE `users` ADD `name` varchar(255)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233951')
+  [1m[36m (9.2ms)[0m  [1mCOMMIT[0m
+Migrating to CreateIdentities (20150724234010)
+  [1m[35m (112.5ms)[0m  CREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_identities_on_user_id`  (`user_id`) ) ENGINE=InnoDB
+  [1m[36m (572.7ms)[0m  [1mALTER TABLE `identities` ADD CONSTRAINT `fk_rails_5373344100`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO `schema_migrations` (`version`) VALUES ('20150724234010')[0m
+  [1m[35m (6.4ms)[0m  COMMIT
+Migrating to AddNewConfirmableToUser (20150725033129)
+  [1m[36m (183.7ms)[0m  [1mALTER TABLE `users` ADD `confirmation_token` varchar(255)[0m
+  [1m[35m (187.7ms)[0m  ALTER TABLE `users` ADD `confirmed_at` datetime
+  [1m[36m (566.8ms)[0m  [1mALTER TABLE `users` ADD `confirmation_sent_at` datetime[0m
+  [1m[35m (198.4ms)[0m  ALTER TABLE `users` ADD `unconfirmed_email` varchar(255)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150725033129')
+  [1m[36m (11.9ms)[0m  [1mCOMMIT[0m
+Migrating to CreateProjects (20150726234430)
+  [1m[35m (86.9ms)[0m  CREATE TABLE `projects` (`id` int(11) auto_increment PRIMARY KEY, `Name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_projects_on_Owner_id`  (`Owner_id`) ,  INDEX `index_projects_on_ProjectProfile_id`  (`ProjectProfile_id`) ) ENGINE=InnoDB
+  [1m[36m (84.2ms)[0m  [1mALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+[0m
+Mysql2::Error: Cannot add foreign key constraint: ALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+
+  [1m[36m (340.8ms)[0m  [1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (174.9ms)[0m  CREATE UNIQUE INDEX `unique_schema_migrations`  ON `schema_migrations` (`version`) 
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to DeviseCreateUsers (20150724233950)
+  [1m[35m (95.4ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (67.3ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (76.3ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) 
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233950')
+  [1m[36m (14.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddNameToUsers (20150724233951)
+  [1m[35m (572.0ms)[0m  ALTER TABLE `users` ADD `name` varchar(255)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233951')
+  [1m[36m (10.6ms)[0m  [1mCOMMIT[0m
+Migrating to CreateIdentities (20150724234010)
+  [1m[35m (104.5ms)[0m  CREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_identities_on_user_id`  (`user_id`) ) ENGINE=InnoDB
+  [1m[36m (172.2ms)[0m  [1mALTER TABLE `identities` ADD CONSTRAINT `fk_rails_5373344100`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (1.1ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO `schema_migrations` (`version`) VALUES ('20150724234010')[0m
+  [1m[35m (7.0ms)[0m  COMMIT
+Migrating to AddNewConfirmableToUser (20150725033129)
+  [1m[36m (166.8ms)[0m  [1mALTER TABLE `users` ADD `confirmation_token` varchar(255)[0m
+  [1m[35m (488.9ms)[0m  ALTER TABLE `users` ADD `confirmed_at` datetime
+  [1m[36m (209.1ms)[0m  [1mALTER TABLE `users` ADD `confirmation_sent_at` datetime[0m
+  [1m[35m (183.3ms)[0m  ALTER TABLE `users` ADD `unconfirmed_email` varchar(255)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (2.9ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150725033129')
+  [1m[36m (16.1ms)[0m  [1mCOMMIT[0m
+Migrating to CreateProjects (20150726234430)
+  [1m[35m (90.6ms)[0m  CREATE TABLE `projects` (`id` int(11) auto_increment PRIMARY KEY, `Name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_projects_on_Owner_id`  (`Owner_id`) ,  INDEX `index_projects_on_ProjectProfile_id`  (`ProjectProfile_id`) ) ENGINE=InnoDB
+  [1m[36m (88.5ms)[0m  [1mALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+[0m
+Mysql2::Error: Cannot add foreign key constraint: ALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+
+  [1m[36m (114.8ms)[0m  [1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (163.8ms)[0m  CREATE UNIQUE INDEX `unique_schema_migrations`  ON `schema_migrations` (`version`) 
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to DeviseCreateUsers (20150724233950)
+  [1m[35m (81.7ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (79.4ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (88.5ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) 
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233950')
+  [1m[36m (7.8ms)[0m  [1mCOMMIT[0m
+Migrating to AddNameToUsers (20150724233951)
+  [1m[35m (164.0ms)[0m  ALTER TABLE `users` ADD `name` varchar(255)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233951')
+  [1m[36m (9.2ms)[0m  [1mCOMMIT[0m
+Migrating to CreateIdentities (20150724234010)
+  [1m[35m (441.2ms)[0m  CREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_identities_on_user_id`  (`user_id`) ) ENGINE=InnoDB
+  [1m[36m (149.1ms)[0m  [1mALTER TABLE `identities` ADD CONSTRAINT `fk_rails_5373344100`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO `schema_migrations` (`version`) VALUES ('20150724234010')[0m
+  [1m[35m (6.5ms)[0m  COMMIT
+Migrating to AddNewConfirmableToUser (20150725033129)
+  [1m[36m (173.1ms)[0m  [1mALTER TABLE `users` ADD `confirmation_token` varchar(255)[0m
+  [1m[35m (163.5ms)[0m  ALTER TABLE `users` ADD `confirmed_at` datetime
+  [1m[36m (624.4ms)[0m  [1mALTER TABLE `users` ADD `confirmation_sent_at` datetime[0m
+  [1m[35m (162.8ms)[0m  ALTER TABLE `users` ADD `unconfirmed_email` varchar(255)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150725033129')
+  [1m[36m (9.6ms)[0m  [1mCOMMIT[0m
+Migrating to CreateProjects (20150726234430)
+  [1m[35m (96.0ms)[0m  CREATE TABLE `projects` (`id` int(11) auto_increment PRIMARY KEY, `Name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_projects_on_Owner_id`  (`Owner_id`) ,  INDEX `index_projects_on_ProjectProfile_id`  (`ProjectProfile_id`) ) ENGINE=InnoDB
+  [1m[36m (85.0ms)[0m  [1mALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+[0m
+Mysql2::Error: Cannot add foreign key constraint: ALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to CreateProjects (20150726234430)
+  [1m[36m (210.0ms)[0m  [1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (111.2ms)[0m  CREATE UNIQUE INDEX `unique_schema_migrations`  ON `schema_migrations` (`version`) 
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to DeviseCreateUsers (20150724233950)
+  [1m[35m (106.6ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (75.5ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (69.1ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) 
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233950')
+  [1m[36m (8.6ms)[0m  [1mCOMMIT[0m
+Migrating to AddNameToUsers (20150724233951)
+  [1m[35m (162.3ms)[0m  ALTER TABLE `users` ADD `name` varchar(255)
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150724233951')
+  [1m[36m (7.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateIdentities (20150724234010)
+  [1m[35m (431.0ms)[0m  CREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_identities_on_user_id`  (`user_id`) ) ENGINE=InnoDB
+  [1m[36m (159.8ms)[0m  [1mALTER TABLE `identities` ADD CONSTRAINT `fk_rails_5373344100`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO `schema_migrations` (`version`) VALUES ('20150724234010')[0m
+  [1m[35m (7.5ms)[0m  COMMIT
+Migrating to AddNewConfirmableToUser (20150725033129)
+  [1m[36m (152.0ms)[0m  [1mALTER TABLE `users` ADD `confirmation_token` varchar(255)[0m
+  [1m[35m (164.3ms)[0m  ALTER TABLE `users` ADD `confirmed_at` datetime
+  [1m[36m (514.1ms)[0m  [1mALTER TABLE `users` ADD `confirmation_sent_at` datetime[0m
+  [1m[35m (199.5ms)[0m  ALTER TABLE `users` ADD `unconfirmed_email` varchar(255)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150725033129')
+  [1m[36m (9.8ms)[0m  [1mCOMMIT[0m
+Migrating to CreateProjects (20150726234430)
+  [1m[35m (86.4ms)[0m  CREATE TABLE `projects` (`id` int(11) auto_increment PRIMARY KEY, `Name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,  INDEX `index_projects_on_Owner_id`  (`Owner_id`) ,  INDEX `index_projects_on_ProjectProfile_id`  (`ProjectProfile_id`) ) ENGINE=InnoDB
+  [1m[36m (69.7ms)[0m  [1mALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+[0m
+Mysql2::Error: Cannot add foreign key constraint: ALTER TABLE `projects` ADD CONSTRAINT `fk_rails_58ef2e6c63`
+FOREIGN KEY (`Owner_id`)
+  REFERENCES `Owners` (`id`)
+
+  [1m[36m (124.0ms)[0m  [1mCREATE TABLE `Projects` (`id` int(11) auto_increment PRIMARY KEY, `name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (247.7ms)[0m  CREATE  INDEX `index_projects_on_Owner_id`  ON `Projects` (`Owner_id`) 
+  [1m[36m (82.7ms)[0m  [1mCREATE  INDEX `index_projects_on_ProjectProfile_id`  ON `Projects` (`ProjectProfile_id`) [0m
+  [1m[35m (47.9ms)[0m  DROP TABLE `identities` CASCADE
+  [1m[36m (83.8ms)[0m  [1mCREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (64.9ms)[0m  CREATE  INDEX `index_identities_on_user_id`  ON `identities` (`user_id`) 
+  [1m[36m (90.9ms)[0m  [1mCREATE TABLE `project_profiles` (`id` int(11) auto_increment PRIMARY KEY, `About` text, `Homepage` varchar(255), `Project_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (72.2ms)[0m  CREATE  INDEX `index_project_profiles_on_Project_id`  ON `project_profiles` (`Project_id`) 
+  [1m[36m (411.2ms)[0m  [1mCREATE TABLE `projects_users` (`id` int(11) auto_increment PRIMARY KEY, `User_id` int(11), `Project_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `state` varchar(255) DEFAULT 'accepted', `initiator_id` int(11) DEFAULT 1) ENGINE=InnoDB[0m
+  [1m[35m (80.3ms)[0m  CREATE  INDEX `index_projects_users_on_Project_id`  ON `projects_users` (`Project_id`) 
+  [1m[36m (79.5ms)[0m  [1mCREATE  INDEX `index_projects_users_on_User_id`  ON `projects_users` (`User_id`) [0m
+  [1m[35m (117.4ms)[0m  CREATE  INDEX `index_projects_users_on_initiator_id`  ON `projects_users` (`initiator_id`) 
+  [1m[36m (40.6ms)[0m  [1mDROP TABLE `users` CASCADE[0m
+  [1m[35m (87.4ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `name` varchar(255), `confirmation_token` varchar(255), `confirmed_at` datetime, `confirmation_sent_at` datetime, `unconfirmed_email` varchar(255)) ENGINE=InnoDB
+  [1m[36m (77.6ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (83.9ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) 
+  [1m[36m (0.3ms)[0m  [1mSELECT version FROM `schema_migrations`[0m
+  [1m[35m (9.4ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150802073054')
+  [1m[36m (15.9ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150726235015')[0m
+  [1m[35m (8.5ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150726234430')
+  [1m[36m (382.3ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150727000741')[0m
+  [1m[35m (9.2ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150727052110')
+  [1m[36m (25.7ms)[0m  [1mDROP TABLE `Projects` CASCADE[0m
+  [1m[35m (82.2ms)[0m  CREATE TABLE `Projects` (`id` int(11) auto_increment PRIMARY KEY, `name` varchar(255), `Owner_id` int(11), `ProjectProfile_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (71.5ms)[0m  [1mCREATE  INDEX `index_projects_on_Owner_id`  ON `Projects` (`Owner_id`) [0m
+  [1m[35m (88.9ms)[0m  CREATE  INDEX `index_projects_on_ProjectProfile_id`  ON `Projects` (`ProjectProfile_id`) 
+  [1m[36m (33.8ms)[0m  [1mDROP TABLE `identities` CASCADE[0m
+  [1m[35m (88.6ms)[0m  CREATE TABLE `identities` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `provider` varchar(255), `uid` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (80.3ms)[0m  [1mCREATE  INDEX `index_identities_on_user_id`  ON `identities` (`user_id`) [0m
+  [1m[35m (30.4ms)[0m  DROP TABLE `project_profiles` CASCADE
+  [1m[36m (68.4ms)[0m  [1mCREATE TABLE `project_profiles` (`id` int(11) auto_increment PRIMARY KEY, `About` text, `Homepage` varchar(255), `Project_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (391.7ms)[0m  CREATE  INDEX `index_project_profiles_on_Project_id`  ON `project_profiles` (`Project_id`) 
+  [1m[36m (25.5ms)[0m  [1mDROP TABLE `projects_users` CASCADE[0m
+  [1m[35m (87.0ms)[0m  CREATE TABLE `projects_users` (`id` int(11) auto_increment PRIMARY KEY, `User_id` int(11), `Project_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `state` varchar(255) DEFAULT 'accepted', `initiator_id` int(11) DEFAULT 1) ENGINE=InnoDB
+  [1m[36m (79.4ms)[0m  [1mCREATE  INDEX `index_projects_users_on_Project_id`  ON `projects_users` (`Project_id`) [0m
+  [1m[35m (70.4ms)[0m  CREATE  INDEX `index_projects_users_on_User_id`  ON `projects_users` (`User_id`) 
+  [1m[36m (84.6ms)[0m  [1mCREATE  INDEX `index_projects_users_on_initiator_id`  ON `projects_users` (`initiator_id`) [0m
+  [1m[35m (24.4ms)[0m  DROP TABLE `users` CASCADE
+  [1m[36m (66.4ms)[0m  [1mCREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `name` varchar(255), `confirmation_token` varchar(255), `confirmed_at` datetime, `confirmation_sent_at` datetime, `unconfirmed_email` varchar(255)) ENGINE=InnoDB[0m
+  [1m[35m (103.7ms)[0m  CREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) 
+  [1m[36m (71.5ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (0.3ms)[0m  SELECT version FROM `schema_migrations`
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Migrating to AddSessionsTable (20150904051724)
+DEPRECATION WARNING: `#timestamps` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/frankd/carbide/carbide-client/db/migrate/20150904051724_add_sessions_table.rb:6)
+  [1m[35m (97.5ms)[0m  CREATE TABLE `sessions` (`id` int(11) auto_increment PRIMARY KEY, `session_id` varchar(255) NOT NULL, `data` text, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB
+  [1m[36m (344.2ms)[0m  [1mCREATE UNIQUE INDEX `index_sessions_on_session_id`  ON `sessions` (`session_id`) [0m
+  [1m[35m (62.1ms)[0m  CREATE  INDEX `index_sessions_on_updated_at`  ON `sessions` (`updated_at`) 
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO `schema_migrations` (`version`) VALUES ('20150904051724')
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT `schema_migrations`.* FROM `schema_migrations`
+  [1m[36m (7.9ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'Projects'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `Projects`
+  [1m[36m (0.3ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'identities'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `identities`
+  [1m[36m (0.3ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'project_profiles'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `project_profiles`
+  [1m[36m (0.3ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'projects'
+[0m
+  [1m[35m (0.3ms)[0m  SHOW CREATE TABLE `projects`
+  [1m[36m (0.4ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'projects_users'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `projects_users`
+  [1m[36m (0.3ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'sessions'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `sessions`
+  [1m[36m (0.3ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'users'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `users`
+
+
+Started GET "/" for 192.168.100.90 at 2015-09-04 01:21:47 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by HomeController#index as HTML
+Completed 401 Unauthorized in 10ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/user/signin" for 192.168.100.90 at 2015-09-04 01:21:47 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.erb (3.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (25.0ms)
+Completed 200 OK in 3431ms (Views: 3387.3ms | ActiveRecord: 3.9ms)
+
+
+Started GET "/assets/NewGUI.self-47827d559363eea4094d9cbdbd4f85b08fb558c5728f33cccf1dd44575eae3a6.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/create_gui_content.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/jstree/themes/default/style.css" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+ActionController::RoutingError (No route matches [GET] "/jstree/themes/default/style.css"):
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (1.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_route.html.erb (10.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_table.html.erb (3.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (62.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (36.7ms)
+
+
+Started GET "/assets/home.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/flowchart.self-55c30bc0b1cb35e51c68602ae03f84c99641a37a483373819f85d574f019005a.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/carbide-context.self-5951e3551e95e49e227ce485bd78156c4f0c2f3ab9bbb1ac7c28d950f68b3d3d.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/omniauth_callbacks.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/project_profiles.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/projects.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/projects_user.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/quartzmenu.self-206b773fcee4c28e1b4f97b1e925d1707487fe9ee2e800c060921de9717a9998.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/scaffolds.self-a1fa1c3aed3355e52c87dc3d64f838862c3dac7899b8b8f22ec6fa332549e613.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/task.self-c5d71154017ea298a2e97908530b15c95806b04b72248ce778818c6871ae3ac4.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/upload.self-848bc9dfe9e5ad67603167b8e1f484f9abb0e8c3af4c3330b09a3e3d323627f2.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/user.self-717197de63d610f7b1a03cd09971cb5a7d5e088e66fb7979ee1c2214509f3740.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/application.self-d885a0a66bd595c10edb24f8879f94e334d88be0730c4d7c7a7b57c731c09037.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness.self-43b389c337492da0492048a6427ec651ec11f92eec2dd0b19a6aeba9190572eb.css?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery2.self-0664d02dcbfb008e715c754b00b9af29d6f1796828c03610aee4265bdfc6afff.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery_ujs.self-ca5248a2fad13d6bd58ea121318d642f195f0b2dd818b30615f785ff365e8d1f.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/core.self-93be4d22eda916787802a64d8f88b52db8a9027d4ccbbc0942625324a7d12d44.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/widget.self-c1602241ddc51216b58391768667068867b8e15b9efc722befcd25771eda6819.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/accordion.self-c95f320275150a94241b004a91e21eef9c5ae9965a793cb3e2475f6078a1670d.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/position.self-e693ced4ecfa1a276f0b794f32c1d30d792764b08788bf68ecfa3b388c291333.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/menu.self-7abc1c9401509a7e4fc609b1e461be6fd17e8116e8fda19cc59d05ba79aefb68.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/autocomplete.self-3befc48aba87cead090cfd014562b2771a662ac6d2c8197b24c08b2d9f3d9f2d.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:51 -0400
+
+
+Started GET "/assets/jquery-ui/button.self-4d4f21ba77bbf8cc08ae65e2b6329a7a1b952b32c3ba7bffca8313e7e8c93d0c.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/datepicker.self-6267be6d4d0f0e8665be3b4d6ac07f40ba23a32aff8eaa5d1bfc00f76a9eeae7.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/mouse.self-c513294e8da73f31f84ba3ef11e2a1180a47faea0eb2fea4a53fc26153dd21fd.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/draggable.self-debcca3d0d5d9afe2fe91a6fd1aebdb41ca0a55f2f6017352e6c02b6d8a6e64c.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/resizable.self-60b870565f3cd62982c1907828119bb51f42ec8228d5e23868153edc3abc685c.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/dialog.self-5a6c7980dfa3f6b74445b0f4b20eed799ee65363163500ed7f032e603d6b022d.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/droppable.self-a7a2b4c2cec8fc176f51e4e4291d92bfd3eec40b6a580b47fc54c16334d52882.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect.self-3acdb29e7da09c8f0195b994d2f04d73bfef50dc539c84fd2c835d964d33e5c1.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-blind.self-ed102209d7aa0b7374f3db8478cc7dcff5f9980d3146e8bf9fbfab959c6d5d8a.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-bounce.self-bfcb9288797ecd234ddeedf4fbc5b4c9de94a4e6d8d44e6faa5b5e9836fad9fd.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-clip.self-7368e4597c32360b162d264ff8bbd0cf9fb1535eb9b4564e6eb7c1db3c774bf3.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-drop.self-294aaa72126ad9c94d6558cca792eb3716754713aca98f18a9dd7c493150ed92.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-explode.self-68e74dc114a52f3f4d7033e40c39196961bdcf439652daa2e98baa115c7bb44b.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fade.self-42d542a5253e0a610717460102ee6bee339c656cc188e491d89eb0779043c963.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fold.self-ad9967f153423916300dbf1104b00f7ad7bbd6a222a0fcc1012ebe251bcb13c8.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-highlight.self-f922b7179ab8ccfa7865141f38865bba0a3d2bdceba7561c27ca14544dbfd996.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-size.self-368aecefa09656a2be5c72dc8e685b120363a3df812134cbd2dd998bafa179fd.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-scale.self-884a5abcb6d90fcd9f9a071aa8329638184df688afced1b1d3b6be6c69f4dd7f.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-puff.self-93415831093923a70f671d73e8d0b3d94deb37ac7472a036a4add545f565c166.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-pulsate.self-eb107c0d136eccdfbd8a2f0f2ee71e0f6911cb300c6b63cc2fe4f6532e6a9a97.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-shake.self-63bcc14897aac5b84e10690be94d64d5724f864aa14c913b4d1030c461a256ad.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-slide.self-c93054a4a80d1f986760806d81ab067e4a4120bf103337e152ecc24d36e785f6.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/effect-transfer.self-181245634ec522320fc1081f6dbf94fd982f34eefa03555f76817dedfcdea336.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/progressbar.self-a259ff5a2a5e7aef0ec21bda94edd0f6bc1e9821128d901de415956edf212b0d.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/selectable.self-42e53fc2f95211314e36a8094c42560f869c207f16d68cfc206aa37201dcdc03.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/selectmenu.self-09dbcac573f0e508194bd9deff254db090889b380d030261857860309c0918e8.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/slider.self-8af8d2a0661743ba88b4cfb99d5c8c874cfa3fc6528ae4e9252366b388def0b7.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/sortable.self-df2d80a36f9dfbe0facc596ccd92af83ca50d38e4cd6a84810aaf5d40b8cd181.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/tabs.self-dc07b44bf1b926c8d28ccd2658e30933881e5329348caf70cf305c3943f6bbd7.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/spinner.self-3c8c95a7bc9c877d0f9c16789246bbedda6b8e8fbf5927951babdab775aed02e.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui/tooltip.self-38f04ac3a6c8fb2391ec6832b68845671cc9013a94371b7eb239478f4835eb73.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery-ui.self-52111578aa54225c9ebfe06f78a62771020ee548bb27d62228ee3f5e6633969d.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/quartzmenu/script.self-6040270ad4b3630d26d2904534c2ea893841b3199e11f70f8c3f13a7b6836d76.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/jquery.ui-contextmenu.self-5c6bd5b62a5b0b438b7e4cce88954bcf008792f0c034b026fd557f48a97e1c87.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/menu.self-37d7542d8b7e03cd5fc0017d8d15879a819492d226d726208203a2d548bfb715.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/assets/application.self-d64d892de0889476c758446889cb929cc926ed96ee051b4b8d41b00dbc6b2774.js?body=1" for 192.168.100.90 at 2015-09-04 01:21:52 -0400
+
+
+Started GET "/user/auth/google_oauth2" for 192.168.100.90 at 2015-09-04 01:21:55 -0400
+
+
+Started POST "/user/signin" for 192.168.100.90 at 2015-09-04 01:22:09 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"PeeZ6U9bbS/LYj6rXA/7fEeNVGXt0Fe+AOkPyWzqxWqc0+p4i1I94+OqmsC5eCGwFEeC+lff5lEpZE+DIgrsxQ==", "user"=>{"email"=>"frankd412@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`email` = 'frankd412@gmail.com'  ORDER BY `users`.`id` ASC LIMIT 1
+Completed 401 Unauthorized in 98ms (ActiveRecord: 0.7ms)
+Processing by Devise::SessionsController#new as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"PeeZ6U9bbS/LYj6rXA/7fEeNVGXt0Fe+AOkPyWzqxWqc0+p4i1I94+OqmsC5eCGwFEeC+lff5lEpZE+DIgrsxQ==", "user"=>{"email"=>"frankd412@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  Rendered devise/shared/_links.html.erb (1.6ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (4.6ms)
+Completed 200 OK in 734ms (Views: 639.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/jstree/themes/default/style.css" for 192.168.100.90 at 2015-09-04 01:22:10 -0400
+
+ActionController::RoutingError (No route matches [GET] "/jstree/themes/default/style.css"):
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (2.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_route.html.erb (5.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_table.html.erb (2.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (4.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (54.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (18.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (41.5ms)
+
+
+Started POST "/user/signin" for 192.168.100.90 at 2015-09-04 01:22:24 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"CuQ206I7Y2af8YBW012z7vcZQ7rU4hh0nE6EtFChn7Wr0EVCZjIzqrc5JD02KmkipNOVJW7tqZu1w8T+HkG2Gg==", "user"=>{"email"=>"frankd412@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`email` = 'frankd412@gmail.com'  ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 106ms (ActiveRecord: 1.2ms)
+Processing by Devise::SessionsController#new as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"CuQ206I7Y2af8YBW012z7vcZQ7rU4hh0nE6EtFChn7Wr0EVCZjIzqrc5JD02KmkipNOVJW7tqZu1w8T+HkG2Gg==", "user"=>{"email"=>"frankd412@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  Rendered devise/shared/_links.html.erb (2.9ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (8.4ms)
+Completed 200 OK in 1032ms (Views: 938.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/jstree/themes/default/style.css" for 192.168.100.90 at 2015-09-04 01:22:25 -0400
+
+ActionController::RoutingError (No route matches [GET] "/jstree/themes/default/style.css"):
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (3.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_route.html.erb (8.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_table.html.erb (3.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (4.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (85.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (29.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (60.4ms)
+
+
+Started GET "/user/auth/google_oauth2" for 192.168.100.90 at 2015-09-04 01:22:41 -0400
+
+
+Started GET "/" for 68.174.62.30 at 2015-09-04 01:30:35 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by HomeController#index as HTML
+Completed 401 Unauthorized in 11ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/user/signin" for 68.174.62.30 at 2015-09-04 01:30:35 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.erb (3.1ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (25.6ms)
+Completed 200 OK in 1031ms (Views: 996.3ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/assets/NewGUI.self-47827d559363eea4094d9cbdbd4f85b08fb558c5728f33cccf1dd44575eae3a6.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/carbide-context.self-5951e3551e95e49e227ce485bd78156c4f0c2f3ab9bbb1ac7c28d950f68b3d3d.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/flowchart.self-55c30bc0b1cb35e51c68602ae03f84c99641a37a483373819f85d574f019005a.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+ActionController::RoutingError (No route matches [GET] "/jstree/themes/default/style.css"):
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (1.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_route.html.erb (5.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_table.html.erb (2.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (54.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (37.6ms)
+
+
+Started GET "/assets/create_gui_content.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/home.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/omniauth_callbacks.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/project_profiles.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/projects.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/projects_user.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:36 -0400
+
+
+Started GET "/assets/quartzmenu.self-206b773fcee4c28e1b4f97b1e925d1707487fe9ee2e800c060921de9717a9998.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/scaffolds.self-a1fa1c3aed3355e52c87dc3d64f838862c3dac7899b8b8f22ec6fa332549e613.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/task.self-c5d71154017ea298a2e97908530b15c95806b04b72248ce778818c6871ae3ac4.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/user.self-717197de63d610f7b1a03cd09971cb5a7d5e088e66fb7979ee1c2214509f3740.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/application.self-d885a0a66bd595c10edb24f8879f94e334d88be0730c4d7c7a7b57c731c09037.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/upload.self-848bc9dfe9e5ad67603167b8e1f484f9abb0e8c3af4c3330b09a3e3d323627f2.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness.self-43b389c337492da0492048a6427ec651ec11f92eec2dd0b19a6aeba9190572eb.css?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery2.self-0664d02dcbfb008e715c754b00b9af29d6f1796828c03610aee4265bdfc6afff.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/core.self-93be4d22eda916787802a64d8f88b52db8a9027d4ccbbc0942625324a7d12d44.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/widget.self-c1602241ddc51216b58391768667068867b8e15b9efc722befcd25771eda6819.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/accordion.self-c95f320275150a94241b004a91e21eef9c5ae9965a793cb3e2475f6078a1670d.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/position.self-e693ced4ecfa1a276f0b794f32c1d30d792764b08788bf68ecfa3b388c291333.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/menu.self-7abc1c9401509a7e4fc609b1e461be6fd17e8116e8fda19cc59d05ba79aefb68.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/autocomplete.self-3befc48aba87cead090cfd014562b2771a662ac6d2c8197b24c08b2d9f3d9f2d.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/button.self-4d4f21ba77bbf8cc08ae65e2b6329a7a1b952b32c3ba7bffca8313e7e8c93d0c.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/datepicker.self-6267be6d4d0f0e8665be3b4d6ac07f40ba23a32aff8eaa5d1bfc00f76a9eeae7.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/mouse.self-c513294e8da73f31f84ba3ef11e2a1180a47faea0eb2fea4a53fc26153dd21fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/draggable.self-debcca3d0d5d9afe2fe91a6fd1aebdb41ca0a55f2f6017352e6c02b6d8a6e64c.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/resizable.self-60b870565f3cd62982c1907828119bb51f42ec8228d5e23868153edc3abc685c.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/dialog.self-5a6c7980dfa3f6b74445b0f4b20eed799ee65363163500ed7f032e603d6b022d.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/droppable.self-a7a2b4c2cec8fc176f51e4e4291d92bfd3eec40b6a580b47fc54c16334d52882.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect.self-3acdb29e7da09c8f0195b994d2f04d73bfef50dc539c84fd2c835d964d33e5c1.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-blind.self-ed102209d7aa0b7374f3db8478cc7dcff5f9980d3146e8bf9fbfab959c6d5d8a.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-bounce.self-bfcb9288797ecd234ddeedf4fbc5b4c9de94a4e6d8d44e6faa5b5e9836fad9fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-clip.self-7368e4597c32360b162d264ff8bbd0cf9fb1535eb9b4564e6eb7c1db3c774bf3.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-drop.self-294aaa72126ad9c94d6558cca792eb3716754713aca98f18a9dd7c493150ed92.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-explode.self-68e74dc114a52f3f4d7033e40c39196961bdcf439652daa2e98baa115c7bb44b.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fade.self-42d542a5253e0a610717460102ee6bee339c656cc188e491d89eb0779043c963.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fold.self-ad9967f153423916300dbf1104b00f7ad7bbd6a222a0fcc1012ebe251bcb13c8.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-highlight.self-f922b7179ab8ccfa7865141f38865bba0a3d2bdceba7561c27ca14544dbfd996.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-size.self-368aecefa09656a2be5c72dc8e685b120363a3df812134cbd2dd998bafa179fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-scale.self-884a5abcb6d90fcd9f9a071aa8329638184df688afced1b1d3b6be6c69f4dd7f.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-puff.self-93415831093923a70f671d73e8d0b3d94deb37ac7472a036a4add545f565c166.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-pulsate.self-eb107c0d136eccdfbd8a2f0f2ee71e0f6911cb300c6b63cc2fe4f6532e6a9a97.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-shake.self-63bcc14897aac5b84e10690be94d64d5724f864aa14c913b4d1030c461a256ad.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-slide.self-c93054a4a80d1f986760806d81ab067e4a4120bf103337e152ecc24d36e785f6.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/effect-transfer.self-181245634ec522320fc1081f6dbf94fd982f34eefa03555f76817dedfcdea336.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/progressbar.self-a259ff5a2a5e7aef0ec21bda94edd0f6bc1e9821128d901de415956edf212b0d.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/selectable.self-42e53fc2f95211314e36a8094c42560f869c207f16d68cfc206aa37201dcdc03.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/selectmenu.self-09dbcac573f0e508194bd9deff254db090889b380d030261857860309c0918e8.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/slider.self-8af8d2a0661743ba88b4cfb99d5c8c874cfa3fc6528ae4e9252366b388def0b7.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/sortable.self-df2d80a36f9dfbe0facc596ccd92af83ca50d38e4cd6a84810aaf5d40b8cd181.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/spinner.self-3c8c95a7bc9c877d0f9c16789246bbedda6b8e8fbf5927951babdab775aed02e.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/tooltip.self-38f04ac3a6c8fb2391ec6832b68845671cc9013a94371b7eb239478f4835eb73.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui/tabs.self-dc07b44bf1b926c8d28ccd2658e30933881e5329348caf70cf305c3943f6bbd7.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery-ui.self-52111578aa54225c9ebfe06f78a62771020ee548bb27d62228ee3f5e6633969d.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/quartzmenu/script.self-6040270ad4b3630d26d2904534c2ea893841b3199e11f70f8c3f13a7b6836d76.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/jquery.ui-contextmenu.self-5c6bd5b62a5b0b438b7e4cce88954bcf008792f0c034b026fd557f48a97e1c87.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/menu.self-37d7542d8b7e03cd5fc0017d8d15879a819492d226d726208203a2d548bfb715.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:37 -0400
+
+
+Started GET "/assets/application.self-d64d892de0889476c758446889cb929cc926ed96ee051b4b8d41b00dbc6b2774.js?body=1" for 68.174.62.30 at 2015-09-04 01:30:38 -0400
+
+
+Started GET "/user/auth/google_oauth2" for 68.174.62.30 at 2015-09-04 01:30:42 -0400
+
+
+Started GET "/user/auth/google_oauth2/callback?state=c2a2168d180c195f49935cd494d3aa64d45c800cdec5575f&code=4/QZV21Ipwde4VM_CL5Dv_kRzWYapi5SBOXEmxPDbklC0" for 68.174.62.30 at 2015-09-04 01:31:27 -0400
+Processing by OmniauthCallbacksController#google_oauth2 as HTML
+  Parameters: {"state"=>"c2a2168d180c195f49935cd494d3aa64d45c800cdec5575f", "code"=>"4/QZV21Ipwde4VM_CL5Dv_kRzWYapi5SBOXEmxPDbklC0"}
+  [1m[35mIdentity Load (0.5ms)[0m  SELECT  `identities`.* FROM `identities` WHERE `identities`.`uid` = '101456477802475024449' AND `identities`.`provider` = 'google_oauth2' LIMIT 1
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE `users` SET `last_sign_in_at` = '2015-08-30 04:21:59', `current_sign_in_at` = '2015-09-04 05:31:28', `sign_in_count` = 24, `updated_at` = '2015-09-04 05:31:28' WHERE `users`.`id` = 1[0m
+  [1m[35m (8.2ms)[0m  COMMIT
+Redirected to http://frank-d.info:3000/
+Completed 302 Found in 52ms (ActiveRecord: 12.9ms)
+
+
+Started GET "/" for 68.174.62.30 at 2015-09-04 01:31:28 -0400
+Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1
+  Rendered home/index.html.erb (2.4ms)
+Completed 200 OK in 61ms (Views: 4.8ms | ActiveRecord: 3.8ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:31:29 -0400
+Processing by UserController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36mProject Load (0.3ms)[0m  [1mSELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35m (0.6ms)[0m  SELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  [1m[36mProject Load (0.4ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  Rendered user/index.html.erb within layouts/user (42.2ms)
+Completed 500 Internal Server Error in 671ms (ActiveRecord: 2.8ms)
+
+ActionView::Template::Error (couldn't find file './jstree/jstree' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     6:   <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+     7:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     9:   <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
+    10: 
+    11:   <%= csrf_meta_tags %>
+    12: </head>
+  app/assets/javascripts/user.js:4
+  app/views/layouts/user.html.erb:9:in `_app_views_layouts_user_html_erb___565677212_78733280'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (16.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (37.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (36.5ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:34:54 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (35.0ms)
+Completed 500 Internal Server Error in 1068ms (ActiveRecord: 6.9ms)
+
+ActionView::Template::Error (couldn't find file './jstree/jstree' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     6:   <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+     7:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     9:   <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
+    10: 
+    11:   <%= csrf_meta_tags %>
+    12: </head>
+  app/assets/javascripts/user.js:4
+  app/views/layouts/user.html.erb:9:in `_app_views_layouts_user_html_erb___93545697_101247100'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (13.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (5.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (34.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (18.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (41.0ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:34:55 -0400
+Processing by UserController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36mProject Load (0.3ms)[0m  [1mSELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  Rendered user/index.html.erb within layouts/user (5.8ms)
+Completed 500 Internal Server Error in 629ms (ActiveRecord: 2.1ms)
+
+ActionView::Template::Error (couldn't find file './jstree/jstree' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     6:   <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+     7:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     9:   <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
+    10: 
+    11:   <%= csrf_meta_tags %>
+    12: </head>
+  app/assets/javascripts/user.js:4
+  app/views/layouts/user.html.erb:9:in `_app_views_layouts_user_html_erb___93545697_101247100'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (13.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (5.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (35.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (37.7ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:35:58 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.2ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.6ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (32.4ms)
+Completed 500 Internal Server Error in 1152ms (ActiveRecord: 5.6ms)
+
+ActionView::Template::Error (couldn't find file './jstree/jstree' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     6:   <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+     7:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     9:   <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
+    10: 
+    11:   <%= csrf_meta_tags %>
+    12: </head>
+  app/assets/javascripts/user.js:4
+  app/views/layouts/user.html.erb:9:in `_app_views_layouts_user_html_erb___588670597_106106390'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (13.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (33.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (39.8ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:36:38 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (32.8ms)
+Completed 500 Internal Server Error in 941ms (ActiveRecord: 6.5ms)
+
+ActionView::Template::Error (couldn't find file './jstree/jstree' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     6:   <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+     7:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     9:   <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
+    10: 
+    11:   <%= csrf_meta_tags %>
+    12: </head>
+  app/assets/javascripts/user.js:4
+  app/views/layouts/user.html.erb:9:in `_app_views_layouts_user_html_erb___1007625727_90598590'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (13.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (5.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (34.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (39.8ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:37:42 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.2ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.5ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (35.2ms)
+  Rendered layouts/_topbarstart.html.erb (0.4ms)
+  Rendered layouts/_topbarend.html.erb (0.9ms)
+Completed 200 OK in 1136ms (Views: 1071.0ms | ActiveRecord: 6.0ms)
+
+
+Started GET "/assets/NewGUI.self-47827d559363eea4094d9cbdbd4f85b08fb558c5728f33cccf1dd44575eae3a6.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/carbide-context.self-5951e3551e95e49e227ce485bd78156c4f0c2f3ab9bbb1ac7c28d950f68b3d3d.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/flowchart.self-55c30bc0b1cb35e51c68602ae03f84c99641a37a483373819f85d574f019005a.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/home.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/omniauth_callbacks.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/create_gui_content.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/project_profiles.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/projects.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/projects_user.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/quartzmenu.self-206b773fcee4c28e1b4f97b1e925d1707487fe9ee2e800c060921de9717a9998.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/scaffolds.self-a1fa1c3aed3355e52c87dc3d64f838862c3dac7899b8b8f22ec6fa332549e613.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/task.self-c5d71154017ea298a2e97908530b15c95806b04b72248ce778818c6871ae3ac4.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/upload.self-848bc9dfe9e5ad67603167b8e1f484f9abb0e8c3af4c3330b09a3e3d323627f2.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/application.self-d885a0a66bd595c10edb24f8879f94e334d88be0730c4d7c7a7b57c731c09037.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:43 -0400
+
+
+Started GET "/assets/user.self-717197de63d610f7b1a03cd09971cb5a7d5e088e66fb7979ee1c2214509f3740.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness.self-43b389c337492da0492048a6427ec651ec11f92eec2dd0b19a6aeba9190572eb.css?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery2.self-0664d02dcbfb008e715c754b00b9af29d6f1796828c03610aee4265bdfc6afff.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery_ujs.self-ca5248a2fad13d6bd58ea121318d642f195f0b2dd818b30615f785ff365e8d1f.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/widget.self-c1602241ddc51216b58391768667068867b8e15b9efc722befcd25771eda6819.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/core.self-93be4d22eda916787802a64d8f88b52db8a9027d4ccbbc0942625324a7d12d44.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/accordion.self-c95f320275150a94241b004a91e21eef9c5ae9965a793cb3e2475f6078a1670d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/position.self-e693ced4ecfa1a276f0b794f32c1d30d792764b08788bf68ecfa3b388c291333.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/menu.self-7abc1c9401509a7e4fc609b1e461be6fd17e8116e8fda19cc59d05ba79aefb68.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/autocomplete.self-3befc48aba87cead090cfd014562b2771a662ac6d2c8197b24c08b2d9f3d9f2d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/button.self-4d4f21ba77bbf8cc08ae65e2b6329a7a1b952b32c3ba7bffca8313e7e8c93d0c.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/datepicker.self-6267be6d4d0f0e8665be3b4d6ac07f40ba23a32aff8eaa5d1bfc00f76a9eeae7.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/mouse.self-c513294e8da73f31f84ba3ef11e2a1180a47faea0eb2fea4a53fc26153dd21fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/draggable.self-debcca3d0d5d9afe2fe91a6fd1aebdb41ca0a55f2f6017352e6c02b6d8a6e64c.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/resizable.self-60b870565f3cd62982c1907828119bb51f42ec8228d5e23868153edc3abc685c.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/dialog.self-5a6c7980dfa3f6b74445b0f4b20eed799ee65363163500ed7f032e603d6b022d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/droppable.self-a7a2b4c2cec8fc176f51e4e4291d92bfd3eec40b6a580b47fc54c16334d52882.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect.self-3acdb29e7da09c8f0195b994d2f04d73bfef50dc539c84fd2c835d964d33e5c1.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-blind.self-ed102209d7aa0b7374f3db8478cc7dcff5f9980d3146e8bf9fbfab959c6d5d8a.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-bounce.self-bfcb9288797ecd234ddeedf4fbc5b4c9de94a4e6d8d44e6faa5b5e9836fad9fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-clip.self-7368e4597c32360b162d264ff8bbd0cf9fb1535eb9b4564e6eb7c1db3c774bf3.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-drop.self-294aaa72126ad9c94d6558cca792eb3716754713aca98f18a9dd7c493150ed92.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fade.self-42d542a5253e0a610717460102ee6bee339c656cc188e491d89eb0779043c963.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fold.self-ad9967f153423916300dbf1104b00f7ad7bbd6a222a0fcc1012ebe251bcb13c8.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-explode.self-68e74dc114a52f3f4d7033e40c39196961bdcf439652daa2e98baa115c7bb44b.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-highlight.self-f922b7179ab8ccfa7865141f38865bba0a3d2bdceba7561c27ca14544dbfd996.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-size.self-368aecefa09656a2be5c72dc8e685b120363a3df812134cbd2dd998bafa179fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-puff.self-93415831093923a70f671d73e8d0b3d94deb37ac7472a036a4add545f565c166.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-scale.self-884a5abcb6d90fcd9f9a071aa8329638184df688afced1b1d3b6be6c69f4dd7f.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-pulsate.self-eb107c0d136eccdfbd8a2f0f2ee71e0f6911cb300c6b63cc2fe4f6532e6a9a97.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-shake.self-63bcc14897aac5b84e10690be94d64d5724f864aa14c913b4d1030c461a256ad.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-slide.self-c93054a4a80d1f986760806d81ab067e4a4120bf103337e152ecc24d36e785f6.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/effect-transfer.self-181245634ec522320fc1081f6dbf94fd982f34eefa03555f76817dedfcdea336.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/progressbar.self-a259ff5a2a5e7aef0ec21bda94edd0f6bc1e9821128d901de415956edf212b0d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/selectable.self-42e53fc2f95211314e36a8094c42560f869c207f16d68cfc206aa37201dcdc03.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/selectmenu.self-09dbcac573f0e508194bd9deff254db090889b380d030261857860309c0918e8.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/slider.self-8af8d2a0661743ba88b4cfb99d5c8c874cfa3fc6528ae4e9252366b388def0b7.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:44 -0400
+
+
+Started GET "/assets/jquery-ui/sortable.self-df2d80a36f9dfbe0facc596ccd92af83ca50d38e4cd6a84810aaf5d40b8cd181.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/spinner.self-3c8c95a7bc9c877d0f9c16789246bbedda6b8e8fbf5927951babdab775aed02e.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/tabs.self-dc07b44bf1b926c8d28ccd2658e30933881e5329348caf70cf305c3943f6bbd7.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui.self-52111578aa54225c9ebfe06f78a62771020ee548bb27d62228ee3f5e6633969d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/tooltip.self-38f04ac3a6c8fb2391ec6832b68845671cc9013a94371b7eb239478f4835eb73.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/quartzmenu/script.self-6040270ad4b3630d26d2904534c2ea893841b3199e11f70f8c3f13a7b6836d76.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery.ui-contextmenu.self-5c6bd5b62a5b0b438b7e4cce88954bcf008792f0c034b026fd557f48a97e1c87.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/application.self-d64d892de0889476c758446889cb929cc926ed96ee051b4b8d41b00dbc6b2774.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/menu.self-37d7542d8b7e03cd5fc0017d8d15879a819492d226d726208203a2d548bfb715.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/preferences.self-2e7430d503d9d3bf581bcb85773c1e0e76b6ff02944a04713586bec9206a7b88.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/contextMenu.self-07d1b157f2b9fe4e28f34871cab7ba9b0e0912aab702ef8f7cc1943d485c4aec.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jstree/jstree.self-1e25a3a8738725ca9be1568c96c402dbed953320592013be033b3cc17584ff8c.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/layoutGUI.self-e5859e7aadcf8aaf0e4dce1664cf6b8cbe02831edf3339f72eb4f9c4a86bfb8d.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/userTree.self-b5f071d3abbee6f989faf0193caffeacd8ad0d8e61c6e3d12378c8a005241488.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/user.self-a348f0105fbebd35249abd5f29e5df3d0485ee41a6d412be8f53a1b7576030be.js?body=1" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness/ui-bg_flat_75_ffffff_40x100-6d5dba68ad6a4387aec524a5a83e8c8c3c0b6328ef2aa64a1ed3a4a0f5099685.png" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness/ui-bg_glass_75_e6e6e6_1x400-a794393ca50f60e6741df838b6f4d2a88a51656b4c8a893ff0645d34df784fd8.png" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness/ui-bg_glass_65_ffffff_1x400-87f56a15a6eddf43cb55735337b8d618ad10bc3f497c8f9a868275447e368b22.png" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.4ms)
+  [1m[35mProject Load (0.4ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+Completed 200 OK in 9ms (Views: 0.2ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:37:45 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness/ui-bg_glass_75_dadada_1x400-0cba29c042042239d0df5abf4000b91dd2e265dd91098b11589e4a9860aea44c.png" for 68.174.62.30 at 2015-09-04 01:37:53 -0400
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:38:12 -0400
+Processing by UserController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.3ms)[0m  SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  Rendered user/index.html.erb within layouts/user (5.3ms)
+  Rendered layouts/_topbarstart.html.erb (0.1ms)
+  Rendered layouts/_topbarend.html.erb (0.2ms)
+Completed 200 OK in 643ms (Views: 638.0ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:38:13 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:38:13 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.1ms)
+  [1m[36mProject Load (0.3ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:38:13 -0400
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:38:13 -0400
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:43:05 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (1.3ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner` = 1[0m
+Mysql2::Error: Unknown column 'projects.Owner' in 'where clause': SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner` = 1
+  Rendered user/index.html.erb within layouts/user (12.6ms)
+Completed 500 Internal Server Error in 87ms (ActiveRecord: 5.3ms)
+
+ActionView::Template::Error (Mysql2::Error: Unknown column 'projects.Owner' in 'where clause': SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner` = 1):
+    13: <tr><td><strong>IP Address:</strong></td><td><%= @user.current_sign_in_ip %></td></tr>
+    14: </table>
+    15: 
+    16:   <h2>Projects you own: (<%= @myProjects.count.to_s %>)</h2>
+    17:     <table id="userProjectsOwned">
+    18:       <thead>
+    19:         <tr>
+  app/views/user/index.html.erb:16:in `_app_views_user_index_html_erb___606105870_91371910'
+  app/controllers/user_controller.rb:6:in `index'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (12.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (31.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (45.8ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:43:32 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.4ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (35.6ms)
+  Rendered layouts/_topbarstart.html.erb (0.6ms)
+  Rendered layouts/_topbarend.html.erb (0.9ms)
+Completed 200 OK in 1031ms (Views: 963.0ms | ActiveRecord: 6.6ms)
+
+
+Started GET "/assets/NewGUI.self-47827d559363eea4094d9cbdbd4f85b08fb558c5728f33cccf1dd44575eae3a6.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:33 -0400
+
+
+Started GET "/assets/home.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:33 -0400
+
+
+Started GET "/assets/create_gui_content.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/omniauth_callbacks.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/flowchart.self-55c30bc0b1cb35e51c68602ae03f84c99641a37a483373819f85d574f019005a.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/carbide-context.self-5951e3551e95e49e227ce485bd78156c4f0c2f3ab9bbb1ac7c28d950f68b3d3d.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/project_profiles.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/projects.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/projects_user.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/quartzmenu.self-206b773fcee4c28e1b4f97b1e925d1707487fe9ee2e800c060921de9717a9998.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/scaffolds.self-a1fa1c3aed3355e52c87dc3d64f838862c3dac7899b8b8f22ec6fa332549e613.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/task.self-c5d71154017ea298a2e97908530b15c95806b04b72248ce778818c6871ae3ac4.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/upload.self-848bc9dfe9e5ad67603167b8e1f484f9abb0e8c3af4c3330b09a3e3d323627f2.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/user.self-717197de63d610f7b1a03cd09971cb5a7d5e088e66fb7979ee1c2214509f3740.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/application.self-d885a0a66bd595c10edb24f8879f94e334d88be0730c4d7c7a7b57c731c09037.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness.self-43b389c337492da0492048a6427ec651ec11f92eec2dd0b19a6aeba9190572eb.css?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery_ujs.self-ca5248a2fad13d6bd58ea121318d642f195f0b2dd818b30615f785ff365e8d1f.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/core.self-93be4d22eda916787802a64d8f88b52db8a9027d4ccbbc0942625324a7d12d44.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery2.self-0664d02dcbfb008e715c754b00b9af29d6f1796828c03610aee4265bdfc6afff.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/accordion.self-c95f320275150a94241b004a91e21eef9c5ae9965a793cb3e2475f6078a1670d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/widget.self-c1602241ddc51216b58391768667068867b8e15b9efc722befcd25771eda6819.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/position.self-e693ced4ecfa1a276f0b794f32c1d30d792764b08788bf68ecfa3b388c291333.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/menu.self-7abc1c9401509a7e4fc609b1e461be6fd17e8116e8fda19cc59d05ba79aefb68.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/autocomplete.self-3befc48aba87cead090cfd014562b2771a662ac6d2c8197b24c08b2d9f3d9f2d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/button.self-4d4f21ba77bbf8cc08ae65e2b6329a7a1b952b32c3ba7bffca8313e7e8c93d0c.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/datepicker.self-6267be6d4d0f0e8665be3b4d6ac07f40ba23a32aff8eaa5d1bfc00f76a9eeae7.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/mouse.self-c513294e8da73f31f84ba3ef11e2a1180a47faea0eb2fea4a53fc26153dd21fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/draggable.self-debcca3d0d5d9afe2fe91a6fd1aebdb41ca0a55f2f6017352e6c02b6d8a6e64c.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/resizable.self-60b870565f3cd62982c1907828119bb51f42ec8228d5e23868153edc3abc685c.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/dialog.self-5a6c7980dfa3f6b74445b0f4b20eed799ee65363163500ed7f032e603d6b022d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/droppable.self-a7a2b4c2cec8fc176f51e4e4291d92bfd3eec40b6a580b47fc54c16334d52882.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/effect.self-3acdb29e7da09c8f0195b994d2f04d73bfef50dc539c84fd2c835d964d33e5c1.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/effect-blind.self-ed102209d7aa0b7374f3db8478cc7dcff5f9980d3146e8bf9fbfab959c6d5d8a.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/effect-bounce.self-bfcb9288797ecd234ddeedf4fbc5b4c9de94a4e6d8d44e6faa5b5e9836fad9fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:34 -0400
+
+
+Started GET "/assets/jquery-ui/effect-clip.self-7368e4597c32360b162d264ff8bbd0cf9fb1535eb9b4564e6eb7c1db3c774bf3.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-drop.self-294aaa72126ad9c94d6558cca792eb3716754713aca98f18a9dd7c493150ed92.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-explode.self-68e74dc114a52f3f4d7033e40c39196961bdcf439652daa2e98baa115c7bb44b.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fade.self-42d542a5253e0a610717460102ee6bee339c656cc188e491d89eb0779043c963.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fold.self-ad9967f153423916300dbf1104b00f7ad7bbd6a222a0fcc1012ebe251bcb13c8.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-highlight.self-f922b7179ab8ccfa7865141f38865bba0a3d2bdceba7561c27ca14544dbfd996.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-size.self-368aecefa09656a2be5c72dc8e685b120363a3df812134cbd2dd998bafa179fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-scale.self-884a5abcb6d90fcd9f9a071aa8329638184df688afced1b1d3b6be6c69f4dd7f.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-puff.self-93415831093923a70f671d73e8d0b3d94deb37ac7472a036a4add545f565c166.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-pulsate.self-eb107c0d136eccdfbd8a2f0f2ee71e0f6911cb300c6b63cc2fe4f6532e6a9a97.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-shake.self-63bcc14897aac5b84e10690be94d64d5724f864aa14c913b4d1030c461a256ad.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-slide.self-c93054a4a80d1f986760806d81ab067e4a4120bf103337e152ecc24d36e785f6.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/effect-transfer.self-181245634ec522320fc1081f6dbf94fd982f34eefa03555f76817dedfcdea336.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/progressbar.self-a259ff5a2a5e7aef0ec21bda94edd0f6bc1e9821128d901de415956edf212b0d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/selectable.self-42e53fc2f95211314e36a8094c42560f869c207f16d68cfc206aa37201dcdc03.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/selectmenu.self-09dbcac573f0e508194bd9deff254db090889b380d030261857860309c0918e8.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/slider.self-8af8d2a0661743ba88b4cfb99d5c8c874cfa3fc6528ae4e9252366b388def0b7.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/sortable.self-df2d80a36f9dfbe0facc596ccd92af83ca50d38e4cd6a84810aaf5d40b8cd181.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/spinner.self-3c8c95a7bc9c877d0f9c16789246bbedda6b8e8fbf5927951babdab775aed02e.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/tabs.self-dc07b44bf1b926c8d28ccd2658e30933881e5329348caf70cf305c3943f6bbd7.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui/tooltip.self-38f04ac3a6c8fb2391ec6832b68845671cc9013a94371b7eb239478f4835eb73.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery-ui.self-52111578aa54225c9ebfe06f78a62771020ee548bb27d62228ee3f5e6633969d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/quartzmenu/script.self-6040270ad4b3630d26d2904534c2ea893841b3199e11f70f8c3f13a7b6836d76.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jquery.ui-contextmenu.self-5c6bd5b62a5b0b438b7e4cce88954bcf008792f0c034b026fd557f48a97e1c87.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/menu.self-37d7542d8b7e03cd5fc0017d8d15879a819492d226d726208203a2d548bfb715.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/application.self-d64d892de0889476c758446889cb929cc926ed96ee051b4b8d41b00dbc6b2774.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/preferences.self-2e7430d503d9d3bf581bcb85773c1e0e76b6ff02944a04713586bec9206a7b88.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/contextMenu.self-07d1b157f2b9fe4e28f34871cab7ba9b0e0912aab702ef8f7cc1943d485c4aec.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/layoutGUI.self-e5859e7aadcf8aaf0e4dce1664cf6b8cbe02831edf3339f72eb4f9c4a86bfb8d.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/userTree.self-b5f071d3abbee6f989faf0193caffeacd8ad0d8e61c6e3d12378c8a005241488.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/jstree/jstree.self-1e25a3a8738725ca9be1568c96c402dbed953320592013be033b3cc17584ff8c.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started GET "/assets/user.self-a348f0105fbebd35249abd5f29e5df3d0485ee41a6d412be8f53a1b7576030be.js?body=1" for 68.174.62.30 at 2015-09-04 01:43:35 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:43:36 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.6ms)
+  [1m[35mProject Load (0.5ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+Completed 200 OK in 12ms (Views: 0.2ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:43:36 -0400
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:43:36 -0400
+
+
+Started GET "/user/logout" for 68.174.62.30 at 2015-09-04 01:43:47 -0400
+Processing by UserController#show as HTML
+  Parameters: {"id"=>"logout"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 0 LIMIT 1
+Completed 404 Not Found in 8ms (ActiveRecord: 1.2ms)
+
+ActiveRecord::RecordNotFound (Couldn't find User with 'id'=0):
+  app/controllers/user_controller.rb:71:in `set_user'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (13.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (5.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (44.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (30.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (62.4ms)
+
+
+Started GET "/user/logout?id=1" for 68.174.62.30 at 2015-09-04 01:43:53 -0400
+Processing by UserController#show as HTML
+  Parameters: {"id"=>"logout"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 0 LIMIT 1
+Completed 404 Not Found in 6ms (ActiveRecord: 1.0ms)
+
+ActiveRecord::RecordNotFound (Couldn't find User with 'id'=0):
+  app/controllers/user_controller.rb:71:in `set_user'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (7.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (3.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (26.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (37.3ms)
+
+
+Started GET "/user/" for 68.174.62.30 at 2015-09-04 01:43:59 -0400
+Processing by UserController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.2ms)[0m  SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35m (0.3ms)[0m  SELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  Rendered user/index.html.erb within layouts/user (5.0ms)
+  Rendered layouts/_topbarstart.html.erb (0.1ms)
+  Rendered layouts/_topbarend.html.erb (0.3ms)
+Completed 200 OK in 732ms (Views: 726.4ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:44:00 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:44:00 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.2ms)
+  [1m[36mProject Load (0.4ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+Completed 200 OK in 10ms (Views: 0.2ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:44:00 -0400
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:44:00 -0400
+
+
+Started GET "/" for 68.174.62.30 at 2015-09-04 01:44:01 -0400
+Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+  Rendered home/index.html.erb (1.8ms)
+Completed 200 OK in 13ms (Views: 3.9ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/user/sign_out" for 68.174.62.30 at 2015-09-04 01:44:03 -0400
+Processing by Devise::SessionsController#destroy as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.1ms)[0m  COMMIT
+Redirected to http://frank-d.info:3000/
+Completed 302 Found in 68ms (ActiveRecord: 34.6ms)
+
+
+Started GET "/" for 68.174.62.30 at 2015-09-04 01:44:03 -0400
+Processing by HomeController#index as HTML
+Completed 401 Unauthorized in 9ms (ActiveRecord: 0.4ms)
+
+
+Started GET "/user/signin" for 68.174.62.30 at 2015-09-04 01:44:03 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.erb (3.6ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (22.9ms)
+Completed 200 OK in 628ms (Views: 623.6ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:44:03 -0400
+
+ActionController::RoutingError (No route matches [GET] "/jstree/themes/default/style.css"):
+  actionpack (4.2.3) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.2.1) lib/web_console/middleware.rb:39:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.3) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.3) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.3) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.3) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.3) lib/action_dispatch/middleware/static.rb:116:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.3) lib/rails/engine.rb:518:in `call'
+  railties (4.2.3) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.4) lib/rack/handler/webrick.rb:88:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /usr/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /usr/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (1.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_route.html.erb (4.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/routes/_table.html.erb (2.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (68.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (18.2ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (38.4ms)
+
+
+Started GET "/user/auth/google_oauth2" for 68.174.62.30 at 2015-09-04 01:44:06 -0400
+
+
+Started GET "/user/auth/google_oauth2/callback?state=d1bb0799f2a9e264d87559f85dc30089cea507fde9ed0640&code=4/_khLFjugrJja3DWKC8ecEZPxcJ60Cy708Ko022IArx8" for 68.174.62.30 at 2015-09-04 01:44:09 -0400
+Processing by OmniauthCallbacksController#google_oauth2 as HTML
+  Parameters: {"state"=>"d1bb0799f2a9e264d87559f85dc30089cea507fde9ed0640", "code"=>"4/_khLFjugrJja3DWKC8ecEZPxcJ60Cy708Ko022IArx8"}
+  [1m[36mIdentity Load (0.3ms)[0m  [1mSELECT  `identities`.* FROM `identities` WHERE `identities`.`uid` = '101456477802475024449' AND `identities`.`provider` = 'google_oauth2' LIMIT 1[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  UPDATE `users` SET `last_sign_in_at` = '2015-09-04 05:31:28', `current_sign_in_at` = '2015-09-04 05:44:09', `sign_in_count` = 25, `updated_at` = '2015-09-04 05:44:09' WHERE `users`.`id` = 1
+  [1m[36m (12.5ms)[0m  [1mCOMMIT[0m
+Redirected to http://frank-d.info:3000/
+Completed 302 Found in 37ms (ActiveRecord: 15.8ms)
+
+
+Started GET "/" for 68.174.62.30 at 2015-09-04 01:44:09 -0400
+Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+  Rendered home/index.html.erb (0.5ms)
+Completed 200 OK in 9ms (Views: 1.5ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:44:11 -0400
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.2ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.2ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (4.5ms)
+  Rendered layouts/_topbarstart.html.erb (0.1ms)
+  Rendered layouts/_topbarend.html.erb (0.2ms)
+Completed 200 OK in 865ms (Views: 860.7ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:44:12 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:44:12 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.1ms)
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:44:12 -0400
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:44:12 -0400
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:46:04 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by UserController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36m (0.5ms)[0m  [1mSELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35mProject Load (0.3ms)[0m  SELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36m (0.5ms)[0m  [1mSELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  [1m[35mProject Load (0.5ms)[0m  SELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  Rendered user/index.html.erb within layouts/user (48.5ms)
+  Rendered layouts/_topbarstart.html.erb (0.4ms)
+  Rendered layouts/_topbarend.html.erb (0.9ms)
+Completed 200 OK in 1362ms (Views: 1261.5ms | ActiveRecord: 8.9ms)
+
+
+Started GET "/user" for 68.174.62.30 at 2015-09-04 01:46:05 -0400
+Processing by UserController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.3ms)[0m  SELECT COUNT(*) FROM `projects` WHERE `projects`.`Owner_id` = 1
+  [1m[36mProject Load (0.3ms)[0m  [1mSELECT `projects`.* FROM `projects` WHERE `projects`.`Owner_id` = 1[0m
+  [1m[35m (0.4ms)[0m  SELECT COUNT(*) FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1
+  [1m[36mProject Load (0.4ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+  Rendered user/index.html.erb within layouts/user (6.6ms)
+  Rendered layouts/_topbarstart.html.erb (0.1ms)
+  Rendered layouts/_topbarend.html.erb (0.3ms)
+Completed 200 OK in 980ms (Views: 972.9ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/assets/jstree/themes/default/style.css" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/NewGUI.self-47827d559363eea4094d9cbdbd4f85b08fb558c5728f33cccf1dd44575eae3a6.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/home.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/create_gui_content.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/flowchart.self-55c30bc0b1cb35e51c68602ae03f84c99641a37a483373819f85d574f019005a.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/carbide-context.self-5951e3551e95e49e227ce485bd78156c4f0c2f3ab9bbb1ac7c28d950f68b3d3d.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/omniauth_callbacks.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/project_profiles.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/projects.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/quartzmenu.self-206b773fcee4c28e1b4f97b1e925d1707487fe9ee2e800c060921de9717a9998.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/projects_user.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:06 -0400
+
+
+Started GET "/assets/scaffolds.self-a1fa1c3aed3355e52c87dc3d64f838862c3dac7899b8b8f22ec6fa332549e613.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/task.self-c5d71154017ea298a2e97908530b15c95806b04b72248ce778818c6871ae3ac4.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/upload.self-848bc9dfe9e5ad67603167b8e1f484f9abb0e8c3af4c3330b09a3e3d323627f2.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/user.self-717197de63d610f7b1a03cd09971cb5a7d5e088e66fb7979ee1c2214509f3740.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/application.self-d885a0a66bd595c10edb24f8879f94e334d88be0730c4d7c7a7b57c731c09037.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/smoothness.self-43b389c337492da0492048a6427ec651ec11f92eec2dd0b19a6aeba9190572eb.css?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery2.self-0664d02dcbfb008e715c754b00b9af29d6f1796828c03610aee4265bdfc6afff.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery_ujs.self-ca5248a2fad13d6bd58ea121318d642f195f0b2dd818b30615f785ff365e8d1f.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/widget.self-c1602241ddc51216b58391768667068867b8e15b9efc722befcd25771eda6819.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/core.self-93be4d22eda916787802a64d8f88b52db8a9027d4ccbbc0942625324a7d12d44.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/accordion.self-c95f320275150a94241b004a91e21eef9c5ae9965a793cb3e2475f6078a1670d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/position.self-e693ced4ecfa1a276f0b794f32c1d30d792764b08788bf68ecfa3b388c291333.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/menu.self-7abc1c9401509a7e4fc609b1e461be6fd17e8116e8fda19cc59d05ba79aefb68.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/autocomplete.self-3befc48aba87cead090cfd014562b2771a662ac6d2c8197b24c08b2d9f3d9f2d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/button.self-4d4f21ba77bbf8cc08ae65e2b6329a7a1b952b32c3ba7bffca8313e7e8c93d0c.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/datepicker.self-6267be6d4d0f0e8665be3b4d6ac07f40ba23a32aff8eaa5d1bfc00f76a9eeae7.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/mouse.self-c513294e8da73f31f84ba3ef11e2a1180a47faea0eb2fea4a53fc26153dd21fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/draggable.self-debcca3d0d5d9afe2fe91a6fd1aebdb41ca0a55f2f6017352e6c02b6d8a6e64c.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/resizable.self-60b870565f3cd62982c1907828119bb51f42ec8228d5e23868153edc3abc685c.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/dialog.self-5a6c7980dfa3f6b74445b0f4b20eed799ee65363163500ed7f032e603d6b022d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/droppable.self-a7a2b4c2cec8fc176f51e4e4291d92bfd3eec40b6a580b47fc54c16334d52882.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect.self-3acdb29e7da09c8f0195b994d2f04d73bfef50dc539c84fd2c835d964d33e5c1.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-blind.self-ed102209d7aa0b7374f3db8478cc7dcff5f9980d3146e8bf9fbfab959c6d5d8a.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-bounce.self-bfcb9288797ecd234ddeedf4fbc5b4c9de94a4e6d8d44e6faa5b5e9836fad9fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-clip.self-7368e4597c32360b162d264ff8bbd0cf9fb1535eb9b4564e6eb7c1db3c774bf3.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-drop.self-294aaa72126ad9c94d6558cca792eb3716754713aca98f18a9dd7c493150ed92.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-explode.self-68e74dc114a52f3f4d7033e40c39196961bdcf439652daa2e98baa115c7bb44b.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fade.self-42d542a5253e0a610717460102ee6bee339c656cc188e491d89eb0779043c963.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-fold.self-ad9967f153423916300dbf1104b00f7ad7bbd6a222a0fcc1012ebe251bcb13c8.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-highlight.self-f922b7179ab8ccfa7865141f38865bba0a3d2bdceba7561c27ca14544dbfd996.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-size.self-368aecefa09656a2be5c72dc8e685b120363a3df812134cbd2dd998bafa179fd.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:07 -0400
+
+
+Started GET "/assets/jquery-ui/effect-scale.self-884a5abcb6d90fcd9f9a071aa8329638184df688afced1b1d3b6be6c69f4dd7f.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/effect-puff.self-93415831093923a70f671d73e8d0b3d94deb37ac7472a036a4add545f565c166.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/effect-pulsate.self-eb107c0d136eccdfbd8a2f0f2ee71e0f6911cb300c6b63cc2fe4f6532e6a9a97.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/effect-shake.self-63bcc14897aac5b84e10690be94d64d5724f864aa14c913b4d1030c461a256ad.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/effect-transfer.self-181245634ec522320fc1081f6dbf94fd982f34eefa03555f76817dedfcdea336.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/effect-slide.self-c93054a4a80d1f986760806d81ab067e4a4120bf103337e152ecc24d36e785f6.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/progressbar.self-a259ff5a2a5e7aef0ec21bda94edd0f6bc1e9821128d901de415956edf212b0d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/selectable.self-42e53fc2f95211314e36a8094c42560f869c207f16d68cfc206aa37201dcdc03.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/selectmenu.self-09dbcac573f0e508194bd9deff254db090889b380d030261857860309c0918e8.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/slider.self-8af8d2a0661743ba88b4cfb99d5c8c874cfa3fc6528ae4e9252366b388def0b7.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/sortable.self-df2d80a36f9dfbe0facc596ccd92af83ca50d38e4cd6a84810aaf5d40b8cd181.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/spinner.self-3c8c95a7bc9c877d0f9c16789246bbedda6b8e8fbf5927951babdab775aed02e.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/tooltip.self-38f04ac3a6c8fb2391ec6832b68845671cc9013a94371b7eb239478f4835eb73.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui/tabs.self-dc07b44bf1b926c8d28ccd2658e30933881e5329348caf70cf305c3943f6bbd7.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery-ui.self-52111578aa54225c9ebfe06f78a62771020ee548bb27d62228ee3f5e6633969d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/quartzmenu/script.self-6040270ad4b3630d26d2904534c2ea893841b3199e11f70f8c3f13a7b6836d76.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jquery.ui-contextmenu.self-5c6bd5b62a5b0b438b7e4cce88954bcf008792f0c034b026fd557f48a97e1c87.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/menu.self-37d7542d8b7e03cd5fc0017d8d15879a819492d226d726208203a2d548bfb715.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/application.self-d64d892de0889476c758446889cb929cc926ed96ee051b4b8d41b00dbc6b2774.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/preferences.self-2e7430d503d9d3bf581bcb85773c1e0e76b6ff02944a04713586bec9206a7b88.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/contextMenu.self-07d1b157f2b9fe4e28f34871cab7ba9b0e0912aab702ef8f7cc1943d485c4aec.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/layoutGUI.self-e5859e7aadcf8aaf0e4dce1664cf6b8cbe02831edf3339f72eb4f9c4a86bfb8d.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jstree/jstree.self-1e25a3a8738725ca9be1568c96c402dbed953320592013be033b3cc17584ff8c.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/userTree.self-b5f071d3abbee6f989faf0193caffeacd8ad0d8e61c6e3d12378c8a005241488.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/user.self-a348f0105fbebd35249abd5f29e5df3d0485ee41a6d412be8f53a1b7576030be.js?body=1" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started POST "/create_gui_content/createUserSidebarContent.json" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+Processing by CreateGuiContentController#createUserSidebarContent as JSON
+  Parameters: {"tabType"=>"ProjectTree"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  Rendered create_gui_content/_createUserSidebarContentProjectTree.js (0.6ms)
+  [1m[36mProject Load (0.4ms)[0m  [1mSELECT `projects`.* FROM `projects` INNER JOIN `projects_users` ON `projects`.`id` = `projects_users`.`Project_id` WHERE `projects_users`.`user_id` = 1[0m
+Completed 200 OK in 11ms (Views: 0.2ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/assets/jstree/themes/default/32px.png" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/assets/jstree/themes/default/throbber.gif" for 68.174.62.30 at 2015-09-04 01:46:08 -0400
+
+
+Started GET "/projects" for 68.174.62.30 at 2015-09-04 01:46:13 -0400
+Processing by ProjectsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects`[0m
+  Rendered projects/index.html.erb within layouts/projects (1.7ms)
+Completed 500 Internal Server Error in 609ms (ActiveRecord: 1.0ms)
+
+ActionView::Template::Error (couldn't find file './flow/flow' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     5:   <!--link rel="stylesheet" href="/assets/jstree/themes/default/style.css" /--!>
+     6:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     7:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'projects', 'data-turbolinks-track' => true %>
+     9:   <%= csrf_meta_tags %>
+    10: </head>
+    11: <body>
+  app/assets/javascripts/projects.js:5
+  app/views/layouts/projects.html.erb:8:in `_app_views_layouts_projects_html_erb__624705137__631990598'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (20.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (7.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (52.8ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (39.2ms)
+
+
+Started GET "/projects" for 68.174.62.30 at 2015-09-04 01:46:59 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+Processing by ProjectsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36mProject Load (0.3ms)[0m  [1mSELECT `projects`.* FROM `projects`[0m
+  Rendered projects/index.html.erb within layouts/projects (4.5ms)
+Completed 500 Internal Server Error in 1214ms (ActiveRecord: 3.8ms)
+
+ActionView::Template::Error (couldn't find file './tinymce/js/tinymce/jquery.tinymce.min.js' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     5:   <!--link rel="stylesheet" href="/assets/jstree/themes/default/style.css" /--!>
+     6:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     7:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'projects', 'data-turbolinks-track' => true %>
+     9:   <%= csrf_meta_tags %>
+    10: </head>
+    11: <body>
+  app/assets/javascripts/projects.js:50
+  app/views/layouts/projects.html.erb:8:in `_app_views_layouts_projects_html_erb__376136822_100463370'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (21.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (7.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.7ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (53.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.5ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (28.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (62.7ms)
+
+
+Started GET "/projects" for 68.174.62.30 at 2015-09-04 01:47:01 -0400
+Processing by ProjectsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  `users`.* FROM `users` WHERE `users`.`id` = 1  ORDER BY `users`.`id` ASC LIMIT 1
+  [1m[36mProject Load (0.2ms)[0m  [1mSELECT `projects`.* FROM `projects`[0m
+  Rendered projects/index.html.erb within layouts/projects (0.9ms)
+Completed 500 Internal Server Error in 644ms (ActiveRecord: 1.0ms)
+
+ActionView::Template::Error (couldn't find file './tinymce/js/tinymce/jquery.tinymce.min.js' under '/home/frankd/carbide/carbide-client/app/assets/javascripts' with type 'application/javascript'):
+     5:   <!--link rel="stylesheet" href="/assets/jstree/themes/default/style.css" /--!>
+     6:   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+     7:   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+     8:   <%= javascript_include_tag 'projects', 'data-turbolinks-track' => true %>
+     9:   <%= csrf_meta_tags %>
+    10: </head>
+    11: <body>
+  app/assets/javascripts/projects.js:50
+  app/views/layouts/projects.html.erb:8:in `_app_views_layouts_projects_html_erb__376136822_100463370'
+
+
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_source.erb (12.9ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.0ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/actionpack-4.2.3/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (32.6ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_markup.html.erb (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/console.js.erb within layouts/javascript (17.1ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/main.js.erb within layouts/javascript (0.3ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
+  Rendered /home/frankd/.gem/ruby/2.1.0/gems/web-console-2.2.1/lib/web_console/templates/index.html.erb (35.7ms)
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.2ms)[0m  SELECT `schema_migrations`.* FROM `schema_migrations`
+  [1m[36m (0.4ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'Projects'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `Projects`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'identities'
+[0m
+  [1m[35m (0.1ms)[0m  SHOW CREATE TABLE `identities`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'project_profiles'
+[0m
+  [1m[35m (0.1ms)[0m  SHOW CREATE TABLE `project_profiles`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'projects'
+[0m
+  [1m[35m (0.1ms)[0m  SHOW CREATE TABLE `projects`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'projects_users'
+[0m
+  [1m[35m (0.2ms)[0m  SHOW CREATE TABLE `projects_users`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'sessions'
+[0m
+  [1m[35m (0.1ms)[0m  SHOW CREATE TABLE `sessions`
+  [1m[36m (0.2ms)[0m  [1mSELECT fk.referenced_table_name as 'to_table'
+      ,fk.referenced_column_name as 'primary_key'
+      ,fk.column_name as 'column'
+      ,fk.constraint_name as 'name'
+FROM information_schema.key_column_usage fk
+WHERE fk.referenced_column_name is not null
+  AND fk.table_schema = 'carbide-client-alpha0'
+  AND fk.table_name = 'users'
+[0m
+  [1m[35m (0.1ms)[0m  SHOW CREATE TABLE `users`
