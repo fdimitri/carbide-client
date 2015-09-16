@@ -1258,49 +1258,53 @@ function deleteTask(hashKey, event, msg) {
 
 
 
-function sendTaskRequest(requestCommand, callbackParams, callback) {
-    var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
-    var eMsg = {
-		"commandSet": "task",
-		"taskCommand": requestCommand,
-		"hash": hashKey,
-	    "taskParams": callbackParams,
-	};
+// function sendTaskRequest(requestCommand, callbackParams, callback) {
+//     var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
+//     var eMsg = {
+// 		"commandSet": "task",
+// 		"taskCommand": requestCommand,
+// 		"hash": hashKey,
+// 	    "taskParams": callbackParams,
+// 	};
 
-	wsSendMsg(JSON.stringify(eMsg));
-	var loopCop = 0;
-	var interval_id = setInterval(function(){
+// 	wsSendMsg(JSON.stringify(eMsg));
+// 	var loopCop = 0;
+// 	var interval_id = setInterval(function(){
 	     
-	     if ((getMsg(hashKey)) || (loopCop > timeOutWait)){
-	         // "exit" the interval loop with clearInterval command
-	         clearInterval(interval_id);
-			 //Execute callback or issue error report
-			 if (loopCop > timeOutWait) {
-			     displayServerError(requestCommand,"Unable to contact server.");
-			 }
-			 else {
-    			 var result = getMsg(hashKey);
-        		 if (result['status'] == true) {
-        			//success from the server. run the callback
-        			callback.apply(null, callbackParams);
-        		 }
-        		 else {
-        		     displayServerError(requestCommand,result['errorMsg']);
-        		     console.log("error result follows");
-        		     console.log(result)
-        		 }
-			 }
+// 	     if ((getMsg(hashKey)) || (loopCop > timeOutWait)){
+// 	         // "exit" the interval loop with clearInterval command
+// 	         clearInterval(interval_id);
+// 			 //Execute callback or issue error report
+// 			 if (loopCop > timeOutWait) {
+// 			     displayServerError(requestCommand,"Unable to contact server.");
+// 			 }
+// 			 else {
+//     			 var result = getMsg(hashKey);
+//         		 if (result['status'] == true) {
+//         			//success from the server. run the callback
+//         			callback.apply(null, callbackParams);
+//         		 }
+//         		 else {
+//         		     displayServerError(requestCommand,result['errorMsg']);
+//         		     console.log("error result follows");
+//         		     console.log(result)
+//         		 }
+// 			 }
 			 
-	     }
-	     loopCop ++;
+// 	     }
+// 	     loopCop ++;
 	     
-	}, 10);
+// 	}, 10);
 				         
-}
+// }
 
-function createTaskBoard(hashKey, msg, event) { //once the server has created a task board we will process it in the file tree and open it if requested
+function createTaskBoard(hashKey, event, msg) { //once the server has created a task board we will process it in the file tree and open it if requested
         if (event == 'send') {
             return;
+        }
+        if (msg['status'] == false) {
+        	console.log(msg['errorReasons']);
+        	return(false);
         }
         var createTaskBoard = msg['createTaskBoard'];
         var taskBoardName = createTaskBoard['taskBoardName'];
@@ -1309,9 +1313,8 @@ function createTaskBoard(hashKey, msg, event) { //once the server has created a 
         if ((windowPane) && (typeof windowPane !== 'undefined'))   { //there is a window pane request
             console.log("opening in pane " + windowPane)
             var tabBarId =  $('#' + windowPane).find(".tabBar").attr("id");
-            console.log("opening in tabbar " + taBarId)
+            console.log("opening in tabbar " + tabBarId)
             var fileName = taskBoardName;
-            var tabBarId = tabBarId;
             var originId = 'unknown';
             var srcPath = taskBoardName;
 			newTab(fileName, tabBarId, originId, 'taskBoard', srcPath);
@@ -1345,11 +1348,12 @@ function sendTaskRequest(requestCommand, serverData, callBack) {
 		"commandSet": "task",
 		"taskCommand": requestCommand,
 		"hash": hashKey,
-	    requestCommand : serverData,
 	};
 	if (requestCommand == "createTaskBoard") {
 		eMsg.commandSet = "base";
+		eMsg.command = requestCommand;
 	}
+	eMsg[requestCommand] = serverData;
 	wsSendMsg(JSON.stringify(eMsg));
 	wsRegisterCallbackForHash(hashKey, callBack)
 }

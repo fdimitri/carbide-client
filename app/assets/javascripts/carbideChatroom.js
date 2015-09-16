@@ -1,22 +1,51 @@
+/* 
+global wsRegisterCallbackForHash
+global wsSendMsg
+global hex_md5
+global newTab
+*/
+/*
+
+*/
+
+var testObj135908 = {
+	"commandSet":"base",
+	"chatCommand":"createChatRoom",
+	"hash":"2e5d956aaf8cb6b5aaa22b665bc0e6ad",
+	"requestCommand": {
+		"chatRoomName":"test1"
+		
+	},
+	"command":"createChatRoom"
+}
 function sendChatRequest(requestCommand, serverData, callBack) {
     var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
     var eMsg = {
 		"commandSet": "chat",
 		"chatCommand": requestCommand,
 		"hash": hashKey,
-	    requestCommand : serverData,
 	};
+	eMsg[requestCommand] = serverData;
 	if (requestCommand == "createChatRoom") {
 		eMsg.commandSet = "base";
+		eMsg.command = requestCommand;
 	}
 	wsSendMsg(JSON.stringify(eMsg));
 	wsRegisterCallbackForHash(hashKey, callBack)
 }
-function createChatRoom(hashKey, msg, event) { //once the server has created a chatroom we will process it in the file tree and open it if requested
+
+function createChatRoom(hashKey, event, msg) { //once the server has created a chatroom we will process it in the file tree and open it if requested
         if (event == 'send') {
             return;
         }
+        if (msg['status'] == false) {
+        	console.log(msg['errorReasons']);
+        	return(false);
+        }
         var createChatRoom = msg['createChatRoom'];
+        console.log(msg)
+        console.log("CREATE CHAT ROOM?");
+        console.log(createChatRoom)
         var chatRoomName = createChatRoom['chatRoomName'];
         var windowPane = createChatRoom['windowPane'];
        

@@ -537,7 +537,22 @@ function cliMsgProcFlowchart(jObj) {
 function cliMsgProcTaskBoard(jObj) {
 	console.log("Entered cliMsgProcTaskBoard");
 	console.log(jObj);
-
+	if (jObj.command == 'addTaskBoard') {
+		var addTaskBoard = jObj.addTaskBoard;
+		var node = addTaskBoard.node;
+		$("#jsTreeTaskBoard").jstree('create_node', 'taskboardroot', node, 'last');
+	}
+	else if (jObj.command == "setTaskBoardTreeJSON") {
+		console.log("Entered command processor for setTaskBoardTreeJSON");
+		var myData = jObj.setTaskBoardTreeJSON;
+		console.log(myData.taskBoardTree);
+		
+		console.log("Mydata.taskBoardTree:");
+		console.log(myData.taskBoardTree);
+		// console.log("Mydata.termTree after JSON Decode:");
+		// console.log($.parseJSON(myData.termTree));
+		initTaskBoardTree((myData.taskBoardTree));
+	}
 }
 
 

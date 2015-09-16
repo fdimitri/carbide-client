@@ -2279,7 +2279,7 @@ function sendFlowchartRequest(requestCommand, serverData, callBack) {
 	wsSendMsg(JSON.stringify(eMsg));
 	wsRegisterCallbackForHash(hashKey, callBack)
 }
-function createFlowchart(hashKey, msg, event) { //once the server has created a flowchart we will process it in the file tree and open it if requested
+function createFlowchart(hashKey, event, msg) { //once the server has created a flowchart we will process it in the file tree and open it if requested
         if (event == 'send') {
             return;
         }

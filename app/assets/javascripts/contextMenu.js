@@ -1051,6 +1051,12 @@ function initializeDialogCreateChatRoom() {
 								else {
 									//createNewChatRoom($('#newChatRoomName').val(), $("#newDialogTarget").val());
 									sendChatRequest('createChatRoom', {'chatRoomName': $('#newChatRoomName').val(), 'windowPane': $("#newDialogTarget").val()}, createChatRoom);
+									/* FrankD:
+									Probably just ignore this for now.. not really sure on where we should put the windowPane logic yet.
+									
+									sendWindowRequest('newTab', {'newTabName' : 'blah', 'windowName' : 'blah', 'srcType' : 'chat', 'srcPath' : '$CHATS/' + $('#newChatRoomName')});
+									*/
+									
 									removeDialogQuestion(thisDialog);
 									removeDialogCheckBox(thisDialog);
 									removeDialogError(thisDialog);
