@@ -2,8 +2,8 @@ var currentlyRenaming = 0; //shows whether someone is renaming a file, for use w
 var typedRename = "";
 
 $(document).ready(function() { 
-	initFlowchartTree();
-	initTaskBoardTree();
+	//initFlowchartTree();
+
 	
     $("#jsTreeChat").click(function(e) { //deselect terminal nodes, flowchart nodes, taskBoard nodes if chat node is clicked
     	var ref = $('#jsTreeTerminal').jstree(true);
@@ -379,7 +379,7 @@ $('#jsTreeFile').keydown(function(e) {
 							console.log($("#" + data.data.obj[0].id).closest('li'));
 							console.log("Dragged " + data.element.outerText + " to " + data.event.target);
 							var tabBarId = t.closest('.windowPane').find('.tabBar').attr("id");
-							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'taskBoard', '');
+							var tabCounter = newTab(data.element.text, tabBarId, data.data.obj[0].id, 'taskBoard', data.element.text);
 							var tabItem = $("#tabs-" + tabCounter);
 							var itemParent = tabItem.closest('div').attr('id');
 						}
@@ -1172,9 +1172,7 @@ function initFlowchartTree(data) {
 }
 
 function initTaskBoardTree(data) {
-	if (!data) {
-		console.log("Asked to init with no data, using built-ins")
-		data = [{
+	var defaults = [{
 			"id": "taskboardroot",
 			"parent": "#",
 			"text": "Task Boards",
@@ -1182,7 +1180,15 @@ function initTaskBoardTree(data) {
 			"li_attr": {
 				"class": "jsTreeRoot"
 			}
-		}, ]
+		}, 
+	];
+	console.log("Defaults:");
+	console.log(defaults);
+	console.log("Data:");
+	console.log(data);
+	if (!data) {
+		data = defaults;
+		console.log("Asked to init with no data, using built-ins")
 	}
 	console.log("Calling jstree() on");
 	console.log($('#jsTreeTaskBoard'));
@@ -1206,7 +1212,7 @@ function initTaskBoardTree(data) {
 		"types": {
 			"root": {
 				"icon": "jstree-folder",
-				"valid_children": ["chat"]
+				"valid_children": ["taskBoard"]
 			},
 			"taskBoard": {
 				"icon": "jstree-file",
@@ -1214,18 +1220,17 @@ function initTaskBoardTree(data) {
 			}
 		},
 		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		 //contextmenu: {
+		 //	items: fileTreeMenu,
+		 //},
 
 
 	});	
 	$('.jstree').on('dblclick', '.jstree-anchor', function(e) { //double click for taskBoard
 		var instance = $.jstree.reference(this),
-			node = instance.get_node(this);
-
+		node = instance.get_node(this);
+		
 		if (node.type == "taskBoard") {
-
 
 			//we've been asked to open a tab in the active pane. first, make sure theres at least 1 pane, or open 1
 			if ($(".windowPane").length == 0) {
@@ -1241,7 +1246,9 @@ function initTaskBoardTree(data) {
 				     if ($(".activePane").length != 0){
 				         // "exit" the interval loop with clearInterval command
 				         clearInterval(interval_id);
-				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				         //newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
+				         console.log("opening up a task board from double click 1251");
+				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.text);
 				      }
 				}, 10);
 				//	   	console.log(node);
