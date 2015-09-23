@@ -312,6 +312,8 @@ $(function() {
                 		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "	ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
                 		{title: '---'},
+						{title: '<span class="contextMenuItem">Download Directory</span>', uiIcon: "ui-icon-arrowthick-1-se", cmd: "downloadFile"},
+						{title: '---'},
                 		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
                 		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     

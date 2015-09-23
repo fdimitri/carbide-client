@@ -1007,6 +1007,10 @@ function cliMsgProcReply(jObj) {
 		var downloadDocument = jObj['downloadDocument'];
 		var httpLink = downloadDocument['httpLink'];
 		console.log("http link is " + httpLink);
-		window.location.assign(httpLink);
+		//window.location.assign(httpLink);
+		// $.fileDownload(httpLink)
+	 //       .done(function () { alert('File download a success!'); })
+	 //       .fail(function () { alert('File download failed!'); });
+ 		window.open(httpLink);
 	}
 }
