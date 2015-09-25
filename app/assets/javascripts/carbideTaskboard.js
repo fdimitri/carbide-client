@@ -1,3 +1,9 @@
+/* 
+global wsRegisterCallbackForHash
+global wsSendMsg
+global hex_md5
+global newTab
+*/
 var timeOutWait = 1000;
 var taskColumnCount = 2;
 var taskCount = 0; //use for numbering ids of task items
@@ -7,6 +13,7 @@ var taskTableInfo = {};
 var defaultTimeZone = "America/New_York";
 var taskLastColor = '#FFFFFF';
 var cellLastColor = '#000000';
+var oldPosition = '';
 
 $(document).ready(function() {
 
@@ -36,7 +43,7 @@ $('.taskNoteButton').tooltip();
 		}
 		
 		if (e.altKey && (String.fromCharCode(e.which) === 'e' || String.fromCharCode(e.which) === 'E')) { //ALT keypress
-		    sendTaskRequest('createTaskColumn', ["table01", "target01", "arbitrary"], createTaskColumn);
+		    sendTaskRequest('createTaskColumn', {"tableId":"table01", "insert":"target01"}, createTaskColumn);
 		}
     });
 
@@ -54,33 +61,49 @@ $('.taskNoteButton').tooltip();
         editTask(clickedElementId, clickedElement);
     });
     $(document).on('click', '.taskNewButton', function() {
-        sendTaskRequest('createTask',[clickedElementId, clickedTarget, "<p>New Task</p>"],createTask);
+        sendTaskRequest('createTask',{"tableId": clickedElementId, "cellId": clickedTarget, "taskContent":"<p>New Task</p>"},createTask);
         //createTask(clickedElementId, clickedTarget, "<p>New Task</p>");
     });
     $(document).on('click', '.taskAddRowButton', function() {
-        sendTaskRequest('createTaskRow',[clickedElementId, false],createTaskRow);
+        sendTaskRequest('createTaskRow',{"tableId": clickedElementId, "insert": false},createTaskRow);
         //createTaskRow(clickedElementId, false);
     });
     $(document).on('click', '.taskAddColumnButton', function() {
-        sendTaskRequest('createTaskColumn',[clickedElementId, false],createTaskColumn);
+        sendTaskRequest('createTaskColumn',{"tableId": clickedElementId, "insert": false},createTaskColumn);
         //createTaskColumn(clickedElementId,false);
     });
     $(document).on('click', '.taskNoteButton', function() {
-        if ($(this).closest('.taskItem').find('.taskNoteItem').length == 0) { //there are no task notes. Add one!
-            var newNoteIndex = addTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
-            sendTaskRequest('editTaskNote',[$(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex],editTaskNote);
-            //editTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex);
+        var thisTask = $(this).closest('.taskItem');
+        if (thisTask.find('.taskNoteItem').length == 0) { //there are no task notes. Add one!
+            //var newNoteIndex = addTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+            
+            var newNoteIndex = thisTask.find('.taskNoteItem').length;
+            sendTaskRequest('addTaskNote',{"tableId": $(this).closest('.taskTable').attr("id"), "taskId": thisTask.attr("id")},addTaskNote);
+           
+            console.log("looking for " + newNoteIndex)
+            var loopCop = 0;
+            var interval_id = setInterval(function(){ 
+                if (thisTask.find('.taskNoteItem').length > newNoteIndex){
+				         // "exit" the interval loop with clearInterval command
+				         clearInterval(interval_id);
+				         editTaskNote(thisTask.closest('.taskTable').attr("id"),thisTask.attr("id"),newNoteIndex);
+                }
+                loopCop ++;
+                if (loopCop > timeOutWait) { //error out
+                    clearInterval(interval_id);
+                }
+			}, 10);
+            // editTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex);
         }
         else if ($(this).hasClass("addTaskNoteButton")) { //this is a special button to add a new task note
-            var newNoteIndex = addTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
-            sendTaskRequest('editTaskNote',[$(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex],editTaskNote);
-            //editTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex);
+            var newNoteIndex = addTaskNote(thisTask.closest('.taskTable').attr("id"),thisTask.attr("id"));
+            editTaskNote(thisTask.closest('.taskTable').attr("id"),thisTask.attr("id"),newNoteIndex);
         }
-        else if ($(this).closest('.taskItem').find('.taskNotes').is(":visible")) { //if it's visible hide it
-            hideTaskNotes($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+        else if (thisTask.find('.taskNotes').is(":visible")) { //if it's visible hide it
+            hideTaskNotes(thisTask.closest('.taskTable').attr("id"),thisTask.attr("id"));
         }
         else { //if it's hidden show it
-            expandTaskNotes($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"));
+            expandTaskNotes(thisTask.closest('.taskTable').attr("id"),thisTask.attr("id"));
             
         }
     });
@@ -251,12 +274,19 @@ function refreshSortable() {
             $(event.target).closest('.taskTable').find('.taskEditButton').css("visibility", "hidden");
             $(event.target).closest('.taskTable').find('.addTaskNoteButton').css("visibility", "hidden");
             $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
+            oldPosition = $(event.target).closest('.taskTable').find('#' + ui.item.attr("id")).index();
 
         },
         update: function(event, ui) {
 
             var itemId = ui.item.attr("id");
-            var newPosition = $(event.target).closest('.taskTable').find('#' + ui.item.attr("id")).index()
+            var newPosition = $(event.target).closest('.taskTable').find('#' + ui.item.attr("id")).index();
+            console.log("DRAGGED " + itemId + " to " + newPosition);
+            console.log("table id " + $(event.target).closest('.taskTable').attr("id"))
+            console.log("old position was " + oldPosition)
+            
+            sendTaskRequest('moveTaskColumn',{'tableId': $(event.target).closest('.taskTable').attr("id"), 'columnFromId': itemId, 'columnFromX': oldPosition, 'columnToX': newPosition}, undoMoveTaskColumn);
+            
 
         },
     });
@@ -267,10 +297,11 @@ function refreshSortable() {
         cursor: 'move',
         opacity: 0.6,
         start: function(event, ui) {
+            var itemId = ui.item.attr("id");
             $(event.target).closest('.taskTable').find('.taskEditButton').css("visibility", "hidden");
             $(event.target).closest('.taskTable').find('.addTaskNoteButton').css("visibility", "hidden");
             $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
-
+            oldPosition = $(event.target).closest('.taskTable').find('#' + itemId).index();
 
         },
         update: function(event, ui) {
@@ -283,11 +314,8 @@ function refreshSortable() {
             var newPosition = $(event.target).closest('.taskTable').find('#' + itemId).index();
             console.log("We have moved item " + itemId + " to position " + newPosition );
             
-            //testing
-            // event.preventDefault();
-            // setTimeout(function(){ 
-            //     moveTaskRow($(event.target).closest('.taskTable').attr("id"),itemId,newPosition);
-            // }, 2000);
+            sendTaskRequest('moveTaskRow',{'tableId': $(event.target).closest('.taskTable').attr("id"), 'rowFromId': itemId, 'rowFromY': oldPosition, 'rowToY': newPosition}, undoMoveTaskRow);
+
             
         }
     });
@@ -301,6 +329,12 @@ function refreshSortable() {
             $(event.target).closest('.taskTable').find('.firstTaskNoteButton').css("visibility", "hidden");
 
             taskTableInfo[$(event.target).closest('.taskTable').attr("id")].taskMoveInProgress = true;
+            for (var i = 0; i < $('#' + event.target.id).find('.taskItem').length; i++) {
+                if ($('#' + event.target.id).find('.taskItem').eq(i).attr("id") == ui.item.attr("id")) {
+                    oldPosition = i;
+                }
+
+            }
 
         },
         receive: function(event, ui) {
@@ -311,6 +345,8 @@ function refreshSortable() {
             var thisTable = $(event.target).closest('.taskTable');
             taskTableInfo[thisTable.attr("id")].taskMoveInProgress = false;
             if (ui.sender) {
+                var oldCell = ui.sender.eq(0).attr("id");
+                var newCell = event.target.id;
                 console.log("you have moved " + ui.item.attr("id") + " from cell " + ui.sender.eq(0).attr("id") + " to cell " + event.target.id);
                 console.log("New position of item " + ui.item.attr("id") + ":");
                 var itemPosition = '';
@@ -321,10 +357,12 @@ function refreshSortable() {
 
                 }
                 console.log(itemPosition + " in cell id " + event.target.id);
+                console.log("old position is " + oldPosition + " in cell id " + ui.sender.eq(0).attr("id"));
                 clearNewButton(thisTable.attr("id"));
 
                 thisTable.find('.taskNewButton').css("visibility", "hidden");
                 refreshSortable();
+                //sendTaskRequest('moveTask', {'tableId': $(event.target).closest('.taskTable').attr("id"), 'rowFromId': itemId, 'rowFromY': oldPosition, 'rowToY': newPosition}, undoMoveTaskRow);
             }
             //event.preventDefault();
 
@@ -400,22 +438,47 @@ function moveTaskColumn(hashKey, event, msg) {
     }
     var moveTaskColumn = msg['moveTaskColumn'];
     var tableId = moveTaskColumn['tableId'];
-    var columnFrom = moveTaskColumn['columnFrom'];
-    var columnTo = moveTaskColumn['columnTo'];
+    var columnFromId = moveTaskColumn['columnFromId'];
+    var columnFromX = moveTaskColumn['columnFromX'];
+    var columnToX = moveTaskColumn['columnToX'];
     
-    if (columnFrom !== parseInt(columnFrom, 10)) { //column from needs to be converted to an index number if it's a header ID
-        columnFrom = $('#' + tableId).find('#' + columnFrom).index();
-    }
-    console.log("Moving position " + columnFrom + " to position  " + columnTo)
+    // if (columnFrom !== parseInt(columnFrom, 10)) { //column from needs to be converted to an index number if it's a header ID
+    //     columnFrom = $('#' + tableId).find('#' + columnFrom).index();
+    // }
+    console.log("Moving position " + columnFromX + " to position  " + columnToX)
     $('#' + tableId).find('tr').each(function() {
         
-        if (columnFrom < columnTo) { //if we're moving to the right we move to columnTo
-            $(this).children('th, td').eq(columnFrom).insertAfter($(this).children('th, td').eq(columnTo));
+        if (columnFromX < columnToX) { //if we're moving to the right we move to columnTo
+            $(this).children('th, td').eq(columnFromX).insertAfter($(this).children('th, td').eq(columnToX));
         }
         else { //otherwise we move to columnTo-1
-            $(this).children('th, td').eq(columnFrom).insertAfter($(this).children('th, td').eq(columnTo-1));
+            $(this).children('th, td').eq(columnFromX).insertAfter($(this).children('th, td').eq(columnToX-1));
         }
-        //$(this).children(":eq(" + (columnTo - 1) + ")").after($(this).children(":eq(" + columnFrom + ")"));
+
+    });
+    refreshSortable();
+
+}
+function undoMoveTaskColumn(hashKey, event, msg) {
+    if (event == 'send') {
+        return;
+    }
+    if (msg['status'] == true) { //don't execute if the status was approved
+        return(false);
+    }
+    var moveTaskColumn = msg['moveTaskColumn'];
+    var tableId = moveTaskColumn['tableId'];
+    var columnFromId = moveTaskColumn['columnFromId'];
+    var columnFromX = moveTaskColumn['columnFromX'];
+    var columnToX = moveTaskColumn['columnToX'];
+    $('#' + tableId).find('tr').each(function() {
+        
+        if (columnToX < columnFromX) { //if we're moving to the right we move to columnTo
+            $(this).children('th, td').eq(columnToX).insertAfter($(this).children('th, td').eq(columnFromX));
+        }
+        else { //otherwise we move to columnTo-1
+            $(this).children('th, td').eq(columnToX).insertAfter($(this).children('th, td').eq(columnFromX-1));
+        }
 
     });
     refreshSortable();
@@ -427,22 +490,47 @@ function moveTaskRow(hashKey, event, msg) {
     }
     var moveTaskRow = msg['moveTaskRow'];
     var tableId = moveTaskRow['tableId'];
-    var rowFrom = moveTaskRow['rowFrom'];
-    var rowTo = moveTaskRow['rowTo'];
+    var rowFromId = moveTaskRow['rowFromId'];
+    var rowFromY = moveTaskRow['rowFromY'];
+    var rowToY = moveTaskRow['rowToY'];
     
-    var positionFrom = $('#' + tableId).children('tbody').find('#' + rowFrom).index();
-    if (rowTo == 0) {
-        $('#' + tableId).children('tbody').find('#' + rowFrom).insertBefore($('#' + tableId).children('tbody').find('tr').eq(0));
+    //var positionFrom = $('#' + tableId).children('tbody').find('#' + rowFrom).index();
+    if (rowToY == 0) {
+        $('#' + tableId).children('tbody').find('#' + rowFromId).insertBefore($('#' + tableId).children('tbody').find('tr').eq(0));
     }
-    else if (positionFrom > rowTo) { //if it's moving left we move it after 1 before the destination
-        $('#' + tableId).children('tbody').find('#' + rowFrom).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowTo - 1));
+    else if (rowFromY > rowToY) { //if it's moving left we move it after 1 before the destination
+        $('#' + tableId).children('tbody').find('#' + rowFromId).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowToY - 1));
     }
     else { //if it's moving right we move it to the spot after the destination
-        $('#' + tableId).children('tbody').find('#' + rowFrom).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowTo));
+        $('#' + tableId).children('tbody').find('#' + rowFromId).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowToY));
     }
     refreshSortable();
 }
-
+function undoMoveTaskRow(hashKey, event, msg) {
+    if (event == 'send') {
+        return;
+    }
+    if (msg['status'] == true) { //don't execute if the status was approved
+        return(false);
+    }
+    var moveTaskRow = msg['moveTaskRow'];
+    var tableId = moveTaskRow['tableId'];
+    var rowFromId = moveTaskRow['rowFromId'];
+    var rowFromY = moveTaskRow['rowFromY'];
+    var rowToY = moveTaskRow['rowToY'];
+    
+    if (rowFromY == 0) {
+        $('#' + tableId).children('tbody').find('tr').eq(rowToY).insertBefore($('#' + tableId).children('tbody').find('tr').eq(0));
+    }
+    else if (rowToY > rowFromY) { //if it's moving left we move it after 1 before the destination
+        $('#' + tableId).children('tbody').find('tr').eq(rowToY).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowFromY - 1));
+    }
+    else { //if it's moving right we move it to the spot after the destination
+        $('#' + tableId).children('tbody').find('tr').eq(rowToY).insertAfter($('#' + tableId).children('tbody').find('tr').eq(rowFromY));
+    }
+    refreshSortable();
+    
+}
 function initializeTaskContextMenu() {
     $(".taskTable th:not(.taskNoSort)").contextmenu({
         //delegate: ".ui-tabs-panel",
@@ -456,19 +544,19 @@ function initializeTaskContextMenu() {
             }
             else if (ui.cmd == "insertTaskColumn") {
                 var thisCol = $('#' + clickedElementId).find('.taskHeader').closest('th').eq(clickedTarget).attr('id');
-                sendTaskRequest('createTaskColumn', [clickedElementId,thisCol], createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": thisCol}, createTaskColumn);
                 //createTaskColumn(clickedElementId,thisCol);
             }
             else if (ui.cmd == "createTaskColumn") {
-                sendTaskRequest('createTaskColumn', [clickedElementId,false], createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": false}, createTaskColumn);
                 //createTaskColumn(clickedElementId,false);
             }
             else if (ui.cmd == "createTaskRow") {
-                sendTaskRequest('createTaskRow', [clickedElementId,false], createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": false}, createTaskRow);
                 //createTaskRow(clickedElementId,false);
             }
             else if (ui.cmd == "deleteTaskColumn") {
-                sendTaskRequest('deleteTaskColumn', [clickedElementId, clickedTarget], deleteTaskColumn);
+                sendTaskRequest('deleteTaskColumn', {"tableId": clickedElementId, "cellId": clickedTarget}, deleteTaskColumn);
                 //deleteTaskColumn(clickedElementId, clickedTarget);
             }
         },
@@ -526,20 +614,20 @@ function initializeTaskContextMenu() {
                 $('#' + clickedElementId).find('.taskRowHeader').eq(clickedTarget).trigger("click");
             }
             else if (ui.cmd == "createTaskColumn") {
-                sendTaskRequest('createTaskColumn', [clickedElementId,false], createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": false}, createTaskColumn);
                 //createTaskColumn(clickedElementId,false);
             }
             else if (ui.cmd == "createTaskRow") {
-                sendTaskRequest('createTaskRow', [clickedElementId,false], createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": false}, createTaskRow);
                 //createTaskRow(clickedElementId,false);
             }
             else if (ui.cmd == "insertTaskRow") {
                 var thisRow = $('#' + clickedElementId).find('.taskRowLabel').eq(clickedTarget).closest('tr').attr('id');
-                sendTaskRequest('createTaskRow', [clickedElementId,thisRow], createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": thisRow}, createTaskRow);
                 //createTaskRow(clickedElementId,thisRow);
             }
             else if (ui.cmd == "deleteTaskRow") {
-                sendTaskRequest('deleteTaskRow', [clickedElementId, clickedTarget], deleteTaskRow);
+                sendTaskRequest('deleteTaskRow', {"tableId": clickedElementId, "cellId": clickedTarget}, deleteTaskRow);
                 //deleteTaskRow(clickedElementId, clickedTarget);
             }
 
@@ -596,26 +684,26 @@ function initializeTaskContextMenu() {
 
         select: function(event, ui) {
             if (ui.cmd == "createTaskItem") {
-                sendTaskRequest('createTask', { 'tableId' : clickedElementId, 'cellId' : clickedTarget, 'taskContent' : "New Task" });
+                sendTaskRequest('createTask', { 'tableId' : clickedElementId, 'cellId' : clickedTarget, 'taskContent' : "New Task" }, createTask);
                 //createTask(clickedElementId, clickedTarget, "New Task");
             }
             else if (ui.cmd == "insertTaskColumn") {
                 var theseCells = $('#' + clickedElementId).find('#' + clickedTarget).closest("tr").find("td"); //all the tds in the current row
                 var thisCell = $('#' + clickedElementId).find('#' + clickedTarget).closest("td"); //this td
                 var colNum = parseInt(theseCells.index(thisCell), 10); //the index of this td in the current row.
-                sendTaskRequest('createTaskColumn', [clickedElementId,$('#' + clickedElementId).find('th').eq(colNum).attr("id")],createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": $('#' + clickedElementId).find('th').eq(colNum).attr("id")},createTaskColumn);
                 //createTaskColumn(clickedElementId,$('#' + clickedElementId).find('th').eq(colNum).attr("id"));
             }
             else if (ui.cmd == "insertTaskRow") {
-                sendTaskRequest('createTaskRow', [clickedElementId,$('#' + clickedElementId).find('#' + clickedTarget).closest('tr').attr("id")],createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": $('#' + clickedElementId).find('#' + clickedTarget).closest('tr').attr("id")},createTaskRow);
                 //createTaskRow(clickedElementId,$('#' + clickedElementId).find('#' + clickedTarget).closest('tr').attr("id"));
             }
             else if (ui.cmd == "createTaskColumn") {
-                sendTaskRequest('createTaskColumn', [clickedElementId,false],createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": false},createTaskColumn);
                 //createTaskColumn(clickedElementId,false);
             }
             else if (ui.cmd == "createTaskRow") {
-                sendTaskRequest('createTaskRow', [clickedElementId,false],createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": false},createTaskRow);
                 //createTaskRow(clickedElementId,false);
             }
             else if (ui.cmd == "changeTaskBG") {
@@ -628,19 +716,19 @@ function initializeTaskContextMenu() {
                 editTask(clickedElementId, clickedElement);
             }
             else if (ui.cmd == "deleteTaskRow") {
-                sendTaskRequest('deleteTaskRow', [clickedElementId, clickedTarget],deleteTaskRow);
+                sendTaskRequest('deleteTaskRow', {"tableId": clickedElementId, "cellId": clickedTarget},deleteTaskRow);
                 //deleteTaskRow(clickedElementId, clickedTarget);
             }
             else if (ui.cmd == "deleteTaskColumn") {
-                sendTaskRequest('deleteTaskColumn', [clickedElementId, clickedTarget],deleteTaskColumn);
+                sendTaskRequest('deleteTaskColumn', {"tableId": clickedElementId, "cellId": clickedTarget},deleteTaskColumn);
                 //deleteTaskColumn(clickedElementId, clickedTarget);
             }
             else if (ui.cmd == "deleteTaskItem") { 
-                sendTaskRequest('deleteTask', [clickedElementId, clickedElement],deleteTask);
+                sendTaskRequest('deleteTask', {"tableId": clickedElementId, "taskId": clickedElement},deleteTask);
                 //deleteTask(clickedElementId, clickedElement);
             }
             else if (ui.cmd == "addTaskNote") {
-                sendTaskRequest('addTaskNote', [clickedElementId, clickedElement],addTaskNote);
+                sendTaskRequest('addTaskNote', {"tableId": clickedElementId, "taskId": clickedElement},addTaskNote);
                 //addTaskNote(clickedElementId, clickedElement);
             }
         },
@@ -807,11 +895,11 @@ function initializeTaskContextMenu() {
 
         select: function(event, ui) {
             if (ui.cmd == "createTaskColumn") {
-                sendTaskRequest('createTaskColumn', [clickedElementId, false], createTaskColumn);
+                sendTaskRequest('createTaskColumn', {"tableId": clickedElementId, "insert": false}, createTaskColumn);
                 //createTaskColumn(clickedElementId, false);
             }
             else if (ui.cmd == "createTaskRow") {
-                sendTaskRequest('createTaskRow', [clickedElementId, false], createTaskRow);
+                sendTaskRequest('createTaskRow', {"tableId": clickedElementId, "insert": false}, createTaskRow);
                 //createTaskRow(clickedElementId,false);
             }
          
@@ -907,7 +995,7 @@ function requestColorPicker(tableId, targetId, type, callback) { //the callback 
                     cellLastColor = tableColor;
                 }
                 
-                sendTaskRequest(type,[tableId, targetId, tableColor],callback);
+                sendTaskRequest(type,{"tableId": tableId, "taskId": targetId, "color": tableColor},callback);
                 ///callback(tableId, targetId, tableColor);
                 
                 $(this).dialog("close");
@@ -988,19 +1076,19 @@ function editTask(tableId, taskId) {
             "Submit Task": function() {
                 if ($('#wysiwyg').find('#taskTitle').val()) {
                     
-                    sendTaskRequest('addTaskTitle', [tableId, taskId, $('#wysiwyg').find('#taskTitle').val()], addTaskTitle);
+                    sendTaskRequest('addTaskTitle', {"tableId": tableId, "taskId": taskId, "content": $('#wysiwyg').find('#taskTitle').val()}, addTaskTitle);
                     //addTaskTitle(tableId, taskId, $('#wysiwyg').find('#taskTitle').val());
                 }
                 else {
-                    sendTaskRequest('removeTaskTitle', [tableId, taskId], removeTaskTitle);
+                    sendTaskRequest('removeTaskTitle', {"tableId": tableId, "taskId": taskId}, removeTaskTitle);
                     //removeTaskTitle(tableId, taskId);
                 }
                 if ($('#wysiwygText').val()) {
-                    sendTaskRequest('addTaskText', [tableId, taskId, $('#wysiwygText').val()], addTaskText);
+                    sendTaskRequest('addTaskText', {"tableId": tableId, "taskId": taskId, "content": $('#wysiwygText').val()}, addTaskText);
                     //addTaskText(tableId, taskId, $('#wysiwygText').val());
                 }
                 else {
-                    sendTaskRequest('addTaskText', [tableId, taskId, '<p>&nbsp;</p>'], addTaskText);
+                    sendTaskRequest('addTaskText', {"tableId": tableId, "taskId": taskId, "content": '<p>&nbsp;</p>'}, addTaskText);
                     //addTaskText(tableId, taskId, '<p>&nbsp;</p>');
                 }
                 $(this).dialog("close");
@@ -1045,7 +1133,7 @@ function addTaskText(hashKey, event, msg) {
     var addTaskText = msg['addTaskText'];
     var tableId = addTaskText['tableId'];
     var taskId = addTaskText['taskId'];
-    var addText = addTaskText['addText'];
+    var addText = addTaskText['content'];
     
     $('#' + tableId).find('#' + taskId).find('.taskItemContent').html(addText);
 }
@@ -1057,7 +1145,7 @@ function addTaskTitle(hashKey, event, msg) {
     var addTaskTitle = msg['addTaskTitle'];
     var tableId = addTaskTitle['tableId'];
     var taskId = addTaskTitle['taskId'];
-    var addTitle = addTaskTitle['addTitle'];
+    var addTitle = addTaskTitle['content'];
     
     var thisTitle = "<strong>" + addTitle + "</strong><hr/>";
     $('#' + tableId).find('#' + taskId).find('.taskItemTitle').html(thisTitle);
@@ -1143,7 +1231,9 @@ function editTaskNote(tableId, taskId, noteIndex) {
         buttons: {
             "Submit Note": function() {
                
-                updateTaskNote(tableId, taskId, noteIndex, $('#wysiwygText').val());
+                //updateTaskNote(tableId, taskId, noteIndex, $('#wysiwygText').val());
+                sendTaskRequest('updateTaskNote', {"tableId": tableId, "taskId": taskId, "noteIndex": noteIndex, "noteContent": $('#wysiwygText').val()}, updateTaskNote);
+                
                 $(this).dialog("close");
 
 
@@ -1151,7 +1241,9 @@ function editTaskNote(tableId, taskId, noteIndex) {
             Cancel: function() {
                 $(this).dialog("close");
                 removeDialogInfo(thisDialog);
-                deleteTaskNote(tableId,taskId,noteIndex);
+                //deleteTaskNote(tableId,taskId,noteIndex);
+                sendTaskRequest('deleteTaskNote', {"tableId": tableId, "taskId": taskId, "noteIndex": noteIndex},deleteTaskNote);
+
 
 
             },
@@ -1173,6 +1265,7 @@ function taskLoadNote(tableId, taskId, noteIndex) {
     $('#wysiwygText').val(insideHtml);
 }
 function updateTaskNote(hashKey, event, msg) {
+    console.log("attempting task note update!!!!")
     if (event == 'send') {
         return;
     }
@@ -1181,7 +1274,7 @@ function updateTaskNote(hashKey, event, msg) {
     var taskId = updateTaskNote['taskId'];
     var noteIndex = updateTaskNote['noteIndex'];
     var noteContent = updateTaskNote['noteContent'];
-    
+    console.log($('#' + tableId).find('#' + taskId).find('.taskNoteItem').eq(noteIndex))
     console.log("updating note index " + noteIndex + " with " + noteContent)
     $('#' + tableId).find('#' + taskId).find('.taskNoteItem').eq(noteIndex).find('.taskNoteText').html(noteContent);
     
@@ -1344,10 +1437,14 @@ function createTaskBoard(hashKey, event, msg) { //once the server has created a 
 
 function sendTaskRequest(requestCommand, serverData, callBack) {
     var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + requestCommand); 
+    var taskName = serverData.tableId;
+    taskName = $('#' + taskName).attr("taskname");
     var eMsg = {
 		"commandSet": "task",
 		"taskCommand": requestCommand,
 		"hash": hashKey,
+		"taskTarget":taskName,
+		"srcPath":taskName,
 	};
 	if (requestCommand == "createTaskBoard") {
 		eMsg.commandSet = "base";

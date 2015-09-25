@@ -28,6 +28,7 @@ $(function() {
             	
                 if (ui.cmd == "openInPane") {
                 	var node;
+                	
                 	if (ui.item.data().type == "file") {
 						node = $('#jsTreeFile').jstree(true).get_selected(true);
                 	}
@@ -44,8 +45,15 @@ $(function() {
                 		node = $('#jsTreeFlowchart').jstree(true).get_selected(true);
                 	}
 					var nodeLength = node.length;
+					console.log("node length is " + nodeLength)
+					console.log(node)
 					for (var i = 0; i < nodeLength; i++) {
-					    newTab(node[i].text, ui.item.data().tabbarid, node[i].id, node[i].type, node[i].li_attr.srcPath);
+						if (node[i].type == "taskBoard") { //taskboard has no srcpath
+							newTab(node[i].text, ui.item.data().tabbarid, node[i].id, node[i].type, node[i].text);
+						}
+						else {
+					    	newTab(node[i].text, ui.item.data().tabbarid, node[i].id, node[i].type, node[i].li_attr.srcPath);
+						}
 					    //Do something
 					}
 					
@@ -85,6 +93,29 @@ $(function() {
                 }
                 else if (ui.cmd == "duplicateFile") {
                 	duplicateFile();
+                }
+                else if (ui.cmd == "downloadFile") {
+                	var ref = $('#jsTreeFile').jstree(true);
+                	
+                	var selectedNodes = ref.get_selected();
+                	var fileAndPath = ref.get_path(selectedNodes,"/");
+					var fileName = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+					var hashKey = hex_md5(Math.floor((Math.random() * 1000) + 10) + fileName); 
+                	var eMsg = {
+						"commandSet": "base",
+						"command": 'downloadDocument',
+						"hash": hashKey,
+						"downloadDocument": {
+							"srcPath": fileName,
+						},
+					};
+
+					console.log("downloadDocument is " + fileName);
+					console.log("and selectedNodes is " + $(selectedNodes));
+					wsSendMsg(JSON.stringify(eMsg));
+					
+					
+			
                 }
                  else if (ui.cmd == "createFile") {
                  	var ref = $('#jsTreeFile').jstree(true);
@@ -281,6 +312,8 @@ $(function() {
                 		{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "	ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},
                 		{title: '---'},
+						{title: '<span class="contextMenuItem">Download Directory</span>', uiIcon: "ui-icon-arrowthick-1-se", cmd: "downloadFile"},
+						{title: '---'},
                 		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
                 		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
                     
@@ -316,6 +349,8 @@ $(function() {
                 		{title: '<span class="contextMenuItem">Rename</span>', uiIcon: "ui-icon-script", cmd: "renameFile"},
                 		{title: '<span class="contextMenuItem">Duplicate</span>', uiIcon: "ui-icon-carat-2-e-w", cmd: "duplicateFile"},
 						{title: '<span class="contextMenuItem">Delete</span><span class="contextMenuShortcut">Del</span>', uiIcon: "ui-icon-closethick", cmd: "deleteFile"},
+						{title: '---'},
+						{title: '<span class="contextMenuItem">Download File</span>', uiIcon: "ui-icon-arrowthick-1-se", cmd: "downloadFile"},
 						{title: '---'},
 						{title: '<span class="contextMenuItem">Create New File</span>', uiIcon: "ui-icon-document", cmd: "createFile"},
                 		{title: '<span class="contextMenuItem">Create New Folder</span>', uiIcon: "ui-icon-folder-collapsed", cmd: "createFolder"},

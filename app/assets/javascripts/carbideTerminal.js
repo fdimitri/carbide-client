@@ -1,4 +1,9 @@
-
+/* 
+global wsRegisterCallbackForHash
+global wsSendMsg
+global hex_md5
+global newTab
+*/
 var terminalArray = [];
 
 function addTerminal (terminalName,divName,columns,rows){
