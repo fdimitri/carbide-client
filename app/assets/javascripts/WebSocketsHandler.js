@@ -58,6 +58,9 @@ function initWebSocket() {
 		else if (jObj.commandSet == "taskBoard") {
 			cliMsgProcTaskBoard(jObj);
 		}
+		else if (jObj.commandSet == "reply") {
+			cliMsgProcReply(jObj);
+		}
 		else {
 			console.log("Received non-chat command: " + jObj.commandSet);
 		}
@@ -540,6 +543,9 @@ function cliMsgProcTaskBoard(jObj) {
 	if (jObj.command == 'addTaskBoard') {
 		var addTaskBoard = jObj.addTaskBoard;
 		var node = addTaskBoard.node;
+		console.log("node!");
+		 console.log(node)
+		 console.log(addTaskBoard)
 		$("#jsTreeTaskBoard").jstree('create_node', 'taskboardroot', node, 'last');
 	}
 	else if (jObj.command == "setTaskBoardTreeJSON") {
@@ -551,8 +557,13 @@ function cliMsgProcTaskBoard(jObj) {
 		console.log(myData.taskBoardTree);
 		// console.log("Mydata.termTree after JSON Decode:");
 		// console.log($.parseJSON(myData.termTree));
-		initTaskBoardTree((myData.taskBoardTree));
+		initTaskBoardTree($.parseJSON(myData.taskBoardTree));
+		
 	}
+	// else if (jObj.command == "moveTaskColumn") {
+	// 	console.log("RECV MOVE TASK COLUMN!!!!!!!");
+	// 	console.log(jObj.moveTaskColumn)
+	// }
 }
 
 
@@ -967,15 +978,39 @@ function getFileTrees() {
 		"command": "getFileTreeJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
-	var statusJSON = {
+	statusJSON = {
 		"commandSet": "base",
 		"command": "getChatListJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
 
-	var statusJSON = {
+	statusJSON = {
 		"commandSet": "base",
 		"command": "getTermListJSON",
 	};
 	wsSendMsg(JSON.stringify(statusJSON));
+	
+	statusJSON = {
+		"commandSet": "base",
+		"command": "getTaskBoardListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+	statusJSON = {
+		"commandSet": "base",
+		"command": "getFlowchartListJSON",
+	};
+	wsSendMsg(JSON.stringify(statusJSON));
+}
+
+function cliMsgProcReply(jObj) {
+	if (jObj.commandType == 'downloadDocument') {
+		var downloadDocument = jObj['downloadDocument'];
+		var httpLink = downloadDocument['httpLink'];
+		console.log("http link is " + httpLink);
+		//window.location.assign(httpLink);
+		// $.fileDownload(httpLink)
+	 //       .done(function () { alert('File download a success!'); })
+	 //       .fail(function () { alert('File download failed!'); });
+ 		window.open(httpLink);
+	}
 }
