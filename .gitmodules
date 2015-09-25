@@ -13,3 +13,6 @@
 [submodule "app/assets/javascripts/tinymce"]
 	path = app/assets/javascripts/tinymce
 	url = https://github.com/tinymce/tinymce.git
+[submodule "app/assets/javascripts/ace-builds"]
+	path = app/assets/javascripts/ace-builds
+	url = https://github.com/ajaxorg/ace-builds.git
