@@ -13,17 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150904051724) do
 
-  create_table "Projects", force: :cascade do |t|
-    t.string   "name",              limit: 255
-    t.integer  "Owner_id",          limit: 4
-    t.integer  "ProjectProfile_id", limit: 4
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "Projects", ["Owner_id"], name: "index_projects_on_Owner_id", using: :btree
-  add_index "Projects", ["ProjectProfile_id"], name: "index_projects_on_ProjectProfile_id", using: :btree
-
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
     t.string   "provider",   limit: 255

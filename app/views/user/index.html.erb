@@ -25,7 +25,7 @@ email
       <tbody>
   <% @myProjects.each do |proj| %>
         <tr>
-          <td><%= link_to proj.name, proj %></td>
+          <td><%= link_to proj.Name, proj %></td>
           <td>(<%= proj.Users.count.to_s %>): 
             <% proj.Users.each do |user| %>
             <%= link_to user.name, user, {:class => 'userLink'} %>
@@ -55,7 +55,7 @@ email
           </thead>
           <tbody>
       <% @user.Projects.each do |proj| %>
-      <tr><td><%= link_to proj.name, proj %></td>
+      <tr><td><%= link_to proj.Name, proj %></td>
         <td>(<%= proj.Users.count.to_s %>):
           <% proj.Users.each do |user| %>
           <%= link_to user.name, user, {:class => 'userLink'} %>

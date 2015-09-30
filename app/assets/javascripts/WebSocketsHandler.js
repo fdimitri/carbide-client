@@ -19,7 +19,7 @@ function initWebSocket() {
 	if (ws.readyState === 0 || ws.readyState === 1) {
 		return;
 	}
-	ws = new WebSocket("ws://frank-d.info:8080/");
+	ws = new WebSocket("ws://alpha0.carb-ide.com:8080/");
 	if (ws.readyState > 1) {
 		console.log("Unable to reconnect, trying again in 5 seconds..");
 		setTimeout(function() {

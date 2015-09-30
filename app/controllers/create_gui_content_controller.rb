@@ -11,14 +11,14 @@ class CreateGuiContentController < ApplicationController
     @customData['projects'] = Hash.new
     @user.Projects.each do |p|
       if (p.Owner.id == @user.id)
-        pName = "[O] " + p.name
+        pName = "[O] " + p.Name
       else
-        pName = p.name
+        pName = p.Name
       end
       projData =  [
         'id' => "Project" + p.id.to_s,
         'parent' => "#",
-        'text' => p.name,
+        'text' => p.Name,
         'type' => 'jsTreeProject',
         'li_attr' => {
           'class' => 'jsTreeProject',
