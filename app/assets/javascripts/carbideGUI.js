@@ -103,6 +103,7 @@ $(document).ready(function() {
 	
 
 	createNewPane();
+	console.log("NEW PANE CREATED!!!!!!!")
 	resetSizes();
 	
 
@@ -922,7 +923,8 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	// }
 	var paneId = $("#" + tabBarId).closest(".windowPane").attr("id");
 	var num_Tabs = $("#" + tabBarId + ' .menuList li').length;
-	var tabName = "tab-" + tabBarId + "-" + filename;
+	var srcHash = hex_md5(srcPath);
+	var tabName = "tab-" + tabBarId + "-" + srcHash + "-" + filename;
 	var tabSaved = $(".tabBar").tabs();
 	tabName = tabName.replace(/\./g, '_');
 	var tabNameNice = filename;

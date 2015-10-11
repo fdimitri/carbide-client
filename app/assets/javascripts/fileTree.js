@@ -538,7 +538,7 @@ function initFileTree(data, ftid) {
 			},
 			'data': data,
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		"plugins": ["dnd", "crrm", "types", "sort"],
 		"dnd": {
 			is_draggable : function () { return true; },
 			drop_check : function (data) { return true; },
@@ -586,9 +586,7 @@ function initFileTree(data, ftid) {
  //   drag_check      : function (data) { return { after : false, before : false, inside : true }; }
  //},
 		
-		contextmenu: {
-			items: fileTreeMenu
-		}
+		
 
 
 	});
@@ -957,10 +955,8 @@ function initChatTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -1041,10 +1037,8 @@ function initTermTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -1134,10 +1128,8 @@ function initFlowchartTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -1219,7 +1211,7 @@ function initTaskBoardTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		"plugins": ["dnd", "crrm", "types", "sort"],
 		 //contextmenu: {
 		 //	items: fileTreeMenu,
 		 //},

@@ -42,13 +42,15 @@ function resetSizes(suppressArrangePanes) {
 		$("#topBar").height());
 	$("#editorContainer").width($(window).width());
 
-
+    
 	$("#toolBarSide").height($(window).height() - 10);
 	var te = $("#toolBarSide ul");
 	var rw = $("#rightWindow");
 	var wd = $("#windows");
 	var rwWidth = $("#toolBarSide").outerWidth() + 21;
-	te.width($("#toolBarSide").height() - 2);
+	var thisNavWidth = $("#toolBarSide").height() - 2;
+	te.width(thisNavWidth);
+	console.log("WE SET TE WIDTH TO " + thisNavWidth);
 	console.log("Resize event setting #rightWindow left to " + rwWidth)
 	rw.css("left", rwWidth);
 	//rw.css("left", 0);
