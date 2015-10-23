@@ -614,7 +614,7 @@ function initFileTree(data, ftid) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				//	   	console.log(node);
 			}
@@ -687,7 +687,7 @@ function cbCreateFile(hashKey, event, message) {
 				renameFile();
 			}, 400);
 		}
-	}, 10);
+	}, 100);
 }
 
 function cbCreateFolder(hashKey, event, message) {
@@ -732,7 +732,7 @@ function cbCreateFolder(hashKey, event, message) {
 				renameFile();
 			}, 400);
 		}
-	}, 10);
+	}, 100);
 }
 
 function createFile(fileDirectory) {
@@ -983,7 +983,7 @@ function initChatTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1066,7 +1066,7 @@ function initTermTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1156,7 +1156,7 @@ function initFlowchartTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1242,7 +1242,7 @@ function initTaskBoardTree(data) {
 				         console.log("opening up a task board from double click 1251");
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.text);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}

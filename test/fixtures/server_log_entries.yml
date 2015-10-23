@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  entrytime: 2015-10-22 21:19:36
+  flags: 1
+  source: MyString
+  message: MyText
+
+two:
+  entrytime: 2015-10-22 21:19:36
+  flags: 1
+  source: MyString
+  message: MyText

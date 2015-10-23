@@ -41,7 +41,7 @@ $(document).ready(function() {
 							goToEditorLine(editorSelector,lineNumber);
 					      }
 					 }
-				}, 20);
+				}, 100);
 			}
 			
     });

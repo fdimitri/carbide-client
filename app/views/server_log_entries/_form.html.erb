@@ -1,0 +1,33 @@
+<%= form_for(@server_log_entry) do |f| %>
+  <% if @server_log_entry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@server_log_entry.errors.count, "error") %> prohibited this server_log_entry from being saved:</h2>
+
+      <ul>
+      <% @server_log_entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :entrytime %><br>
+    <%= f.datetime_select :entrytime %>
+  </div>
+  <div class="field">
+    <%= f.label :flags %><br>
+    <%= f.number_field :flags %>
+  </div>
+  <div class="field">
+    <%= f.label :source %><br>
+    <%= f.text_field :source %>
+  </div>
+  <div class="field">
+    <%= f.label :message %><br>
+    <%= f.text_area :message %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

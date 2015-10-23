@@ -346,5 +346,5 @@ function createTerminal(hashKey, event, msg) { //once the server has created a t
 					var thisElement = document.getElementById(terminalName);
 					$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
 			      }
-			}, 10);
+			}, 100);
 }

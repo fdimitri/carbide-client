@@ -1,0 +1,2 @@
+module ServerLogEntriesHelper
+end

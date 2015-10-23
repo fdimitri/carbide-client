@@ -1,25 +1,5 @@
 
-<html>
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
 
-
-
-
-
-
-
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>-->
-
-<!--<script src="terminaljs/terminal.js"></script>-->
-
-
-
-</head>
-
-
-
-<body>
 	<div id="mainContainer">
 		<%= render 'layouts/topbarstart' %>
 						<li class='active has-sub'><a href='#'><span>File</span></a>
@@ -40,7 +20,8 @@
 										</li>
 									</ul>
 								</li>
-							</ul>
+								<li id="fsckNew"><a href='#'><span>FSCK New</span></a>
+								</li>							</ul>
 						</li>
 						<li class='active has-sub'><a href='#'><span>View</span></a>
 							<ul>
@@ -207,6 +188,3 @@
 	      </div>
 	      <input type="file" name="selectFile" id="selectFile" style="display:none;">
 	 </div>
-</body>
-
-</html>

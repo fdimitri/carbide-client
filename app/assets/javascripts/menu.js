@@ -49,8 +49,16 @@ $(document).ready(function() {
     $("#window_newPane").click(function() {
         createNewPane();
     });
+    
+    $("#fsckNew").click(function() {
+                var statusJSON = {
+					"commandSet": "base",
+					"command": "fsckNew",
 	
-});
+				};
+				var rval = wsSendMsg(JSON.stringify(statusJSON));    
+        });	
+    });
 
 
 function numWindowPanes() {

@@ -92,7 +92,7 @@ $('.taskNoteButton').tooltip();
                 if (loopCop > timeOutWait) { //error out
                     clearInterval(interval_id);
                 }
-			}, 10);
+			}, 100);
             // editTaskNote($(this).closest('.taskTable').attr("id"),$(this).closest('.taskItem').attr("id"),newNoteIndex);
         }
         else if ($(this).hasClass("addTaskNoteButton")) { //this is a special button to add a new task note
@@ -123,16 +123,16 @@ $('.taskNoteButton').tooltip();
     //$('.taskHeader').editable('http://www.bogusurlthatdoesntreallyexist/save.php');
 
     //open the edit task dialog off the side of the screen and let it load the WYSIWYG editor, so it doesn't have to load when someone is trying to use it
-    editTask(1, 1);
-    $('.ui-dialog[aria-describedby="wysiwyg"]').css("position", "absolute");
-    $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index", "-1");
-    $('.ui-dialog[aria-describedby="wysiwyg"]').css("left", "-1000");
+    // editTask(1, 1);
+    // $('.ui-dialog[aria-describedby="wysiwyg"]').css("position", "absolute");
+    // $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index", "-1");
+    // $('.ui-dialog[aria-describedby="wysiwyg"]').css("left", "-1000");
 
-    setTimeout(function() {
-        $('#wysiwyg').dialog("close");
-        $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index", "700");
-        $('.ui-dialog[aria-describedby="wysiwyg"]').css("left", "50");
-    }, 6000);
+    // setTimeout(function() {
+    //     $('#wysiwyg').dialog("close");
+    //     $('.ui-dialog[aria-describedby="wysiwyg"]').css("z-index", "700");
+    //     $('.ui-dialog[aria-describedby="wysiwyg"]').css("left", "50");
+    // }, 6000);
     ///the dialog should now be loaded properly and no one is the wiser///////////////////////////////////////////////////////////////////////////////////
 
 
@@ -249,7 +249,7 @@ function createTask(hashKey, event, msg) {
         if (loopCop > 1000) { //to prevent an infinite loop we bail after 20,000 milliseconds
             clearInterval(interval_id);
         }
-    }, 20);
+    }, 100);
     taskTableInfo[tableId].taskCount ++;
 
 }
@@ -1432,7 +1432,7 @@ function createTaskBoard(hashKey, event, msg) { //once the server has created a 
 					var thisElement = document.getElementById(taskBoardName);
 					$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
 			      }
-			}, 10);
+			}, 100);
 }
 
 function sendTaskRequest(requestCommand, serverData, callBack) {

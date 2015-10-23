@@ -134,8 +134,9 @@ body {
 	max-width:100%;
 }
 
-
-#sidewaysWrapper {
+.jstree-default .jstree-icon {
+    width:20px !important;
+}#sidewaysWrapper {
     position: relative;
     width: 488px;
 }
@@ -599,7 +600,7 @@ background: linear-gradient(135deg, #4c4c4c 0%,#000000 4%,#383838 37%,#111111 60
 	height: calc(100% - 98px) !important;
 	/*min-height: calc(100% - 78px);*/
 	margin-top:20px !important;
-	margin-left:2px !important;
+	margin-left:-4px !important;
 	
 }
 
