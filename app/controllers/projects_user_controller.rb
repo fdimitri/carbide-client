@@ -37,10 +37,12 @@ class ProjectsUserController < ApplicationController
   
     def create
         if (!projects_user_params[:Project_id])
-            format.html { render :index, location: @projects_user }
+            format.html { render json: @Project_user.errors, status: :unprocessable_entity }
             return
         end
         
+        project_user_params[:Initiator_id] = current_user.id
+        project_user_params[:State] = 'accepted' #temporary
         @projects_user = ProjectsUser.new(projects_user_params)
         respond_to do |format|
             if @projects_user.save
@@ -48,7 +50,7 @@ class ProjectsUserController < ApplicationController
                 myResponse = {:data => @projects_user, :status => true }
                 format.json { render json: myResponse }
             else
-                format.html { render :new }
+                format.html { notice: 'Project profile was unable to be created because of ' + @projects_user.inspect.to_s }
                 format.json { render json: @projects_user.errors, status: :unprocessable_entity }
             end
         end
@@ -101,7 +103,7 @@ class ProjectsUserController < ApplicationController
     end
 
     def projects_user_params
-      params.require(:projects_user).permit(:User_id, :Project_id)
+      params.require(:projects_user).permit(:Project_id)
     end  
 
 end

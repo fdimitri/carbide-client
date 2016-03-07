@@ -1,13 +1,20 @@
 class ServerLogEntriesController < ApplicationController
   before_action :set_server_log_entry, only: [:show, :edit, :update, :destroy]
-
   # GET /server_log_entries
   # GET /server_log_entries.json
   def index
-    @server_log_entries = ServerLogEntry.all
+      @server_log_entries = ServerLogEntry.last(10000)
+      if (params[:flags])
+          @server_log_entries = @server_log_entries.find_by_flags(params[:flags])
+      end
+      if (params[:source])
+          @server_log_entries = @server_log_entries.where("source REGEXP ?", params[:source])
+      end
+      if (params[:msg])
+          @server_log_entries = @server_log_entries.where("msg REGEXP ?", params[:msg])
+      end
+    
   end
-
-  # GET /server_log_entries/1
   # GET /server_log_entries/1.json
   def show
   end

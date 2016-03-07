@@ -14,17 +14,14 @@
   </thead>
 
   <tbody>
-    <% @server_log_entries.each do |server_log_entry| %>
-      <tr>
-        <td><%= server_log_entry.entrytime %></td>
-        <td><%= server_log_entry.flags %></td>
-        <td><%= server_log_entry.source %></td>
-        <td><%= server_log_entry.message %></td>
-        <td><%= link_to 'Show', server_log_entry %></td>
-        <td><%= link_to 'Edit', edit_server_log_entry_path(server_log_entry) %></td>
-        <td><%= link_to 'Destroy', server_log_entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+<% @server_log_entries.each do |sle| %>
+<tr>
+    <td><%= sle.entrytime %></td>
+    <td><%= convFlagsToString(sle.flags) %></td>
+    <td><%= sle.source %></td>
+    <td><%= sle.message %></td>
+</tr>
+<% end %>
   </tbody>
 </table>
 
