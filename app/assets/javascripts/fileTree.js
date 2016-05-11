@@ -538,7 +538,7 @@ function initFileTree(data, ftid) {
 			},
 			'data': data,
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		"plugins": ["dnd", "crrm", "types", "sort"],
 		"dnd": {
 			is_draggable : function () { return true; },
 			drop_check : function (data) { return true; },
@@ -586,9 +586,7 @@ function initFileTree(data, ftid) {
  //   drag_check      : function (data) { return { after : false, before : false, inside : true }; }
  //},
 		
-		contextmenu: {
-			items: fileTreeMenu
-		}
+		
 
 
 	});
@@ -616,7 +614,7 @@ function initFileTree(data, ftid) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				//	   	console.log(node);
 			}
@@ -689,7 +687,7 @@ function cbCreateFile(hashKey, event, message) {
 				renameFile();
 			}, 400);
 		}
-	}, 10);
+	}, 100);
 }
 
 function cbCreateFolder(hashKey, event, message) {
@@ -734,7 +732,7 @@ function cbCreateFolder(hashKey, event, message) {
 				renameFile();
 			}, 400);
 		}
-	}, 10);
+	}, 100);
 }
 
 function createFile(fileDirectory) {
@@ -957,10 +955,8 @@ function initChatTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -987,7 +983,7 @@ function initChatTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1041,10 +1037,8 @@ function initTermTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -1072,7 +1066,7 @@ function initTermTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1134,10 +1128,8 @@ function initFlowchartTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
-		 contextmenu: {
-		 	items: fileTreeMenu,
-		 },
+		"plugins": ["dnd", "crrm", "types", "sort"],
+		 
 
 
 	});	
@@ -1164,7 +1156,7 @@ function initFlowchartTree(data) {
 				         clearInterval(interval_id);
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.li_attr.srcPath);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}
@@ -1219,7 +1211,7 @@ function initTaskBoardTree(data) {
 				"valid_children": []
 			}
 		},
-		"plugins": ["contextmenu", "dnd", "crrm", "types", "sort"],
+		"plugins": ["dnd", "crrm", "types", "sort"],
 		 //contextmenu: {
 		 //	items: fileTreeMenu,
 		 //},
@@ -1250,7 +1242,7 @@ function initTaskBoardTree(data) {
 				         console.log("opening up a task board from double click 1251");
 				         newTab(node.text, $(".activePane .tabBar").attr('id'), node.id, node.type, node.text);
 				      }
-				}, 10);
+				}, 100);
 				//	   	console.log(node);
 			}
 		}

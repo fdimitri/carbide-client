@@ -4,6 +4,8 @@ var deletedPanes = 0;
 var lastFocusedPane = "";
 var paneCounter = 0;
 
+            
+            
 ////TESTING FUNCTIONS/////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
@@ -103,6 +105,7 @@ $(document).ready(function() {
 	
 
 	createNewPane();
+	console.log("NEW PANE CREATED!!!!!!!")
 	resetSizes();
 	
 
@@ -342,6 +345,9 @@ function createNewPane() {
 				         focusPane(result.paneId);
 				         var newY = $(result.paneId).parent().height() / 2 - $(result.paneId).height() / 2;
 						 var newX = $(result.paneId).parent().width() / 2 - $(result.paneId).width() / 2 - $("#toolBarSide").width() - $("#leftBar").width();
+						 if (newX < 0) {
+						     newX = 0;
+						 }						 console.log("NEWX " + newX + " NEWY " + newY + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 						 $(result.paneId).css({
 							top: newY,
 							left: newX,
@@ -350,7 +356,7 @@ function createNewPane() {
 						 $(result.paneId).attr("oldx", $(result.paneId).position().left);
 						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
 				      }
-					}, 10);
+					}, 100);
 					
 				}
 				else {
@@ -368,7 +374,7 @@ function createNewPane() {
 					 	 $(result.paneId).attr("oldx", $(result.paneId).position().left);
 						 $(result.paneId).attr("oldy", $(result.paneId).position().top);
 				      }
-					}, 10);
+					}, 100);
 					
 
 				}
@@ -613,7 +619,7 @@ function maximizePane(paneId) {
 			$(this).find("th").eq(0).width(labelWidths.shift());
 			fixTaskWidth($(this).attr("id"));
 	    });
-	}, 300);
+	}, 100);
 }
 
 
@@ -692,7 +698,7 @@ function restorePane(paneId) {
 		thisPane.find('.taskTable').each(function() { //fix task board widths
 			fixTaskWidth($(this).attr("id"));
 	    });
-	}, 300);
+	}, 100);
 }
 
 function minimizePane(paneId) {
@@ -906,7 +912,7 @@ function waitForNewWindow(conditions, callback, filename, originId, tabType, src
             console.log("WAITING: " + numWindowPanes() + " UNTIL " + conditions)
             waitForNewWindow(conditions, callback, filename, originId, tabType, srcPath);
         }
-    }, 50); // wait 10ms for the connection...
+    }, 100); // wait 100ms for the connection...
 }
 
 
@@ -922,7 +928,8 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 	// }
 	var paneId = $("#" + tabBarId).closest(".windowPane").attr("id");
 	var num_Tabs = $("#" + tabBarId + ' .menuList li').length;
-	var tabName = "tab-" + tabBarId + "-" + filename;
+	var srcHash = hex_md5(srcPath);
+	var tabName = "tab-" + tabBarId + "-" + srcHash + "-" + filename;
 	var tabSaved = $(".tabBar").tabs();
 	tabName = tabName.replace(/\./g, '_');
 	var tabNameNice = filename;
@@ -1073,7 +1080,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 				     	clearInterval(interval_id);
 				     }
 				         
-		 		}, 50);
+		 		}, 100);
 			}
 			else if (tabType == 'taskBoard') {
 				var statusJSON = {
@@ -1132,7 +1139,7 @@ function newTab(filename, tabBarId, originId, tabType, srcPath) {
 			}
 			activeTabs.push(activeTabId);
 	      }
-	}, 20);
+	}, 100);
 	
 
 
@@ -1303,6 +1310,6 @@ function goToEditorLine(editorSelector,lineNumber) {
 				editor.gotoLine(lineNumber, 0, true);
 		      }
 		 }
-	}, 20);
+	}, 100);
 	
 }

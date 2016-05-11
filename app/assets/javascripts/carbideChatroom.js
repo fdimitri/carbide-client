@@ -79,5 +79,5 @@ function createChatRoom(hashKey, event, msg) { //once the server has created a c
 					var thisElement = document.getElementById(chatRoomName);
 					$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
 			      }
-			}, 10);
+			}, 100);
 }

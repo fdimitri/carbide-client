@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :server_log_entries
   post 'create_gui_content/createPane'
   get 'create_gui_content/createPane'
   post 'create_gui_content/createContent'

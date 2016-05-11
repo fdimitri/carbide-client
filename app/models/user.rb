@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
 
-  has_many :OwnedProjects, class_name: "Project", foreign_key: "Owner"
+  has_many :OwnedProjects, class_name: "Project", foreign_key: "Owner_id"
   has_many :ProjectsUser
   has_many :Projects, :through => :ProjectsUser
-  has_many :InitiatedInvites, class_name: "ProjectsUser", foreign_key: "Owner"
+  has_many :InitiatedInvites, class_name: "ProjectsUser", foreign_key: "Owner_id"
 
 
   def self.find_for_oauth(auth, signed_in_resource = nil)

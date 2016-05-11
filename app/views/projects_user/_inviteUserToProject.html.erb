@@ -13,7 +13,6 @@ Partial form for invite user to project
     </div>
   <% end %>
 <%= f.hidden_field :Project_id, :value => project_id %>
-<%= f.hidden_field :AddedBy_id, :value => current_user.id %>
   <div class="field">
     <%= f.label :User_id %><br>
     <%= f.text_field :User_id %>

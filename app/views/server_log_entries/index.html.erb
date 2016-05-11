@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Server Log Entries</h1>
+
+<table id="serverLogTable">
+  <thead>
+    <tr>
+      <th>Entrytime</th>
+      <th>Flags</th>
+      <th>Source</th>
+      <th>Message</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+<% @server_log_entries.each do |sle| %>
+<tr>
+    <td><%= sle.entrytime %></td>
+    <td><%= convFlagsToString(sle.flags) %></td>
+    <td><%= sle.source %></td>
+    <td><%= sle.message %></td>
+</tr>
+<% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Server log entry', new_server_log_entry_path %>

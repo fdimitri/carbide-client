@@ -315,12 +315,15 @@ $(function() {
 		}
 
 	});
+	console.log("REPORTING ON PANE ID DRAGGABLE!!!!! <%= @paneId %>");
 	$("<%= @paneId %>").draggable({
 		containment: "parent",
 		handle: ".paneHeader",
 		cancel: ".maximizedPane",
 		start: function(event, ui) {
+		    console.log("attempt to drag registered");
 			if (clickedElement == "paneButton") { //don't let them drag a pane button
+			console.log("drag on pane button cancel");
 				return(false);
 			}
 			else { console.log("allowing drag bc of " + clickedElement); }

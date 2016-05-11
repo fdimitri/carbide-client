@@ -47,7 +47,6 @@
 
 //= require ./jsplumb/src/base-library-adapter.js
 //= require ./jsplumb/src/dom.jsPlumb.js
-
 //= require ./tinymce/js/tinymce/jquery.tinymce.min.js
 //= require ./tinymce/js/tinymce/tinymce.min.js
         

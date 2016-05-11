@@ -1,25 +1,5 @@
 
-<html>
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
 
-
-
-
-
-
-
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>-->
-
-<!--<script src="terminaljs/terminal.js"></script>-->
-
-
-
-</head>
-
-
-
-<body>
 	<div id="mainContainer">
 		<%= render 'layouts/topbarstart' %>
 						<li class='active has-sub'><a href='#'><span>File</span></a>
@@ -40,7 +20,8 @@
 										</li>
 									</ul>
 								</li>
-							</ul>
+								<li id="fsckNew"><a href='#'><span>FSCK New</span></a>
+								</li>							</ul>
 						</li>
 						<li class='active has-sub'><a href='#'><span>View</span></a>
 							<ul>
@@ -83,31 +64,35 @@
 		<div id="editorContainer">
 
 				<div id="toolBarSide">
-				    <ul>
-				        <li><a href="#tabs-1">Files</a>
-				        </li>
-				        <li><a href="#tabs-2">Collaboration Tools</a>
-				        </li>
-				        <li><a href="#tabs-3">Preferences</a>
-				        </li>
-				    </ul>
-				    <div id="tabs-1">
-
-				    	<div id="jsTreeFile">
-
-
-
-				    	</div>
-				    </div>
-				    <div id="tabs-2">
-				        <div id="jsTreeChat"></div>
-				        <div id="jsTreeTerminal"></div>
-				        <div id="jsTreeTaskBoard"></div>
-				        <div id="jsTreeFlowchart"></div>
-				    </div>
-				    <div id="tabs-3">
-
-				    </div>
+				    <div id="toolBarRotate">
+    				    <ul>
+    				        <li><a href="#tabs-1">Files</a>
+    				        </li>
+    				        <li><a href="#tabs-2">Collaboration Tools</a>
+    				        </li>
+    				        <li><a href="#tabs-3">Preferences</a>
+    				        </li>
+    				    </ul>
+    				 </div>  
+    				    <div id="tabs-1">
+    
+    				    	<div id="jsTreeFile">
+    
+    
+    
+    				    	</div>
+    				    </div>
+    				    <div id="tabs-2">
+    				        <div id="jsTreeChat"></div>
+    				        <div id="jsTreeTerminal"></div>
+    				        <div id="jsTreeTaskBoard"></div>
+    				        <div id="jsTreeFlowchart"></div>
+    				    </div>
+    				    <div id="tabs-3">
+    
+    				    </div>
+    				
+				    
 
 				</div>
 
@@ -203,6 +188,3 @@
 	      </div>
 	      <input type="file" name="selectFile" id="selectFile" style="display:none;">
 	 </div>
-</body>
-
-</html>

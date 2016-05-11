@@ -287,8 +287,24 @@ $(function() {
                 		$("#selectFile").attr("accept", ".tar,.tar.gz,.tgz,.gz");
                 		$("#selectFile").trigger("click");
                 	}
+                	
                 }
-                
+                else if (ui.cmd == "reloadFileFromFS") {
+                	    console.log("RELOAD FILE FROM FS");
+                	    var ref = $('#jsTreeFile').jstree(true);
+                	    var selectedNodes = ref.get_selected();
+                    	var fileAndPath = ref.get_path(selectedNodes,"/");
+    					var srcPath = fileAndPath.substring(fileAndPath.lastIndexOf("/") + 1, fileAndPath.length);
+    					var statusJSON = {
+        					"commandSet": "folder",
+        					"command": "reloadFileFromFS",
+        					"documentTarget": srcPath,
+        					"reloadFileFromFS": {
+        					  "srcPath" : srcPath,  
+        					},        	
+        				};
+        				var rval = wsSendMsg(JSON.stringify(statusJSON));                    	
+                }                                       
                   
             },
             beforeOpen: function(event, ui) {
@@ -357,6 +373,8 @@ $(function() {
                 		{title: '---'},
                 		{title: '<span class="contextMenuItem">Upload File</span>', uiIcon: "ui-icon-document", cmd: "uploadFile"},
                 		{title: '<span class="contextMenuItem">Upload Tarball</span>', uiIcon: "ui-icon-suitcase", cmd: "uploadTarball"},
+                		{title: '---'},
+                		{title: '<span class="contextMenuItem">Reload File from FS</span>', uiIcon: "ui-icon-script", cmd: "reloadFileFromFS"},
                     
                     ]);
 				}
@@ -714,7 +732,7 @@ $(document).ready(function() {
 						var thisElement = document.getElementById(termName);
 						$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
 				      }
-				}, 10);
+				}, 100);
 			   
 				
 					
@@ -791,7 +809,7 @@ $(document).ready(function() {
 						var thisElement = document.getElementById(chatName);
 						$('#tabs-2').scrollTop( thisElement.offsetTop - 20 );
 				      }
-				}, 10);
+				}, 1000);
 				
         }
     });

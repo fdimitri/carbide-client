@@ -41,7 +41,7 @@ $(document).ready(function() {
 							goToEditorLine(editorSelector,lineNumber);
 					      }
 					 }
-				}, 20);
+				}, 100);
 			}
 			
     });
@@ -52,7 +52,9 @@ $(document).ready(function() {
 			if ($(event.target).is('.paneMaximize') || $(event.target).is('.paneRestore') || $(event.target).is('.paneMinimize') || $(event.target).is('.paneClose')) {
 				clickedElement = "paneButton";
 			}
-			else if ($(event.target).is('.windowPaneTabClose')) {
+			else if ($(event.target).is('.paneHeader')) {
+				clickedElement = "paneHeader";
+			}			else if ($(event.target).is('.windowPaneTabClose')) {
 				clickedElement = "paneTabButton";
 			}
 			///////////////////////JSTREE CLICKS////////////////////////////////

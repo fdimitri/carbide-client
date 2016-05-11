@@ -11,14 +11,14 @@ class CreateGuiContentController < ApplicationController
     @customData['projects'] = Hash.new
     @user.Projects.each do |p|
       if (p.Owner.id == @user.id)
-        pName = "[O] " + p.name
+        pName = "[O] " + p.Name
       else
-        pName = p.name
+        pName = p.Name
       end
       projData =  [
         'id' => "Project" + p.id.to_s,
         'parent' => "#",
-        'text' => p.name,
+        'text' => p.Name,
         'type' => 'jsTreeProject',
         'li_attr' => {
           'class' => 'jsTreeProject',
@@ -37,11 +37,11 @@ class CreateGuiContentController < ApplicationController
           'li_attr' => {
             "class" => "jsTreeUser",
           }
-          
+
         ]
         @customData['projects'][pName] = {
           'treeData' => projData.flatten,
-          'ownerId' => p.Owner.id, 
+          'ownerId' => p.Owner.id,
           'ownerName' => p.Owner.name
         }
       end
@@ -54,20 +54,20 @@ class CreateGuiContentController < ApplicationController
     end
     @customData['treeData'] = treeData.flatten
   end
-  
+
 
   def createUserSidebarContent
     setVarsUserSidebarContent(params)
     #@myHtml = render_to_string(:partial => "/create_gui_content/createUserSidebarContent#{@tabType}", :layout => false, :formats => [:erb, :html])
     @myScript = render_to_string(:partial => "/create_gui_content/createUserSidebarContent#{@tabType}", :layout => false, :formats => [:js, :erb])
-    if (!defined? @user) 
+    if (!defined? @user)
       @user = current_user
     end
     @customData = Hash.new
-    if (self.respond_to?("createUserSidebarContent#{@tabType}"))  
+    if (self.respond_to?("createUserSidebarContent#{@tabType}"))
       self.send("createUserSidebarContent#{@tabType}")
     end
-    
+
     @jsonString = {
       'reply' => {
         'success' => true,
@@ -83,7 +83,7 @@ class CreateGuiContentController < ApplicationController
       format.json { render :json => JSON.pretty_generate(@jsonString).html_safe }
     end
   end
-  
+
 
   def createPane
     setVarsPane(params)
@@ -97,7 +97,7 @@ class CreateGuiContentController < ApplicationController
         'paneId' => @pane,
         'script' => @myScript,
         'calledWith' => @data,
-        
+
       },
     }
 
@@ -123,7 +123,7 @@ class CreateGuiContentController < ApplicationController
 
     @tabType = params['tabType']
   end
-  
+
 
   def createContent
     setVarsContent(params)
@@ -143,24 +143,24 @@ class CreateGuiContentController < ApplicationController
       format.json { render :json => JSON.pretty_generate(@jsonString).html_safe }
     end
   end
-  
+
   def createContentTask
     setVarsContent(params)
   end
-  
+
   def createContentChat
     setVarsContent(params)
   end
-  
+
   def createContentFile
     setVarsContent(params)
   end
-  
+
   def createContentTerminal
     setVarsContent(params)
   end
-  
-  
+
+
   def setVarsContent(params)
     @data = params
     @tabName = params['tabName']
@@ -169,7 +169,7 @@ class CreateGuiContentController < ApplicationController
     @chatTarget = params['chatTarget']
     @srcPath = params['srcPath']
     #Terminal-only params
-  	@containerId = @tabName + '_C';
+        @containerId = @tabName + '_C';
     @terminalContainerId = @containerId
     @terminalId = @tabName
     @terminalName = @chatTarget

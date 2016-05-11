@@ -1,27 +1,86 @@
-<p id="notice"><%= notice %></p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CARBIDE Personal Dashboard</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" href="/assets/jstree/themes/default/style.css" />
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'user', 'data-turbolinks-track' => true %>
 
-<pre>
-Welcome to CARB/IDE!
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<%= render 'layouts/topbarstart' %>
+<%= render 'layouts/topbarend' %>
+<div id="editorContainer">
 
-</pre>
-<ul>
-<% if user_signed_in? %>
-  <li>
-  <%= link_to('Edit registration', edit_user_registration_path) %>
-  </li>
-  <li>
-  <%= link_to('My dashboard', user_index_path) %>
-  </li>
-  <li>
-  <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
-  </li>
+				<div id="toolBarSide">
+				    <div id="toolBarRotate">
+    				    <ul>
+    				        <li><a href="#tabs-1">Projects</a>
+    				        </li>
+    				        <li><a href="#tabs-2">Users</a>
+    				        </li>
+    				        <li><a href="#tabs-3">Preferences</a>
+    				        </li>
+    				    </ul>
+				    </div>
+				    <div id="tabs-1">
 
-<% else %>
-  <li>
-  <%= link_to('Register', new_user_registration_path)  %>
-  </li>
-  <li>
-  <%= link_to('Login', new_user_session_path)  %>
-  </li>
-<% end %>
-</ul>
+				    	<div id="userProjects">
+				    	  
+				    	</div>
+				    </div>
+				    <div id="tabs-2">
+				        <div id="userUsers"></div>
+				    </div>
+				    <div id="tabs-3">
+                <div id="userPreferences"></div>
+				    </div>
+
+				</div>
+
+			<div id="rightWindow">
+
+				<div id="windows">
+
+                    <p id="notice"><%= notice %></p>
+                    
+                    <pre>
+                    Welcome to CARB/IDE!
+                    
+                    </pre>
+                    <ul>
+                    <% if user_signed_in? %>
+
+                      <li>
+                      <%= link_to('Edit registration', edit_user_registration_path) %>
+                      </li>
+                      <li>
+                      <%= link_to('My dashboard', user_index_path) %>
+                      </li>
+                      <li>
+                      <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
+                      </li>
+                    
+                    <% else %>
+                      <li>
+                      <%= link_to('Register', new_user_registration_path)  %>
+                      </li>
+                      <li>
+                      <%= link_to('Login', new_user_session_path)  %>
+                      </li>
+                    <% end %>
+                    </ul>
+				</div>
+
+
+			</div>
+			<!--<div style="clear:both;"></div>-->
+		
+
+
+		</div>
+</body>
+</html>

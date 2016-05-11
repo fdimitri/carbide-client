@@ -11,18 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150904051724) do
-
-  create_table "Projects", force: :cascade do |t|
-    t.string   "name",              limit: 255
-    t.integer  "Owner_id",          limit: 4
-    t.integer  "ProjectProfile_id", limit: 4
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "Projects", ["Owner_id"], name: "index_projects_on_Owner_id", using: :btree
-  add_index "Projects", ["ProjectProfile_id"], name: "index_projects_on_ProjectProfile_id", using: :btree
+ActiveRecord::Schema.define(version: 20151023011936) do
 
   create_table "identities", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -67,6 +56,15 @@ ActiveRecord::Schema.define(version: 20150904051724) do
   add_index "projects_users", ["Project_id"], name: "index_projects_users_on_Project_id", using: :btree
   add_index "projects_users", ["User_id"], name: "index_projects_users_on_User_id", using: :btree
   add_index "projects_users", ["initiator_id"], name: "index_projects_users_on_initiator_id", using: :btree
+
+  create_table "server_log_entries", force: :cascade do |t|
+    t.datetime "entrytime"
+    t.integer  "flags",      limit: 4
+    t.string   "source",     limit: 255
+    t.text     "message",    limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
